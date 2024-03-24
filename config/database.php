@@ -16,4 +16,3 @@
     catch (PDOException $e) {
         exit("Error: " . $e->getMessage());
     }
-?>

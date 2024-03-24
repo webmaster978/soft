@@ -1,217 +1,417 @@
 <?php
+require 'config/database.php';
 
-// Check if the system setup is complete
 
-require 'config/database.php'; 
+if (isset($_SESSION['PROFILE']['id_utilisateur'])) {
+  switch ($_SESSION['PROFILE']['designation']) {
 
-if (isset($_SESSION['user_id'])) 
-{
-    header('Location: admin/');
-    exit();
+
+    case 'admin':
+      header('location: manager/');
+      break;
+    case 'reception':
+      header('location: reception/');
+      break;
+    case 'consultation':
+      header('location: consultation/');
+      break;
+    case 'triage':
+      header('location: triage/');
+      break;
+    case 'labo':
+      header('location: labo/');
+      break;
+
+
+    default:
+      header('location: ./');
+      die('aucune service');
+      break;
+  }
 }
 
-$errorMessage = '';
+if (isset($_POST['btn_submit'])) {
+  extract($_POST);
+  $sql = "SELECT * FROM authentification  WHERE (username=:username OR email=:email) AND password=:password";
+  $req = $db->prepare($sql);
+  $req->execute([
+    'username' => htmlspecialchars(trim($username)),
+    'email' => $username,
+    'password' => sha1($password)
+  ]);
 
-if(isset($_POST['btn_login']))
-{
-    // Get the email and password entered by the user
-    $email = $_POST['email'];
-    
-    $password = $_POST['password'];
+  if ($informations = $req->fetch()) { /*Si l'adresse et le mot de passe sont vrai*/
+    $_SESSION['TMP_PROFILE'] = $informations;
+    //echo $_SESSION['TMP_PROFILE']['ref_utilisateur'];
 
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $recup_informations = $db->prepare("SELECT * FROM fonction INNER JOIN tbl_agent ON fonction.id_fonction=tbl_agent.ref_fonction WHERE id_utilisateur=:id_utilisateur");
+    $recup_informations->execute([
+      'id_utilisateur' => $_SESSION['TMP_PROFILE']['ref_utilisateur']
+    ]);
 
-    // Validate email address format
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
-    {
-        $errors[] = 'Please enter a valid email address.';
+    while ($session = $recup_informations->fetch()) {
+      $_SESSION['PROFILE'] = $session;
     }
 
-    // Validate password field is not empty
-    if (empty($password)) 
-    {
-        $errors[] = 'Please enter a password.';
+    switch ($_SESSION['PROFILE']['designation']) {
+
+
+      case 'admin':
+        header('location: manager/');
+        break;
+      case 'reception':
+        header('location: reception/');
+        break;
+      case 'consultation':
+        header('location: consultation/');
+        break;
+      case 'triage':
+        header('location: triage/');
+        break;
+      case 'labo':
+        header('location: labo/');
+        break;
     }
-
-    // If there are no validation errors, attempt to log in
-    if(empty($errors)) 
-    {
-
-        // Query the database to see if a user with that username exists
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
-
-        // If the user exists, retrieve their password hash from the database
-        if ($user) 
-        {
-            $passwordHash = $user['password'];
-
-            // Use the password_verify function to check if the entered password matches the password hash
-            if (password_verify($password, $passwordHash)) 
-            {
-                // Password is correct, log the user in
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_role'] = $user['role'];
-                $_SESSION['user_name'] = $user['name'];
-                if($user['role'] == 'user')
-                {
-                    header('Location: bills.php');
-                }
-                else
-                {
-                    header('Location: admin/');
-                }
-                exit;
-            } 
-            else
-            {
-                // Password is incorrect, show an error message
-                $errors[] = "Invalid password";
-            }
-        } 
-        else 
-        {
-            // User not found, show an error message
-            $errors[] = "email not found in database";
-        }
-    }
+  } else {
+    $error = '';
+  }
 }
 
 ?>
+
+
+
 <!DOCTYPE html>
-<html data-navigation-type="default" data-navbar-horizontal-shape="default" lang="en-US" dir="ltr">
+<html lang="en">
 
-
-<!-- Mirrored from prium.github.io/phoenix/v1.15.0/pages/authentication/simple/sign-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Mar 2024 10:35:09 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 
 <head>
+  <!-- Required Meta Tags Always Come First -->
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- ===============================================-->
-  <!--    Document Title-->
-  <!-- ===============================================-->
-  <title>Phoenix</title>
+  <!-- Title -->
+  <title>Clinovie || Connexion</title>
 
-  <!-- ===============================================-->
-  <!--    Favicons-->
-  <!-- ===============================================-->
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
-  <link rel="shortcut icon" type="image/x-icon" href="https://prium.github.io/phoenix/v1.15.0/assets/img/favicons/favicon.ico">
-  <link rel="manifest" href="https://prium.github.io/phoenix/v1.15.0/assets/img/favicons/manifest.json">
-  <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
-  <meta name="theme-color" content="#ffffff">
-  <script src="vendors/simplebar/simplebar.min.js"></script>
-  <script src="assets/js/config.js"></script>
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="assets/img/logo/lg.png">
 
-  <!-- ===============================================-->
-  <!--    Stylesheets-->
-  <!-- ===============================================-->
-  <link rel="preconnect" href="https://fonts.googleapis.com/">
-  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
-  <link href="vendors/simplebar/simplebar.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="unicons.iconscout.com/release/v4.0.8/css/line.css">
-  <link href="assets/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
-  <link href="assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
-  <link href="assets/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
-  <link href="assets/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+
+  <!-- CSS Implementing Plugins -->
+  <link rel="stylesheet" href="assets/css/vendor.min.css">
+
+  <!-- CSS Front Template -->
+  <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
+
+  <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
+  <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
+
+  <style data-hs-appearance-onload-styles>
+    * {
+      transition: unset !important;
+    }
+
+    body {
+      opacity: 0;
+    }
+  </style>
+
   <script>
-    var phoenixIsRTL = window.config.config.phoenixIsRTL;
-    if (phoenixIsRTL) {
-      var linkDefault = document.getElementById('style-default');
-      var userLinkDefault = document.getElementById('user-style-default');
-      linkDefault.setAttribute('disabled', true);
-      userLinkDefault.setAttribute('disabled', true);
-      document.querySelector('html').setAttribute('dir', 'rtl');
-    } else {
-      var linkRTL = document.getElementById('style-rtl');
-      var userLinkRTL = document.getElementById('user-style-rtl');
-      linkRTL.setAttribute('disabled', true);
-      userLinkRTL.setAttribute('disabled', true);
+    window.hs_config = {
+      "autopath": "@@autopath",
+      "deleteLine": "hs-builder:delete",
+      "deleteLine:build": "hs-builder:build-delete",
+      "deleteLine:dist": "hs-builder:dist-delete",
+      "previewMode": false,
+      "startPath": "/index.html",
+      "vars": {
+        "themeFont": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
+        "version": "?v=1.0"
+      },
+      "layoutBuilder": {
+        "extend": {
+          "switcherSupport": true
+        },
+        "header": {
+          "layoutMode": "default",
+          "containerMode": "container-fluid"
+        },
+        "sidebarLayout": "default"
+      },
+      "themeAppearance": {
+        "layoutSkin": "default",
+        "sidebarSkin": "default",
+        "styles": {
+          "colors": {
+            "primary": "#377dff",
+            "transparent": "transparent",
+            "white": "#fff",
+            "dark": "132144",
+            "gray": {
+              "100": "#f9fafc",
+              "900": "#1e2022"
+            }
+          },
+          "font": "Inter"
+        }
+      },
+      "languageDirection": {
+        "lang": "en"
+      },
+      "skipFilesFromBundle": {
+        "dist": ["assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.js", "assets/js/demo.js"],
+        "build": ["assets/css/theme.css", "assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js", "assets/js/demo.js", "assets/css/theme-dark.html", "assets/css/docs.css", "assets/vendor/icon-set/style.html", "assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.js", "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html", "assets/js/demo.js"]
+      },
+      "minifyCSSFiles": ["assets/css/theme.css", "assets/css/theme-dark.css"],
+      "copyDependencies": {
+        "dist": {
+          "*assets/js/theme-custom.js": ""
+        },
+        "build": {
+          "*assets/js/theme-custom.js": "",
+          "node_modules/bootstrap-icons/font/*fonts/**": "assets/css"
+        }
+      },
+      "buildFolder": "",
+      "replacePathsToCDN": {},
+      "directoryNames": {
+        "src": "./src",
+        "dist": "./dist",
+        "build": "./build"
+      },
+      "fileNames": {
+        "dist": {
+          "js": "theme.min.js",
+          "css": "theme.min.css"
+        },
+        "build": {
+          "css": "theme.min.css",
+          "js": "theme.min.js",
+          "vendorCSS": "vendor.min.css",
+          "vendorJS": "vendor.min.js"
+        }
+      },
+      "fileTypes": "jpg|png|svg|mp4|webm|ogv|json"
+    }
+    window.hs_config.gulpRGBA = (p1) => {
+      const options = p1.split(',')
+      const hex = options[0].toString()
+      const transparent = options[1].toString()
+
+      var c;
+      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+        c = hex.substring(1).split('');
+        if (c.length == 3) {
+          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c = '0x' + c.join('');
+        return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + transparent + ')';
+      }
+      throw new Error('Bad Hex');
+    }
+    window.hs_config.gulpDarken = (p1) => {
+      const options = p1.split(',')
+
+      let col = options[0].toString()
+      let amt = -parseInt(options[1])
+      var usePound = false
+
+      if (col[0] == "#") {
+        col = col.slice(1)
+        usePound = true
+      }
+      var num = parseInt(col, 16)
+      var r = (num >> 16) + amt
+      if (r > 255) {
+        r = 255
+      } else if (r < 0) {
+        r = 0
+      }
+      var b = ((num >> 8) & 0x00FF) + amt
+      if (b > 255) {
+        b = 255
+      } else if (b < 0) {
+        b = 0
+      }
+      var g = (num & 0x0000FF) + amt
+      if (g > 255) {
+        g = 255
+      } else if (g < 0) {
+        g = 0
+      }
+      return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
+    }
+    window.hs_config.gulpLighten = (p1) => {
+      const options = p1.split(',')
+
+      let col = options[0].toString()
+      let amt = parseInt(options[1])
+      var usePound = false
+
+      if (col[0] == "#") {
+        col = col.slice(1)
+        usePound = true
+      }
+      var num = parseInt(col, 16)
+      var r = (num >> 16) + amt
+      if (r > 255) {
+        r = 255
+      } else if (r < 0) {
+        r = 0
+      }
+      var b = ((num >> 8) & 0x00FF) + amt
+      if (b > 255) {
+        b = 255
+      } else if (b < 0) {
+        b = 0
+      }
+      var g = (num & 0x0000FF) + amt
+      if (g > 255) {
+        g = 255
+      } else if (g < 0) {
+        g = 0
+      }
+      return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
     }
   </script>
 </head>
 
 <body>
 
-  <!-- ===============================================-->
-  <!--    Main Content-->
-  <!-- ===============================================-->
-  <main class="main" id="top">
-    <div class="container">
-      <div class="row flex-center min-vh-100 py-5">
-        <div class="col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-3"><a class="d-flex flex-center text-decoration-none mb-4" href="https://prium.github.io/phoenix/v1.15.0/index.html">
-            <div class="d-flex align-items-center fw-bolder fs-3 d-inline-block"><img src="assets/img/icons/logo.png" alt="phoenix" width="58" /></div>
-          </a>
-          <form method="POST" autocomplete="off">
-          <div class="text-center mb-7">
-            <h3 class="text-body-highlight">Connexion</h3>
-            <?php
-                            
-                            if(isset($errors))
-                            {
-                                foreach ($errors as $error) 
-                                {
-                                    echo "<div class='alert alert-danger'>$error</div>";
-                                }
-                            }
-                            ?>
+  <script src="assets/js/hs.theme-appearance.js"></script>
 
-            <p class="text-body-tertiary">Get access to your account</p>
-          </div><button class="btn btn-phoenix-secondary w-100 mb-3"><span class="fab fa-google text-danger me-2 fs-9"></span>Sign in with google</button><button class="btn btn-phoenix-secondary w-100"><span class="fab fa-facebook text-primary me-2 fs-9"></span>Sign in with facebook</button>
-          <div class="position-relative">
-            <hr class="bg-body-secondary mt-5 mb-4" />
-            <div class="divider-content-center">or use email</div>
-          </div>
-          <div class="mb-3 text-start"><label class="form-label" for="email">Email address</label>
-            <div class="form-icon-container"><input class="form-control form-icon-input" id="email" type="text" name="username" value="<?= (isset($username)) ? $username : ''; ?>" placeholder="name@example.com" /><span class="fas fa-user text-body fs-9 form-icon"></span></div>
-          </div>
-          <div class="mb-3 text-start"><label class="form-label" for="password">Password</label>
-            <div class="form-icon-container"><input class="form-control form-icon-input" id="password" type="password" name="password" value="<?= (isset($password)) ? $password : ''; ?>"  placeholder="Password" /><span class="fas fa-key text-body fs-9 form-icon"></span></div>
-          </div>
-          <div class="row flex-between-center mb-7">
-            <div class="col-auto">
-              <div class="form-check mb-0"><input class="form-check-input" id="basic-checkbox" type="checkbox" checked="checked" /><label class="form-check-label mb-0" for="basic-checkbox">Remember me</label></div>
-            </div>
-            <div class="col-auto"><a class="fs-9 fw-semibold" href="forgot-password.html">Forgot Password?</a></div>
-          </div>
-          <button type="submit" name="btn_submit" class="btn btn-primary w-100 mb-3">Se connecter</button>
-          <div class="text-center"><a class="fs-9 fw-bold" href="sign-up.html">Create an account</a></div>
-          </form>
-        </div>
+
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main id="content" role="main" class="main">
+    <div class="position-fixed top-0 end-0 start-0 bg-img-start" style="height: 32rem; background-image: url(assets/svg/components/card-6.svg);">
+      <!-- Shape -->
+      <div class="shape shape-bottom zi-1">
+        <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
+          <polygon fill="#fff" points="0,273 1921,273 1921,0 " />
+        </svg>
       </div>
+      <!-- End Shape -->
     </div>
 
-  </main><!-- ===============================================-->
-  <!--    End of Main Content-->
-  <!-- ===============================================-->
+    <!-- Content -->
+    <div class="container py-5 py-sm-7">
+      <a class="d-flex justify-content-center mb-5" href="#">
+        <img class="zi-2" src="assets/img/logo/lg.png" alt="Image Description" style="width: 8rem;">
+      </a>
 
 
-  <!-- ===============================================-->
-  <!--    JavaScripts-->
-  <!-- ===============================================-->
-  <script src="vendors/popper/popper.min.js"></script>
-  <script src="vendors/bootstrap/bootstrap.min.js"></script>
-  <script src="vendors/anchorjs/anchor.min.js"></script>
-  <script src="vendors/is/is.min.js"></script>
-  <script src="vendors/fontawesome/all.min.js"></script>
-  <script src="vendors/lodash/lodash.min.js"></script>
-  <script src="polyfill.io/v3/polyfill.min58be.js?features=window.scroll"></script>
-  <script src="vendors/list.js/list.min.js"></script>
-  <script src="vendors/feather-icons/feather.min.js"></script>
-  <script src="vendors/dayjs/dayjs.min.js"></script>
-  <script src="assets/js/phoenix.js"></script>
+
+      <div class="mx-auto" style="max-width: 30rem;">
+        <!-- Card -->
+        <div class="card card-lg mb-5">
+          <div class="card-body">
+            <!-- Form -->
+            <form class="js-validate needs-validation" id="login-form" method="POST" novalidate>
+              <div class="text-center">
+                <div class="mb-5">
+                  <h1 class="display-5">Connexion</h1>
+
+
+
+
+                </div>
+
+                <div class="d-grid mb-4">
+                  <a class="btn btn-white btn-lg" href="#">
+                    <span class="d-flex justify-content-center align-items-center">
+                      <img class="avatar avatar-xss me-2" src="assets/img/logo/lg.png" alt="Image Description">
+
+                    </span>
+                  </a>
+                </div>
+
+
+              </div>
+
+              <!-- Form -->
+              <div class="mb-4">
+                <label class="form-label" for="signinSrEmail">Nom d'utilisateur ou email</label>
+                <input type="text" class="form-control form-control-lg" id="email" name="username" value="<?= (isset($username)) ? $username : ''; ?>" placeholder="email@address.com" required>
+                <span class="invalid-feedback">Veuillez entrer une adresse email.</span>
+              </div>
+              <!-- End Form -->
+
+              <!-- Form -->
+              <div class="mb-4">
+
+                <label class="form-label" for="signupSrPassword">Mot de passe</label>
+                <div class="input-group input-group-merge" data-hs-validation-validate-class>
+
+                  <input type="password" class="js-toggle-password form-control form-control-lg" name="password" value="<?= (isset($password)) ? $password : ''; ?>" placeholder="8+ characters required" aria-label="3+ characters required" required minlength="3" data-hs-toggle-password-options='{
+                           "target": "#changePassTarget",
+                           "defaultClass": "bi-eye-slash",
+                           "showClass": "bi-eye",
+                           "classChangeTarget": "#changePassIcon"
+                         }'>
+                  <a id="changePassTarget" class="input-group-append input-group-text" href="javascript:;">
+                    <i id="changePassIcon" class="bi-eye"></i>
+                  </a>
+                </div>
+
+                <span class="invalid-feedback">Veuillez entrez un mot de passe.</span>
+              </div>
+              <!-- End Form -->
+
+              <!-- Form Check -->
+              <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" value="" id="termsCheckbox">
+                <label class="form-check-label" for="termsCheckbox">
+                  Se souvenir de moi
+                </label>
+              </div>
+              <!-- End Form Check -->
+
+              <div class="d-grid">
+                <button type="submit" name="btn_submit" class="btn btn-primary btn-lg">Se connecter</button>
+              </div>
+            </form>
+            <!-- End Form -->
+          </div>
+        </div>
+        <!-- End Card -->
+
+
+      </div>
+    </div>
+    <!-- End Content -->
+  </main>
+  <!-- ========== END MAIN CONTENT ========== -->
+
+  <!-- JS Implementing Plugins -->
+  <script src="assets/js/vendor.min.js"></script>
+
+  <!-- JS Front -->
+  <script src="assets/js/theme.min.js"></script>
+
+  <!-- JS Plugins Init. -->
+  <script>
+    (function() {
+      window.onload = function() {
+        // INITIALIZATION OF BOOTSTRAP VALIDATION
+        // =======================================================
+        // HSBsValidation.init('.js-validate', {
+        //   onSubmit: data => {
+        //     data.event.preventDefault()
+        //     alert('Submited')
+        //   }
+        // })
+
+
+        // INITIALIZATION OF TOGGLE PASSWORD
+        // =======================================================
+        // new HSTogglePassword('.js-toggle-password')
+      }
+    })()
+  </script>
 </body>
 
-
-<!-- Mirrored from prium.github.io/phoenix/v1.15.0/pages/authentication/simple/sign-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Mar 2024 10:35:23 GMT -->
 
 </html>

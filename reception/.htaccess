@@ -1,0 +1,7 @@
+RewriteEngine on
+RewriteRule ^dashboard$ index.php
+RewriteRule ^patients$ patients.php
+RewriteRule ^triage$ triage.php
+RewriteRule ^plaintes$ plaintes.php
+RewriteRule ^consultations$ consultations.php
+RewriteRule ^cons$ cons.php
