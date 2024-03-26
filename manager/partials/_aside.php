@@ -72,7 +72,7 @@
               </div>
               <div class="nav-item">
                 <a class="nav-link dropdown-toggle " href="#navbarCons" role="button" data-bs-toggle="collapse" data-bs-target="#navbarCons" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
-                  <i class="bi-book nav-icon"></i>
+                  <i class="bi-stickies nav-icon"></i>
                   <span class="nav-link-title">Consultation</span>
                 </a>
 
@@ -91,9 +91,9 @@
                 </a>
 
                 <div id="navbarLab" class="nav-collapse collapse " data-bs-parent="#navbarLab">
-                  <a class="nav-link " href="#">Nouvelle</a>
+                  <a class="nav-link " href="#">Nouveau cas</a>
                   <a class="nav-link " href="#">Rapport</a>
-                  <a class="nav-link " href="#">Liste des examens</a>
+                  <a class="nav-link " href="examen_labo">Liste des examens</a>
                   
                   
                 </div>

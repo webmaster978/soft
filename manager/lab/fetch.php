@@ -1,6 +1,6 @@
 <?php
 //fetch.php
-$connect = mysqli_connect("localhost", "root", "", "testing");
+$connect = mysqli_connect("localhost", "root", "", "clin");
 $output = '';
 $query = "SELECT * FROM item ORDER BY item_id DESC";
 $result = mysqli_query($connect, $query);

@@ -3,11 +3,14 @@ if(isset($_POST['submit'])){
   $ref_fiche = htmlspecialchars($_POST['ref_fiche']);
   $ref_examen = htmlspecialchars($_POST['ref_examen']);
 
+  for($count = 0; $count < count($_POST["ref_examen"]); $count++)
+	{
+
   $exlab = $db->prepare("INSERT INTO examen_labo (ref_fiche,ref_examen) VALUES (:ref_fiche,:ref_examen)");
 
   $exlab->execute(array(
     'ref_fiche' => $ref_fiche,
-    'ref_examen' => $ref_examen
+    'ref_examen' => $ref_examen[$count]
   ));
 
   if($exlab){
@@ -15,6 +18,7 @@ if(isset($_POST['submit'])){
   } else {
     echo 'err';
   }
+}
 }
 
 

@@ -11,69 +11,24 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 }
 
 
-
-
 ?>
 
 <?php
-if (isset($_POST['btn_consult'])) {
-    $ca = htmlspecialchars($_POST['ca']);
-    $atcds = htmlspecialchars($_POST['atcds']);
-    $hm = htmlspecialchars($_POST['hm']);
-    $cou = htmlspecialchars($_POST['cou']);
-    $thorax = htmlspecialchars($_POST['thorax']);
-    $abdomen = htmlspecialchars($_POST['abdomen']);
-    $locomoteur = htmlspecialchars($_POST['locomoteur']);
-    $genitaux = htmlspecialchars($_POST['genitaux']);
-    $diagno = htmlspecialchars($_POST['diagno']);
-    $id_fiche = htmlspecialchars($_POST['id_fiche']);
-    $ref_consult = $_SESSION['PROFILE']['id_utilisateur'];
-
-    $consult = $db->prepare("UPDATE fiches SET ca=:ca,atcds=:atcds,hm=:hm,cou=:cou,thorax=:thorax,abdomen=:abdomen,locomoteur=:locomoteur,genitaux=:genitaux,diagno=:diagno,ref_consult=:ref_consult WHERE id_fiche=:id_fiche");
-    $consult->execute(array(
-        'ca' => $ca,
-        'atcds' => $atcds,
-        'hm' => $hm,
-        'cou' => $cou,
-        'thorax' => $thorax,
-        'abdomen' => $abdomen,
-        'locomoteur' => $locomoteur,
-        'genitaux' => $genitaux,
-        'diagno' => $diagno,
-        'id_fiche' => $id_fiche,
-        'ref_consult' => $_SESSION['PROFILE']['id_utilisateur']
-    ));
-
-    if ($consult) {
-        echo 'valider';
-    } else {
-        echo 'err';
-    }
-}
-
-
-
-?>
-
-
-<?php
-if (isset($_POST['btn_imagerie'])) {
+if (isset($_POST['btn_submit'])) {
     extract($_POST);
 
-    $name = htmlspecialchars($_POST['name']);
-    $email = htmlspecialchars($_POST['email']);
-    $categorie = htmlspecialchars($_POST['categorie']);
-    
+    $noms = htmlspecialchars($_POST['nom_plainte']);
+
+    $created_by = $_SESSION['PROFILE']['id_utilisateur'];
 
 
 
-    $check_query = "SELECT * FROM user_data
-            WHERE name=:name AND email=:email
+    $check_query = "SELECT * FROM plaintes
+            WHERE nom_plainte=:nom_plainte
            ";
     $statement = $db->prepare($check_query);
     $check_data = array(
-        ':name'   =>  $name,
-        ':email' => $email
+        ':nom_plainte'   =>  $nom_plainte
 
     );
     if ($statement->execute($check_data)) {
@@ -86,14 +41,12 @@ if (isset($_POST['btn_imagerie'])) {
 
 
 
-                $reque = $db->prepare("INSERT INTO user_data (name,email,categorie) VALUES (:name,:email,:categorie) ");
+                $reque = $db->prepare("INSERT INTO plaintes (nom_plainte,created_by) VALUES (:nom_plainte,:created_by) ");
 
                 $result = $reque->execute(array(
 
-                    'name' => $name,
-                    'email' => $email,
-                    'categorie' => $categorie
-                    
+                    'nom_plainte' => $nom_plainte,
+                    'created_by' => $_SESSION['PROFILE']['id_utilisateur']
 
                 ));
                 if ($result) {
@@ -111,11 +64,6 @@ if (isset($_POST['btn_imagerie'])) {
 
 
 ?>
-
-
-
-
-
 
 
 <!DOCTYPE html>
@@ -141,17 +89,6 @@ if (isset($_POST['btn_imagerie'])) {
 
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
-
-
 
     <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
     <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
@@ -356,270 +293,288 @@ if (isset($_POST['btn_imagerie'])) {
 
     <?php include 'partials/_aside.php' ?>
 
-    <?php
-
-
-    $id_fiche = $_GET['id_fiche'];
-
-
-
-    $card = $db->prepare("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE id_fiche=:id_fiche");
-    $card->execute([
-        'id_fiche' => $id_fiche
-    ]);
-    $carte = $card->fetch(PDO::FETCH_OBJ);
-
-
-    ?>
-
     <main id="content" role="main" class="main">
         <!-- Content -->
         <div class="content container-fluid">
             <!-- Page Header -->
-
-            <div class="row">
-                <div class="col-lg-12 mb-5 mb-lg-0">
-                    <!-- Card -->
-                    <div class="card card-lg mb-5">
-                        <div class="card-body">
-                            <div class="row justify-content-lg-between">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <img src="../assets/img/logo/lg.png" alt="Logo">
-
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h1 style="font-size: 50px;" class=" text-primary">CLINIQUE NOTRE VIE</h1>
-                                        <h1 class="text-center text-danger">CLINOVIE</h1>
-                                    </div>
-
-                                </div>
-                                <!-- End Col -->
-
-                                <div class="">
-                                    <div>
-                                        <h2 class="text-center">FICHE DE CONSULTATION</h2>
-
-                                    </div>
+            <div class="page-header">
+                <div class="row align-items-end">
+                    <div class="col-sm mb-2 mb-sm-0">
 
 
-                                </div>
-                                <!-- End Col -->
-                            </div>
-                            <!-- End Row -->
-
-                            <div class="row justify-content-md-between mb-3">
-                                <div class="col-md">
-                                    <h4>Nom & Post Nom & Prenom: <?= ucwords($carte->noms); ?> </h4>
-                                    <h4>Sexe : <?= ucwords($carte->genre); ?> </h4>
-                                    <h4>Date de naissance : <?= ucwords($carte->date_naiss); ?> // Age <?php
-                                                                                                        $daten = $carte->date_naiss;
-                                                                                                        $today = date("Y-m-d");
-                                                                                                        $diff = date_diff(date_create($daten), date_create($today));
-                                                                                                        echo $diff->format('%y');
-
-                                                                                                        ?> An(s)</h4>
-                                    <h4>Categorie : <?= ucwords($carte->categorie); ?> </h4>
-                                    <h4>Personne a contacter : <?= ucwords($carte->nom_respo); ?> // <?= ucwords($carte->contact_respo); ?> </h4>
-
-
-                                </div>
-                                <!-- End Col -->
-
-                                <div class="col-md text-md-end">
-                                    <dl class="row">
-                                        <dt class="col-sm-8">Num du dossier:</dt>
-                                        <dd class="col-sm-4">00<?= ucwords($carte->id_fiche); ?></dd>
-                                    </dl>
-
-                                </div>
-                                <!-- End Col -->
-                            </div>
-                            <!-- End Row -->
-                            <h4 class="text-center">CLINIQUE</h4>
-
-                            <!-- Table -->
-                            <div class="">
-                                <table class="table table-borderless table-nowrap table-align-middle">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>Poids : <?= ucwords($carte->poids); ?> Kg</th>
-                                            <th>Taille : <?= ucwords($carte->taille); ?> cm</th>
-                                            <th>Temp : <?= ucwords($carte->temperature); ?> C</th>
-                                            <th>Pouls : <?= ucwords($carte->pouls); ?> bpm</th>
-                                            <th>FR : <?= ucwords($carte->frequence); ?></th>
-                                            <th>SPO2 : <?= ucwords($carte->spo2); ?> bpm</th>
-                                        </tr>
-                                    </thead>
-
-
-                                </table>
-                                <h4>Plaintes : <?= ucwords($carte->plaintes); ?> </h4>
-
-
-
-                            </div>
-
-                            
-                            <div>
-                            <!-- End Table -->
-                            <form action="" method="post">
-                                <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">CA :</label>
-                                    <div class="col-sm-11">
-                                        <textarea class="form-control" name="ca" placeholder="ca" value="<?= $carte->ca; ?>"> <?= $carte->ca; ?></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">ATCDS :</label>
-                                    <div class="col-sm-11">
-                                        <textarea class="form-control" name="atcds" placeholder="atcds" value="<?= $carte->atcds; ?>"> <?= $carte->atcds; ?></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">HM :</label>
-                                    <div class="col-sm-11">
-                                        <textarea class="form-control" name="hm" placeholder="ca" value="<?= $carte->hm; ?>"><?= $carte->hm; ?></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">TETE ET COU:EG :</label>
-                                    <div class="col-sm-11">
-                                        <textarea class="form-control" name="cou" placeholder="ca" value="<?= $carte->cou; ?>"><?= $carte->cou; ?></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">THORAX :</label>
-                                    <div class="col-sm-11">
-                                        <textarea class="form-control" name="thorax" placeholder="thorax" value="<?= $carte->thorax; ?>"> <?= $carte->thorax; ?></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">ABDOMEN :</label>
-                                    <div class="col-sm-11">
-                                        <textarea class="form-control" name="abdomen" placeholder="abdomen" value="<?= $carte->abdomen; ?>"> <?= $carte->abdomen; ?></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">APPAREIL LOCOMOTEUR :</label>
-                                    <div class="col-sm-11">
-                                        <textarea style="color: black;" class="form-control" name="locomoteur" value="<?= $carte->locomoteur; ?>"> <?= $carte->locomoteur; ?> </textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">APPAREILS GENITAUX :</label>
-                                    <div class="col-sm-11">
-                                        <textarea class="form-control" name="genitaux" placeholder="Appareils genitaux" value="<?= $carte->genitaux; ?>"><?= $carte->genitaux; ?></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">DIAGNOSTIC DE PRESOMPTION :</label>
-                                    <div class="col-sm-11">
-                                        <textarea class="form-control" name="diagno" placeholder="Diagnostic de presomption" value="<?= $carte->diagno; ?>"><?= $carte->diagno; ?></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <input type="submit" name="btn_consult" class="btn btn-primary" value="Enregistrer">
-                            </form>
-                            <br>
-                            </div>
-
-
-                            <div>
-                            
-                            <div style="margin: auto;width: 60%;">
-                                <h3>Examen labo</h3>
-                                <form id="form1" name="form1" method="post">
-                                    <div class="form-group">
-                                        <label for="email">Num fiche</label>
-                                        <input type="text" name="sname" class="form-control" id="name" value="<?= $carte->id_fiche; ?>" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="pwd">Selectionner un examen:</label>
-                                        <div class="tom-select-custom">
-                                            <select class="js-select form-select" name="email" id="email" autocomplete="off" data-hs-tom-select-options='{
-            "placeholder": "Selectionner un examen du labo..."
-          }'>
-                                                <?php $lab = $db->query("SELECT * FROM labo");
-                                                while ($gaa = $lab->fetch()) {
-                                                ?>
-                                                    <option value="">Selectionner un examen ...</option>
-                                                    <option value="<?= $gaa['nom_labo']; ?>"><?= $gaa['nom_labo']; ?></option>
-
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                        <br>
-                                        <!-- <input type="text" name="email" class="form-control" id="email"> -->
-                                    </div>
-                                    <input type="button" name="send" class="btn btn-primary" value="Ajouter un examen" id="butsend">
-                                    <input type="button" name="save" class="btn btn-primary" value="Enregistrer" id="butsave">
-                                </form>
-                                <table id="table1" name="table1" class="table table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <th>Numero</th>
-                                            <th>Numero de la fiche</th>
-                                            <th>Examen</th>
-                                            <th>Action</th>
-                                        <tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-
-                        <div>
-                            <h3>Imagerie</h3>
-                            <form action="" method="post">
-                                <input type="hidden" name="name" value="<?= $carte->id_fiche; ?>">
-                                <input type="hidden" name="categorie" value="imagerie">
-                            <textarea class="form-control" name="email" id="" cols="15" rows="5" Required>
-
-                            </textarea>
-                            <br>
-                            <input class="btn btn-primary" type="submit" name="btn_imagerie" value="Enregistrer">
-                            </form>
-                        </div>
-                       
-
-
-
-
-
-
-
-
-
-                            <!-- End Row -->
-
-
-                        </div>
+                        <h1 class="page-header-title">Configuration plaintes</h1>
+                    </div>
+                    <!-- End Col -->
+                    <div class="col-sm-auto">
+                        <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                            <i class="bi-plus"></i>
+                            Nouvelle plainte
+                        </button>
 
                     </div>
 
-                    <!-- End Card -->
 
-                    <!-- Footer -->
-
-                    <!-- End Footer -->
+                    <!-- End Col -->
                 </div>
+                <!-- End Row -->
+            </div>
+            <!-- End Page Header -->
+
+            <!-- Stats -->
+
+            <!-- End Stats -->
+
+            <!-- Card -->
+            <div class="card">
+                <!-- Header -->
+                <div class="card-header card-header-content-md-between">
+                    <div class="mb-2 mb-md-0">
+                        <form>
+                            <!-- Search -->
+                            <div class="input-group input-group-merge input-group-flush">
+                                <div class="input-group-prepend input-group-text">
+                                    <i class="bi-search"></i>
+                                </div>
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher une plainte" aria-label="Search users">
+                            </div>
+                            <!-- End Search -->
+                        </form>
+                    </div>
+
+                    <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
+                        <!-- Datatable Info -->
+
+                        <!-- End Datatable Info -->
+
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi-download me-2"></i> Export
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
+                                <span class="dropdown-header">Options</span>
+                                <a id="export-copy" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/illustrations/copy-icon.svg" alt="Image Description">
+                                    Copy
+                                </a>
+                                <a id="export-print" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/illustrations/print-icon.svg" alt="Image Description">
+                                    Print
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <span class="dropdown-header">Download options</span>
+                                <a id="export-excel" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/brands/excel-icon.svg" alt="Image Description">
+                                    Excel
+                                </a>
+                                <a id="export-csv" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
+                                    .CSV
+                                </a>
+                                <a id="export-pdf" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/brands/pdf-icon.svg" alt="Image Description">
+                                    PDF
+                                </a>
+                            </div>
+                        </div>
+                        <!-- End Dropdown -->
+
+                        <!-- Dropdown -->
+
+                        <!-- End Dropdown -->
+                    </div>
+                </div>
+                <!-- End Header -->
+
+                <!-- Table -->
+                <div class="table-responsive datatable-custom">
+                    <table id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
+                        "columnDefs": [{
+                      "targets": [0, 7],
+                      "orderable": false
+                    }],
+                   "order": [],
+                   "info": {
+                     "totalQty": "#datatableWithPaginationInfoTotalQty"
+                   },
+                   "search": "#datatableSearch",
+                   "entries": "#datatableEntries",
+                   "pageLength": 15,
+                   "isResponsive": false,
+                   "isShowPaging": false,
+                   "pagination": "datatablePagination"
+                 }'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="table-column-pe-0">
+                                    nuimero
+                                    <!-- <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
+                                        <label class="form-check-label" for="datatableCheckAll"></label>
+                                    </div> -->
+                                </th>
+                                <th class="table-column-ps-0">Nom de la plainte</th>
+                                <th>Creer par</th>
+                                <th>Date creation</th>
+
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php $requete = $db->query("SELECT * FROM plaintes INNER JOIN tbl_agent ON plaintes.created_by = tbl_agent.id_utilisateur");
+                            while ($g = $requete->fetch()) {
+                            ?>
+
+
+
+                                <!-- modal triage -->
+
+                                <div id="exampleModalCenter<?= $g['id_plainte']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalCenterTitle">Modifier la plainte de : <?= $g['nom_plainte']; ?></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="" method="POST">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input type="text" class="form-control" name="nom_plainte" value="<?= $g['nom_plainte']; ?>" readonly>
+                                                            <input type="hidden" name="ref_plainte" value="<?= $g['id_plainte']; ?>">
+                                                        </div>
+
+
+
+                                                    </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
+                                                <button type="submit" name="btn_tri" class="btn btn-warning">Modifier</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- end modal triage -->
+                                <tr>
+                                    <td class="table-column-pe-0">
+
+                                        <?= $g['id_plainte']; ?>
+
+
+                                    </td>
+                                    <td class="table-column-ps-0">
+                                        <?= $g['nom_plainte']; ?>
+                                    </td>
+                                    <td>
+                                        <?= $g['nom_complet']; ?>
+                                    </td>
+                                    <td><?= $g['created_plainte']; ?> </td>
+
+
+                                    <td>
+
+                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_plainte']; ?>">
+                                            <i class="bi-pencil-fill me-1"></i> Modifier
+                                        </button>
+
+                                    </td>
+                                </tr>
+                            <?php } ?>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End Table -->
+                <div class="card-footer">
+                    <!-- Pagination -->
+                    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                        <div class="col-sm mb-2 mb-sm-0">
+                            <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                                <span class="me-2">Showing:</span>
+
+                                <!-- Select -->
+                                <div class="tom-select-custom">
+                                    <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
+                            "searchInDropdown": false,
+                            "hideSearch": true
+                          }'>
+                                        <option value="4">4</option>
+                                        <option value="6">6</option>
+                                        <option value="8" selected>8</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                                <!-- End Select -->
+
+                                <span class="text-secondary me-2">of</span>
+
+                                <!-- Pagination Quantity -->
+                                <span id="datatableWithPaginationInfoTotalQty"></span>
+                            </div>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-sm-auto">
+                            <div class="d-flex justify-content-center justify-content-sm-end">
+                                <!-- Pagination -->
+                                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                            </div>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Pagination -->
+                </div>
+                <!-- End Footer -->
             </div>
 
             <!-- Footer -->
 
-            <?php include '../part/_foot.php' ?>
+            <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Nouvelle plainte</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="POST" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" name="nom_plainte" placeholder="Nouvelle plainte" required>
+                                    </div>
+
+
+
+                                </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- End Footer -->
+        </div>
+        <!-- End Card -->
+        </div>
+        <!-- End Content -->
+
+        <!-- Footer -->
+
+        <?php include '../part/_foot.php' ?>
+
+        <!-- End Footer -->
     </main>
     <!-- ========== END MAIN CONTENT ========== -->
 
@@ -995,47 +950,6 @@ if (isset($_POST['btn_imagerie'])) {
                 HSCore.components.HSMask.init('.js-input-mask')
             }
         })()
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            var id = 1;
-            /*Assigning id and class for tr and td tags for separation.*/
-            $("#butsend").click(function() {
-                var newid = id++;
-                $("#table1").append('<tr valign="top" id="' + newid + '">\n\
-    <td width="100px" >' + newid + '</td>\n\
-    <td width="100px" class="name' + newid + '">' + $("#name").val() + '</td>\n\
-    <td width="100px" class="email' + newid + '">' + $("#email").val() + '</td>\n\
-    <td width="100px"><a href="javascript:void(0);" class="remCF">Supprimer</a></td>\n\ </tr>');
-            });
-            $("#table1").on('click', '.remCF', function() {
-                $(this).parent().parent().remove();
-            });
-            /*crating new click event for save button*/
-            $("#butsave").click(function() {
-                var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
-                var name = new Array();
-                var email = new Array();
-                for (var i = 1; i <= lastRowId; i++) {
-                    name.push($("#" + i + " .name" + i).html()); /*pushing all the names listed in the table*/
-                    email.push($("#" + i + " .email" + i).html()); /*pushing all the emails listed in the table*/
-                }
-                var sendName = JSON.stringify(name);
-                var sendEmail = JSON.stringify(email);
-                $.ajax({
-                    url: "save.php",
-                    type: "post",
-                    data: {
-                        name: sendName,
-                        email: sendEmail
-                    },
-                    success: function(data) {
-                        alert(data); /* alerts the response from php.*/
-                    }
-                });
-            });
-        });
     </script>
 
     <!-- End Style Switcher JS -->
