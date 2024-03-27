@@ -11,10 +11,12 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 }
 
 
+
+
 ?>
 
-<?php 
-if(isset($_POST['btn_consult'])){
+<?php
+if (isset($_POST['btn_consult'])) {
     $ca = htmlspecialchars($_POST['ca']);
     $atcds = htmlspecialchars($_POST['atcds']);
     $hm = htmlspecialchars($_POST['hm']);
@@ -25,27 +27,85 @@ if(isset($_POST['btn_consult'])){
     $genitaux = htmlspecialchars($_POST['genitaux']);
     $diagno = htmlspecialchars($_POST['diagno']);
     $id_fiche = htmlspecialchars($_POST['id_fiche']);
+    $ref_consult = $_SESSION['PROFILE']['id_utilisateur'];
 
-    $consult = $db->prepare("UPDATE fiches SET ca=:ca,atcds=:atcds,hm=:hm,cou=:cou,thorax=:thorax,abdomen=:abdomen,locomoteur=:locomoteur,genitaux=:genitaux,diagno=:diagno WHERE id_fiche=:id_fiche");
+    $consult = $db->prepare("UPDATE fiches SET ca=:ca,atcds=:atcds,hm=:hm,cou=:cou,thorax=:thorax,abdomen=:abdomen,locomoteur=:locomoteur,genitaux=:genitaux,diagno=:diagno,ref_consult=:ref_consult WHERE id_fiche=:id_fiche");
     $consult->execute(array(
-        'ca' =>$ca,
+        'ca' => $ca,
         'atcds' => $atcds,
-        'hm'=> $hm,
+        'hm' => $hm,
         'cou' => $cou,
         'thorax' => $thorax,
         'abdomen' => $abdomen,
         'locomoteur' => $locomoteur,
         'genitaux' => $genitaux,
         'diagno' => $diagno,
-        'id_fiche' => $id_fiche
+        'id_fiche' => $id_fiche,
+        'ref_consult' => $_SESSION['PROFILE']['id_utilisateur']
     ));
 
-    if($consult){
+    if ($consult) {
         echo 'valider';
     } else {
         echo 'err';
     }
+}
 
+
+
+?>
+
+
+<?php
+if (isset($_POST['btn_imagerie'])) {
+    extract($_POST);
+
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
+    $categorie = htmlspecialchars($_POST['categorie']);
+    
+
+
+
+    $check_query = "SELECT * FROM user_data
+            WHERE name=:name AND email=:email
+           ";
+    $statement = $db->prepare($check_query);
+    $check_data = array(
+        ':name'   =>  $name,
+        ':email' => $email
+
+    );
+    if ($statement->execute($check_data)) {
+        if ($statement->rowCount() > 1) {
+            echo "
+                err existe
+                ";
+        } else {
+            if ($statement->rowCount() == 0) {
+
+
+
+                $reque = $db->prepare("INSERT INTO user_data (name,email,categorie) VALUES (:name,:email,:categorie) ");
+
+                $result = $reque->execute(array(
+
+                    'name' => $name,
+                    'email' => $email,
+                    'categorie' => $categorie
+                    
+
+                ));
+                if ($result) {
+                    echo "
+   valider
+     ";
+                } else {
+                    echo "err";
+                }
+            }
+        }
+    }
 }
 
 
@@ -81,6 +141,17 @@ if(isset($_POST['btn_consult'])){
 
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
+
+
 
     <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
     <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
@@ -388,94 +459,142 @@ if(isset($_POST['btn_consult'])){
 
 
                             </div>
+
+                            
+                            <div>
                             <!-- End Table -->
                             <form action="" method="post">
                                 <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">CA :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control" name="ca" placeholder="ca" value="<?= $carte->ca; ?>"> <?= $carte->ca; ?></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">ATCDS :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control" name="atcds" placeholder="atcds" value="<?= $carte->atcds; ?>"> <?= $carte->atcds; ?></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">HM :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control" name="hm" placeholder="ca" value="<?= $carte->hm; ?>"><?= $carte->hm; ?></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">TETE ET COU:EG :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control" name="cou" placeholder="ca" value="<?= $carte->cou; ?>"><?= $carte->cou; ?></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">THORAX :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control" name="thorax" placeholder="thorax" value="<?= $carte->thorax; ?>"> <?= $carte->thorax; ?></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">ABDOMEN :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control" name="abdomen" placeholder="abdomen" value="<?= $carte->abdomen; ?>"> <?= $carte->abdomen; ?></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">APPAREIL LOCOMOTEUR :</label>
-                                <div class="col-sm-11">
-                                <textarea style="color: black;"class="form-control" name="locomoteur" value="<?= $carte->locomoteur; ?>"> <?= $carte->locomoteur; ?> </textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">APPAREILS GENITAUX :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control"  name="genitaux" placeholder="Appareils genitaux" value="<?= $carte->genitaux; ?>"><?= $carte->genitaux; ?></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="col-sm-1 col-form-label">DIAGNOSTIC DE PRESOMPTION :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control" name="diagno" placeholder="Diagnostic de presomption" value="<?= $carte->diagno; ?>"><?= $carte->diagno; ?></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <input type="submit" name="btn_consult" class="btn btn-primary" value="Enregistrer">
-                            </form>
-
-                            <?php 
-                            if($carte->ca ==''){
-                                echo '
                                 <div class="row">
-                                <label class="col-sm-1 col-form-label">DIAGNOSTIC DE PRESOMPTION :</label>
-                                <div class="col-sm-11">
-                                <textarea class="form-control" name="diagno" placeholder="Diagnostic de presomption" value=""></textarea>
+                                    <label class="col-sm-1 col-form-label">CA :</label>
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control" name="ca" placeholder="ca" value="<?= $carte->ca; ?>"> <?= $carte->ca; ?></textarea>
+                                    </div>
                                 </div>
+                                <br>
+                                <div class="row">
+                                    <label class="col-sm-1 col-form-label">ATCDS :</label>
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control" name="atcds" placeholder="atcds" value="<?= $carte->atcds; ?>"> <?= $carte->atcds; ?></textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <label class="col-sm-1 col-form-label">HM :</label>
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control" name="hm" placeholder="ca" value="<?= $carte->hm; ?>"><?= $carte->hm; ?></textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <label class="col-sm-1 col-form-label">TETE ET COU:EG :</label>
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control" name="cou" placeholder="ca" value="<?= $carte->cou; ?>"><?= $carte->cou; ?></textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <label class="col-sm-1 col-form-label">THORAX :</label>
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control" name="thorax" placeholder="thorax" value="<?= $carte->thorax; ?>"> <?= $carte->thorax; ?></textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <label class="col-sm-1 col-form-label">ABDOMEN :</label>
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control" name="abdomen" placeholder="abdomen" value="<?= $carte->abdomen; ?>"> <?= $carte->abdomen; ?></textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <label class="col-sm-1 col-form-label">APPAREIL LOCOMOTEUR :</label>
+                                    <div class="col-sm-11">
+                                        <textarea style="color: black;" class="form-control" name="locomoteur" value="<?= $carte->locomoteur; ?>"> <?= $carte->locomoteur; ?> </textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <label class="col-sm-1 col-form-label">APPAREILS GENITAUX :</label>
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control" name="genitaux" placeholder="Appareils genitaux" value="<?= $carte->genitaux; ?>"><?= $carte->genitaux; ?></textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <label class="col-sm-1 col-form-label">DIAGNOSTIC DE PRESOMPTION :</label>
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control" name="diagno" placeholder="Diagnostic de presomption" value="<?= $carte->diagno; ?>"><?= $carte->diagno; ?></textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <input type="submit" name="btn_consult" class="btn btn-primary" value="Enregistrer">
+                            </form>
+                            <br>
                             </div>
-                                ';
 
-                            }
 
+                            <div>
                             
-                            
-                            
-                            
-                            ?>
-                            
+                            <div style="margin: auto;width: 60%;">
+                                <h3>Examen labo</h3>
+                                <form id="form1" name="form1" method="post">
+                                    <div class="form-group">
+                                        <label for="email">Num fiche</label>
+                                        <input type="text" name="sname" class="form-control" id="name" value="<?= $carte->id_fiche; ?>" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pwd">Selectionner un examen:</label>
+                                        <div class="tom-select-custom">
+                                            <select class="js-select form-select" name="email" id="email" autocomplete="off" data-hs-tom-select-options='{
+            "placeholder": "Selectionner un examen du labo..."
+          }'>
+                                                <?php $lab = $db->query("SELECT * FROM labo");
+                                                while ($gaa = $lab->fetch()) {
+                                                ?>
+                                                    <option value="">Selectionner un examen ...</option>
+                                                    <option value="<?= $gaa['nom_labo']; ?>"><?= $gaa['nom_labo']; ?></option>
+
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <!-- <input type="text" name="email" class="form-control" id="email"> -->
+                                    </div>
+                                    <input type="button" name="send" class="btn btn-primary" value="Ajouter un examen" id="butsend">
+                                    <input type="button" name="save" class="btn btn-primary" value="Enregistrer" id="butsave">
+                                </form>
+                                <table id="table1" name="table1" class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>Numero</th>
+                                            <th>Numero de la fiche</th>
+                                            <th>Examen</th>
+                                            <th>Action</th>
+                                        <tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <h3>Imagerie</h3>
+                            <form action="" method="post">
+                                <input type="hidden" name="name" value="<?= $carte->id_fiche; ?>">
+                                <input type="hidden" name="categorie" value="imagerie">
+                            <textarea class="form-control" name="email" id="" cols="15" rows="5" Required>
+
+                            </textarea>
+                            <br>
+                            <input class="btn btn-primary" type="submit" name="btn_imagerie" value="Enregistrer">
+                            </form>
+                        </div>
+                       
+
+
+
+
 
 
 
@@ -491,15 +610,7 @@ if(isset($_POST['btn_consult'])){
                     <!-- End Card -->
 
                     <!-- Footer -->
-                    <div class="d-flex justify-content-end d-print-none gap-3">
-                        <a class="btn btn-white" href="#">
-                            <i class="bi-file-earmark-arrow-down me-1"></i> PDF
-                        </a>
 
-                        <a class="btn btn-primary" href="javascript:;" onclick="window.print(); return false;">
-                            <i class="bi-printer me-1"></i> Print details
-                        </a>
-                    </div>
                     <!-- End Footer -->
                 </div>
             </div>
@@ -884,6 +995,47 @@ if(isset($_POST['btn_consult'])){
                 HSCore.components.HSMask.init('.js-input-mask')
             }
         })()
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var id = 1;
+            /*Assigning id and class for tr and td tags for separation.*/
+            $("#butsend").click(function() {
+                var newid = id++;
+                $("#table1").append('<tr valign="top" id="' + newid + '">\n\
+    <td width="100px" >' + newid + '</td>\n\
+    <td width="100px" class="name' + newid + '">' + $("#name").val() + '</td>\n\
+    <td width="100px" class="email' + newid + '">' + $("#email").val() + '</td>\n\
+    <td width="100px"><a href="javascript:void(0);" class="remCF">Supprimer</a></td>\n\ </tr>');
+            });
+            $("#table1").on('click', '.remCF', function() {
+                $(this).parent().parent().remove();
+            });
+            /*crating new click event for save button*/
+            $("#butsave").click(function() {
+                var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
+                var name = new Array();
+                var email = new Array();
+                for (var i = 1; i <= lastRowId; i++) {
+                    name.push($("#" + i + " .name" + i).html()); /*pushing all the names listed in the table*/
+                    email.push($("#" + i + " .email" + i).html()); /*pushing all the emails listed in the table*/
+                }
+                var sendName = JSON.stringify(name);
+                var sendEmail = JSON.stringify(email);
+                $.ajax({
+                    url: "save.php",
+                    type: "post",
+                    data: {
+                        name: sendName,
+                        email: sendEmail
+                    },
+                    success: function(data) {
+                        alert(data); /* alerts the response from php.*/
+                    }
+                });
+            });
+        });
     </script>
 
     <!-- End Style Switcher JS -->

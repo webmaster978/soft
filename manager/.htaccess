@@ -9,3 +9,4 @@ RewriteRule ^rapport_consult$ rapport_consult.php
 RewriteRule ^rapc$ rapc.php
 RewriteRule ^users$ users.php
 RewriteRule ^personnel$ personnel.php
+RewriteRule ^examen_labo$ examen_labo.php
