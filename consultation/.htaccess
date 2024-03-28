@@ -1,0 +1,15 @@
+RewriteEngine on
+RewriteRule ^dashboard$ index.php
+RewriteRule ^patients$ patients.php
+RewriteRule ^triage$ triage.php
+RewriteRule ^plaintes$ plaintes.php
+RewriteRule ^consultations$ consultations.php
+RewriteRule ^cons$ cons.php
+RewriteRule ^rapport_consult$ rapport_consult.php
+RewriteRule ^rapc$ rapc.php
+RewriteRule ^users$ users.php
+RewriteRule ^personnel$ personnel.php
+RewriteRule ^examen_labo$ examen_labo.php
+RewriteRule ^labos$ labos.php
+RewriteRule ^labo$ labo.php
+RewriteRule ^rapport_triage$ rap_trie.php

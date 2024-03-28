@@ -2,12 +2,12 @@
 <header id="header" class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-container navbar-bordered bg-white">
     <div class="navbar-nav-wrap">
       <!-- Logo -->
-      <a class="navbar-brand" href="index.html" aria-label="Front">
-        <img class="navbar-brand-logo" src="assets/svg/logos/logo.svg" alt="Logo" data-hs-theme-appearance="default">
-        <img class="navbar-brand-logo" src="assets/svg/logos-light/logo.svg" alt="Logo" data-hs-theme-appearance="dark">
-        <img class="navbar-brand-logo-mini" src="assets/svg/logos/logo-short.svg" alt="Logo" data-hs-theme-appearance="default">
-        <img class="navbar-brand-logo-mini" src="assets/svg/logos-light/logo-short.svg" alt="Logo" data-hs-theme-appearance="dark">
-      </a>
+      <a class="navbar-brand" href="#" aria-label="test">
+          <img class="navbar-brand-logo" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="default">
+          <img class="navbar-brand-logo" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="dark">
+          <img class="navbar-brand-logo-mini" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="default">
+          <img class="navbar-brand-logo-mini" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="dark">
+        </a>
       <!-- End Logo -->
 
       <div class="navbar-nav-wrap-content-start">
