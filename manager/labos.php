@@ -15,48 +15,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 
 
-<?php
-if (isset($_POST['btn_tri'])) {
-    extract($_POST);
 
-    $poids = htmlspecialchars($_POST['poids']);
-    $taille = htmlspecialchars($_POST['taille']);
-    $temperature = htmlspecialchars($_POST['temperature']);
-    $pouls = htmlspecialchars($_POST['pouls']);
-    $spo2 = htmlspecialchars($_POST['spo2']);
-    $frequence = htmlspecialchars($_POST['frequence']);
-    $plaintes = implode(',',$_POST['plaintes']);
-    $id_fiche = htmlspecialchars($_POST['id_fiche']);
-   
-
-
-                $reque = $db->prepare ("UPDATE fiches SET poids=:poids,taille=:taille,temperature=:temperature,pouls=:pouls,spo2=:spo2,frequence=:frequence,plaintes=:plaintes WHERE fiches.id_fiche=:id_fiche ");
-
-                $result = $reque->execute(array(
-                    'poids' => $poids,
-                    'taille' => $taille,
-                    'temperature' => $temperature,
-                    'pouls' => $pouls,
-                    'spo2' => $spo2,
-                    'frequence' => $frequence,
-                    'plaintes' => $plaintes,
-                    'id_fiche' => $id_fiche
-                    
-
-                ));
-                if ($result) {
-                    echo "
-   valider
-     ";
-                } else {
-                    echo "err";
-                }
-        
-}
-
-
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -293,7 +252,7 @@ if (isset($_POST['btn_tri'])) {
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Nos pour triage</h1>
+                        <h1 class="page-header-title">Liste d'attente pour la consultation</h1>
                     </div>
                     <!-- End Col -->
 
@@ -410,101 +369,13 @@ if (isset($_POST['btn_tri'])) {
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE poids=''");
+                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE status=4 ");
                             while ($g = $requete->fetch()) {
                             ?>
 
 
 
-                                <!-- modal triage -->
 
-                                <div id="exampleModalCenter<?= $g['id_fiche']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalCenterTitle">Examen de triage de : <?= $g['noms']; ?></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="" method="POST" enctype="multipart/form-data">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <input type="text" class="form-control" name="noms" value="<?= $g['noms']; ?>" readonly>
-                                                            <input type="hidden" name="ref_patient" value="<?= $g['id_patient']; ?>">
-                                                        </div>
-                                                        <br>
-                                                        <br>
-                                                        <br>
-
-                                                        <div class="col-md-4">
-                                                            <label for="">Taille</label>
-                                                            <input type="number" class="js-input-mask form-control" name="taille"  placeholder="" aria-label="xxx.xx" value="<?= $g['taille']; ?>" data-hs-mask-options="{&quot;mask&quot;: &quot;000.00&quot; }">
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label for="">Poids</label>
-                                                            <input type="number" class="js-input-mask form-control" name="poids"  placeholder="" aria-label="xxx.xx" value="<?= $g['poids']; ?>" data-hs-mask-options="">
-
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label for="CNPJLabel">temperature</label>
-
-                                                            <input type="number" class="js-input-mask form-control" id="CNPJLabel" name="temperature" value="<?= $g['temperature']; ?>" placeholder="xx.xxx.xxx/xxxx-xx" data-hs-mask-options="{
-                  &quot;mask&quot;: &quot;00.00&quot;
-                }">
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label for="">pouls</label>
-                                                            <input type="number" class="js-input-mask form-control" name="pouls" id="taille" placeholder="" value="<?= $g['taille']; ?>" aria-label="xxx.xx" data-hs-mask-options="{&quot;mask&quot;: &quot;000.00&quot; }">
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label for="">SPO2</label>
-                                                            <input type="number" class="js-input-mask form-control" name="spo2" id="phoneLabel" placeholder="" value="<?= $g['spo2']; ?>" aria-label="xxx.xx" data-hs-mask-options="">
-
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label for="CNPJLabel">fr</label>
-                                                            <input type="number" class="js-input-mask form-control" id="CNPJLabel" name="frequence" value="<?= $g['frequence']; ?>" placeholder="frequence" data-hs-mask-options="{
-                  &quot;mask&quot;: &quot;00.00-00&quot;
-                }">
-                                                        </div>
-                                                      
-                                                        <div class="col-md-12">
-                                                            <br>
-                                                            <div class="tom-select-custom tom-select-custom-with-tags">
-                                                                <select class="js-select form-select" autocomplete="off" name="plaintes[]" multiple="multiple" required multiple data-hs-tom-select-options='{"placeholder": "Selectionner une plainte..."}'>
-                                                                    <option value="<?= $g['plaintes']; ?>"><?= $g['plaintes']; ?></option>
-                                                                <?php $plaint = $db->query("SELECT * FROM plaintes");
-                                                                   while ($pl = $plaint->fetch()) {
-                                                                      ?>
-                                                                     <option value=""></option>
-                                                                
-                                                                    <option value="<?= $pl['nom_plainte'];?>"><?= $pl['nom_plainte'];?></option>
-                                                                    
-                                                                    <?php } ?>
-                                                                </select>
-                                                            </div>
-                                                            <input type="hidden" name="id_fiche" value="<?= $g['id_fiche'];?>">
-
-                                                        </div>
-                                                        <br>
-                                                        <br>
-                                                        <br>
-
-
-
-                                                    </div>
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
-                                                <button type="submit" name="btn_tri" class="btn btn-primary">Envoyer</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- end modal triage -->
                                 <tr>
                                     <td class="table-column-pe-0">
 
@@ -540,10 +411,9 @@ if (isset($_POST['btn_tri'])) {
                                     </td>
                                     <td><?= $g['plaintes']; ?></td>
                                     <td>
+                                        <a class="btn btn-outline-primary btn-sm" href="labo?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
 
-                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_fiche']; ?>">
-                                            <i class="bi-pencil-fill me-1"></i> Triage
-                                        </button>
+                                      
 
                                     </td>
                                 </tr>
@@ -598,84 +468,7 @@ if (isset($_POST['btn_tri'])) {
 
                 <!-- Footer -->
 
-                <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau patient</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" method="POST" autocomplete="off">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control" name="noms" placeholder="Nom du patients" required>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <div class="col-md-6">
-                                            <label for="">Genre</label>
-                                            <select name="genre" id="" class="form-control" required>
-                                                <option>--Genre--</option>
-                                                <option value="Homme">Homme</option>
-                                                <option value="Femme">Femme</option>
-                                            </select>
 
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="">Date de naissance</label>
-                                            <input type="date" class="form-control" name="date_naiss" placeholder="date de naissance" required>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" name="nom_respo" placeholder="nom du reponsable" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="number" class="form-control" name="contact_respo" placeholder="contact du reponsable" required>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <div class="col-md-6">
-                                            <input type="number" class="form-control" name="contact" placeholder="cobract du patient" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <select class="form-control" name="categorie" id="">
-                                                <option>--Categorie--</option>
-                                                <option value="abonnee">Abonnee</option>
-                                                <option value="non abonnee">Non abonnee</option>
-                                            </select>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control" name="adresse" placeholder="adresse" required>
-
-                                        </div>
-                                        <br>
-
-
-                                    </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                                <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- End Footer -->
-            </div>
-            <!-- End Card -->
-        </div>
         <!-- End Content -->
 
         <!-- Footer -->

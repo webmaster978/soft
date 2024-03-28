@@ -410,7 +410,7 @@ if (isset($_POST['btn_tri'])) {
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE poids=''");
+                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient");
                             while ($g = $requete->fetch()) {
                             ?>
 

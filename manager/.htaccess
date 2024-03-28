@@ -10,3 +10,6 @@ RewriteRule ^rapc$ rapc.php
 RewriteRule ^users$ users.php
 RewriteRule ^personnel$ personnel.php
 RewriteRule ^examen_labo$ examen_labo.php
+RewriteRule ^labos$ labos.php
+RewriteRule ^labo$ labo.php
+RewriteRule ^rapport_triage$ rap_trie.php

@@ -27,9 +27,10 @@ if (isset($_POST['btn_consult'])) {
     $genitaux = htmlspecialchars($_POST['genitaux']);
     $diagno = htmlspecialchars($_POST['diagno']);
     $id_fiche = htmlspecialchars($_POST['id_fiche']);
+    $status = htmlspecialchars($_POST['status']);
     $ref_consult = $_SESSION['PROFILE']['id_utilisateur'];
 
-    $consult = $db->prepare("UPDATE fiches SET ca=:ca,atcds=:atcds,hm=:hm,cou=:cou,thorax=:thorax,abdomen=:abdomen,locomoteur=:locomoteur,genitaux=:genitaux,diagno=:diagno,ref_consult=:ref_consult WHERE id_fiche=:id_fiche");
+    $consult = $db->prepare("UPDATE fiches SET ca=:ca,atcds=:atcds,hm=:hm,cou=:cou,thorax=:thorax,abdomen=:abdomen,locomoteur=:locomoteur,genitaux=:genitaux,diagno=:diagno,status=:status,ref_consult=:ref_consult WHERE id_fiche=:id_fiche");
     $consult->execute(array(
         'ca' => $ca,
         'atcds' => $atcds,
@@ -41,6 +42,7 @@ if (isset($_POST['btn_consult'])) {
         'genitaux' => $genitaux,
         'diagno' => $diagno,
         'id_fiche' => $id_fiche,
+        'status' => $status,
         'ref_consult' => $_SESSION['PROFILE']['id_utilisateur']
     ));
 
@@ -465,6 +467,7 @@ if (isset($_POST['btn_imagerie'])) {
                             <!-- End Table -->
                             <form action="" method="post">
                                 <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
+                                <input type="hidden" name="status" value="4">
                                 <div class="row">
                                     <label class="col-sm-1 col-form-label">CA :</label>
                                     <div class="col-sm-11">
