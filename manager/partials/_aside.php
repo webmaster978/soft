@@ -92,7 +92,7 @@
 
                 <div id="navbarLab" class="nav-collapse collapse " data-bs-parent="#navbarLab">
                   <a class="nav-link " href="labos">Nouveau cas</a>
-                  <a class="nav-link " href="#">Rapport</a>
+                  <a class="nav-link " href="rapport_labo">Rapport</a>
                   <a class="nav-link " href="examen_labo">Liste des examens</a>
                   
                   
