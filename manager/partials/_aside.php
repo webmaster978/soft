@@ -3,11 +3,11 @@
       <div class="navbar-vertical-footer-offset">
         <!-- Logo -->
 
-        <a class="navbar-brand" href="index.html" aria-label="Front">
-          <img class="navbar-brand-logo" src="assets/svg/logos/logo.svg" alt="Logo" data-hs-theme-appearance="default">
-          <img class="navbar-brand-logo" src="assets/svg/logos-light/logo.svg" alt="Logo" data-hs-theme-appearance="dark">
-          <img class="navbar-brand-logo-mini" src="assets/svg/logos/logo-short.svg" alt="Logo" data-hs-theme-appearance="default">
-          <img class="navbar-brand-logo-mini" src="assets/svg/logos-light/logo-short.svg" alt="Logo" data-hs-theme-appearance="dark">
+        <a class="navbar-brand" href="#" aria-label="test">
+          <img class="navbar-brand-logo" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="default">
+          <img class="navbar-brand-logo" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="dark">
+          <img class="navbar-brand-logo-mini" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="default">
+          <img class="navbar-brand-logo-mini" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="dark">
         </a>
 
         <!-- End Logo -->
@@ -64,7 +64,7 @@
 
                 <div id="navbarRec" class="nav-collapse collapse " data-bs-parent="#navbarRec">
                   <a class="nav-link " href="triage">Nouveau</a>
-                  <a class="nav-link " href="#">Rapport</a>
+                  <a class="nav-link " href="rapport_triage">Rapport</a>
                   <a class="nav-link " href="plaintes">Plaintes</a>
                   
                 </div>
@@ -91,8 +91,8 @@
                 </a>
 
                 <div id="navbarLab" class="nav-collapse collapse " data-bs-parent="#navbarLab">
-                  <a class="nav-link " href="#">Nouveau cas</a>
-                  <a class="nav-link " href="#">Rapport</a>
+                  <a class="nav-link " href="labos">Nouveau cas</a>
+                  <a class="nav-link " href="rapport_labo">Rapport</a>
                   <a class="nav-link " href="examen_labo">Liste des examens</a>
                   
                   

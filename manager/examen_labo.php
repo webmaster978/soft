@@ -17,18 +17,16 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 if (isset($_POST['btn_submit'])) {
     extract($_POST);
 
-    $noms = htmlspecialchars($_POST['nom_plainte']);
-
-    $created_by = $_SESSION['PROFILE']['id_utilisateur'];
-
+    $nom_labo = htmlspecialchars($_POST['nom_labo']);
+    $prix = htmlspecialchars($_POST['prix']);
 
 
-    $check_query = "SELECT * FROM plaintes
-            WHERE nom_plainte=:nom_plainte
+    $check_query = "SELECT * FROM labo
+            WHERE nom_labo=:nom_labo
            ";
     $statement = $db->prepare($check_query);
     $check_data = array(
-        ':nom_plainte'   =>  $nom_plainte
+        ':nom_labo'   =>  $nom_labo
 
     );
     if ($statement->execute($check_data)) {
@@ -41,12 +39,12 @@ if (isset($_POST['btn_submit'])) {
 
 
 
-                $reque = $db->prepare("INSERT INTO plaintes (nom_plainte,created_by) VALUES (:nom_plainte,:created_by) ");
+                $reque = $db->prepare("INSERT INTO labo (nom_labo,prix) VALUES (:nom_labo,:prix)");
 
                 $result = $reque->execute(array(
 
-                    'nom_plainte' => $nom_plainte,
-                    'created_by' => $_SESSION['PROFILE']['id_utilisateur']
+                    'nom_labo' => $nom_labo,
+                    'prix' => $prix
 
                 ));
                 if ($result) {
@@ -302,13 +300,13 @@ if (isset($_POST['btn_submit'])) {
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Configuration plaintes</h1>
+                        <h1 class="page-header-title">Configuration examen labo</h1>
                     </div>
                     <!-- End Col -->
                     <div class="col-sm-auto">
                         <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                             <i class="bi-plus"></i>
-                            Nouvelle plainte
+                            Nouveau Examen
                         </button>
 
                     </div>
@@ -423,7 +421,7 @@ if (isset($_POST['btn_submit'])) {
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM plaintes INNER JOIN tbl_agent ON plaintes.created_by = tbl_agent.id_utilisateur");
+                            <?php $requete = $db->query("SELECT * FROM labo ORDER BY nom_labo ASC");
                             while ($g = $requete->fetch()) {
                             ?>
 
@@ -431,19 +429,19 @@ if (isset($_POST['btn_submit'])) {
 
                                 <!-- modal triage -->
 
-                                <div id="exampleModalCenter<?= $g['id_plainte']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div id="exampleModalCenter<?= $g['id_labo']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalCenterTitle">Modifier la plainte de : <?= $g['nom_plainte']; ?></h5>
+                                                <h5 class="modal-title" id="exampleModalCenterTitle">Modifier l'examen de : <?= $g['nom_labo']; ?></h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <form action="" method="POST">
                                                     <div class="row">
-                                                        <div class="col-md-12">
-                                                            <input type="text" class="form-control" name="nom_plainte" value="<?= $g['nom_plainte']; ?>" readonly>
-                                                            <input type="hidden" name="ref_plainte" value="<?= $g['id_plainte']; ?>">
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control" name="nom_labo" value="<?= $g['nom_labo']; ?>">
+                                                            <input type="hidden" name="ref_labo" value="<?= $g['id_labo']; ?>">
                                                         </div>
 
 
@@ -464,22 +462,22 @@ if (isset($_POST['btn_submit'])) {
                                 <tr>
                                     <td class="table-column-pe-0">
 
-                                        <?= $g['id_plainte']; ?>
+                                        <?= $g['id_labo']; ?>
 
 
                                     </td>
                                     <td class="table-column-ps-0">
-                                        <?= $g['nom_plainte']; ?>
+                                        <?= $g['nom_labo']; ?>
                                     </td>
                                     <td>
-                                        <?= $g['nom_complet']; ?>
+                                        <?= $g['prix']; ?> $
                                     </td>
-                                    <td><?= $g['created_plainte']; ?> </td>
+                                    <td><?= $g['created_labo']; ?> </td>
 
 
                                     <td>
 
-                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_plainte']; ?>">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_labo']; ?>">
                                             <i class="bi-pencil-fill me-1"></i> Modifier
                                         </button>
 
@@ -540,14 +538,17 @@ if (isset($_POST['btn_submit'])) {
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalCenterTitle">Nouvelle plainte</h5>
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau examen labo</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form action="" method="POST" autocomplete="off">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="text" class="form-control" name="nom_plainte" placeholder="Nouvelle plainte" required>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="nom_labo" placeholder="Nouveau examen" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control" name="prix" placeholder="Prix" required>
                                     </div>
 
 

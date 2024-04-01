@@ -8,7 +8,7 @@ echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
 for ($i = 0; $i < count($nameArr); $i++) {
 if(($nameArr[$i] != "")){ /*not allowing empty values and the row which has been removed.*/
-$sql="INSERT INTO user_data (ref_user, email)
+$sql="INSERT INTO user_data (name, email)
 VALUES
 ('$nameArr[$i]','$emailArr[$i]')";
 if (!mysqli_query($con,$sql))

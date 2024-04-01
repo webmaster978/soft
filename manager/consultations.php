@@ -369,7 +369,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE plaintes!='' ORDER BY id_fiche DESC ");
+                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE ca='' ORDER BY id_fiche DESC ");
                             while ($g = $requete->fetch()) {
                             ?>
 
