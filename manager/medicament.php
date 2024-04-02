@@ -13,7 +13,55 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 ?>
 
+<?php
+if (isset($_POST['btn_submit'])) {
+    extract($_POST);
 
+    $nom_labo = htmlspecialchars($_POST['nom_labo']);
+    $prix = htmlspecialchars($_POST['prix']);
+
+
+    $check_query = "SELECT * FROM labo
+            WHERE nom_labo=:nom_labo
+           ";
+    $statement = $db->prepare($check_query);
+    $check_data = array(
+        ':nom_labo'   =>  $nom_labo
+
+    );
+    if ($statement->execute($check_data)) {
+        if ($statement->rowCount() > 1) {
+            echo "
+                err existe
+                ";
+        } else {
+            if ($statement->rowCount() == 0) {
+
+
+
+                $reque = $db->prepare("INSERT INTO labo (nom_labo,prix) VALUES (:nom_labo,:prix)");
+
+                $result = $reque->execute(array(
+
+                    'nom_labo' => $nom_labo,
+                    'prix' => $prix
+
+                ));
+                if ($result) {
+                    echo "
+   valider
+     ";
+                } else {
+                    echo "err";
+                }
+            }
+        }
+    }
+}
+
+
+
+?>
 
 
 <!DOCTYPE html>
@@ -252,9 +300,16 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Rapport du labo</h1>
+                        <h1 class="page-header-title">Configuration examen labo</h1>
                     </div>
                     <!-- End Col -->
+                    <div class="col-sm-auto">
+                        <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                            <i class="bi-plus"></i>
+                            Nouveau Examen
+                        </button>
+
+                    </div>
 
 
                     <!-- End Col -->
@@ -278,7 +333,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                                 <div class="input-group-prepend input-group-text">
                                     <i class="bi-search"></i>
                                 </div>
-                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un patient" aria-label="Search users">
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher une plainte" aria-label="Search users">
                             </div>
                             <!-- End Search -->
                         </form>
@@ -331,9 +386,9 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                 <!-- End Header -->
 
                 <!-- Table -->
-                <div class="table-responsive datatable-custom position-relative">
+                <div class="table-responsive datatable-custom">
                     <table id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
-                   "columnDefs": [{
+                        "columnDefs": [{
                       "targets": [0, 7],
                       "orderable": false
                     }],
@@ -351,69 +406,80 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                         <thead class="thead-light">
                             <tr>
                                 <th class="table-column-pe-0">
-                                    <div class="form-check">
+                                    nuimero
+                                    <!-- <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
                                         <label class="form-check-label" for="datatableCheckAll"></label>
-                                    </div>
+                                    </div> -->
                                 </th>
-                                <th class="table-column-ps-0">Noms du patient</th>
-                                <th>Poids</th>
-                                <th>Taille</th>
-                                <th>Temperature</th>
-                                <th>Pouls</th>
-                                <th>SPO2 ET FR</th>
+                                <th class="table-column-ps-0">Nom de la plainte</th>
+                                <th>Creer par</th>
+                                <th>Date creation</th>
 
-                                <th>Plaintes</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient");
+                            <?php $requete = $db->query("SELECT * FROM labo ORDER BY nom_labo ASC");
                             while ($g = $requete->fetch()) {
                             ?>
 
 
 
+                                <!-- modal triage -->
 
+                                <div id="exampleModalCenter<?= $g['id_labo']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalCenterTitle">Modifier l'examen de : <?= $g['nom_labo']; ?></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="" method="POST">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <input type="text" class="form-control" name="nom_labo" value="<?= $g['nom_labo']; ?>">
+                                                            <input type="hidden" name="ref_labo" value="<?= $g['id_labo']; ?>">
+                                                        </div>
+
+
+
+                                                    </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
+                                                <button type="submit" name="btn_tri" class="btn btn-warning">Modifier</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- end modal triage -->
                                 <tr>
                                     <td class="table-column-pe-0">
 
-                                        <?= $g['id_fiche']; ?>
+                                        <?= $g['id_labo']; ?>
 
 
                                     </td>
                                     <td class="table-column-ps-0">
-                                        <a class="d-flex align-items-center" href="#">
-                                            <div class="avatar avatar-circle">
-                                                <img class="avatar-img" src="../assets/img/prof/img.jpg" alt="Image Description">
-                                            </div>
-                                            <div class="ms-3">
-                                                <span class="d-block h5 text-inherit mb-0"><?= $g['noms']; ?><i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></span>
-                                                <span class="d-block fs-5 text-body"><?= $g['categorie']; ?></span>
-                                            </div>
-                                        </a>
+                                        <?= $g['nom_labo']; ?>
                                     </td>
                                     <td>
-                                        <?= $g['poids']; ?> Kg
+                                        <?= $g['prix']; ?> $
                                     </td>
-                                    <td><?= $g['taille']; ?> m</td>
-                                    <td>
-                                        <?= $g['temperature']; ?> Degrer
-                                    </td>
-                                    <td>
-                                        <?= $g['pouls']; ?> bpm
+                                    <td><?= $g['created_labo']; ?> </td>
 
-                                    </td>
-                                    <td>SPO2 : <?= $g['spo2']; ?>
-                                        <span class="d-block fs-5 text-body">FR : <?= $g['frequence']; ?></span>
 
-                                    </td>
-                                    <td><?= $g['plaintes']; ?></td>
                                     <td>
-                                        <a class="btn btn-outline-primary btn-sm" href="labs?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
 
-                                      
+                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_labo']; ?>">
+                                            <i class="bi-pencil-fill me-1"></i> Modifier
+                                        </button>
 
                                     </td>
                                 </tr>
@@ -425,50 +491,84 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                 </div>
                 <!-- End Table -->
                 <div class="card-footer">
-          <!-- Pagination -->
-          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                <span class="me-2">Showing:</span>
+                    <!-- Pagination -->
+                    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                        <div class="col-sm mb-2 mb-sm-0">
+                            <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                                <span class="me-2">Showing:</span>
 
-                <!-- Select -->
-                <div class="tom-select-custom">
-                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
+                                <!-- Select -->
+                                <div class="tom-select-custom">
+                                    <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }'>
-                    <option value="4">4</option>
-                    <option value="6">6</option>
-                    <option value="8" selected>8</option>
-                    <option value="12">12</option>
-                  </select>
+                                        <option value="4">4</option>
+                                        <option value="6">6</option>
+                                        <option value="8" selected>8</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                                <!-- End Select -->
+
+                                <span class="text-secondary me-2">of</span>
+
+                                <!-- Pagination Quantity -->
+                                <span id="datatableWithPaginationInfoTotalQty"></span>
+                            </div>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-sm-auto">
+                            <div class="d-flex justify-content-center justify-content-sm-end">
+                                <!-- Pagination -->
+                                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                            </div>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Pagination -->
                 </div>
-                <!-- End Select -->
-
-                <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
-                <span id="datatableWithPaginationInfoTotalQty"></span>
-              </div>
+                <!-- End Footer -->
             </div>
-            <!-- End Col -->
 
-            <div class="col-sm-auto">
-              <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
-                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-              </div>
+            <!-- Footer -->
+
+            <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau examen labo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="POST" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="nom_labo" placeholder="Nouveau examen" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control" name="prix" placeholder="Prix" required>
+                                    </div>
+
+
+
+                                </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Pagination -->
+
+            <!-- End Footer -->
         </div>
-        <!-- End Footer -->
-      </div>
-
-                <!-- Footer -->
-
-
+        <!-- End Card -->
+        </div>
         <!-- End Content -->
 
         <!-- Footer -->

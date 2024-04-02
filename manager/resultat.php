@@ -411,7 +411,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                                     </td>
                                     <td><?= $g['plaintes']; ?></td>
                                     <td>
-                                        <a class="btn btn-outline-primary btn-sm" href="labs?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
+                                        <a class="btn btn-outline-primary btn-sm" href="ordonn?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
 
                                       
 
