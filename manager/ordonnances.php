@@ -11,59 +11,36 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 }
 
 
+
+
 ?>
 
 <?php
-if (isset($_POST['btn_submit'])) {
-    extract($_POST);
+if (isset($_POST['btn_res'])) {
+    $resultat = htmlspecialchars($_POST['resultat']);
+    $id_user = htmlspecialchars($_POST['id_user']);
 
-    $nom_labo = htmlspecialchars($_POST['nom_med']);
-    $prix_a = htmlspecialchars($_POST['prix_a']);
-    $prix_v = htmlspecialchars($_POST['prix_v']);
+    $ref_lab = $_SESSION['PROFILE']['id_utilisateur'];
 
+    $consult = $db->prepare("UPDATE user_data SET resultat=:resultat,ref_lab=:ref_lab WHERE id_user=:id_user");
+    $consult->execute(array(
+        'resultat' => $resultat,
+        'id_user' => $id_user,
+        'ref_lab' => $_SESSION['PROFILE']['id_utilisateur']
+        
+    ));
 
-    $check_query = "SELECT * FROM medicaments
-            WHERE nom_med=:nom_med
-           ";
-    $statement = $db->prepare($check_query);
-    $check_data = array(
-        ':nom_med'   =>  $nom_med
-
-    );
-    if ($statement->execute($check_data)) {
-        if ($statement->rowCount() > 1) {
-            echo "
-                err existe
-                ";
-        } else {
-            if ($statement->rowCount() == 0) {
-
-
-
-                $reque = $db->prepare("INSERT INTO medicaments (nom_med,prix_a,prix_v) VALUES (:nom_med,:prix_a,:prix_v)");
-
-                $result = $reque->execute(array(
-
-                    'nom_med' => $nom_med,
-                    'prix_a' => $prix_a,
-                    'prix_v' => $prix_v
-
-                ));
-                if ($result) {
-                    echo "
-   valider
-     ";
-                } else {
-                    echo "err";
-                }
-            }
-        }
+    if ($consult) {
+        echo 'valider';
+    } else {
+        echo 'err';
     }
 }
 
 
 
 ?>
+
 
 
 <!DOCTYPE html>
@@ -89,6 +66,17 @@ if (isset($_POST['btn_submit'])) {
 
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
+
+
 
     <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
     <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
@@ -293,301 +281,201 @@ if (isset($_POST['btn_submit'])) {
 
     <?php include 'partials/_aside.php' ?>
 
+    <?php
+
+
+    $id_fiche = $_GET['id_fiche'];
+
+
+
+    $card = $db->prepare("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE id_fiche=:id_fiche");
+    $card->execute([
+        'id_fiche' => $id_fiche
+    ]);
+    $carte = $card->fetch(PDO::FETCH_OBJ);
+
+
+
+
+
+
+    ?>
+
     <main id="content" role="main" class="main">
         <!-- Content -->
         <div class="content container-fluid">
             <!-- Page Header -->
-            <div class="page-header">
-                <div class="row align-items-end">
-                    <div class="col-sm mb-2 mb-sm-0">
 
+            <div class="row">
+                <div class="col-lg-12 mb-5 mb-lg-0">
+                    <!-- Card -->
+                    <div class="card card-lg mb-5">
+                        <div class="card-body">
+                            <div class="row justify-content-lg-between">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="../assets/img/logo/lg.png" alt="Logo">
 
-                        <h1 class="page-header-title">Configuration des medicamants</h1>
-                    </div>
-                    <!-- End Col -->
-                    <div class="col-sm-auto">
-                        <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                            <i class="bi-plus"></i>
-                            Nouveau medicament
-                        </button>
-
-                    </div>
-
-
-                    <!-- End Col -->
-                </div>
-                <!-- End Row -->
-            </div>
-            <!-- End Page Header -->
-
-            <!-- Stats -->
-
-            <!-- End Stats -->
-
-            <!-- Card -->
-            <div class="card">
-                <!-- Header -->
-                <div class="card-header card-header-content-md-between">
-                    <div class="mb-2 mb-md-0">
-                        <form>
-                            <!-- Search -->
-                            <div class="input-group input-group-merge input-group-flush">
-                                <div class="input-group-prepend input-group-text">
-                                    <i class="bi-search"></i>
-                                </div>
-                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un medicamant" aria-label="Search users">
-                            </div>
-                            <!-- End Search -->
-                        </form>
-                    </div>
-
-                    <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-                        <!-- Datatable Info -->
-
-                        <!-- End Datatable Info -->
-
-                        <!-- Dropdown -->
-                        <div class="dropdown">
-                            <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi-download me-2"></i> Export
-                            </button>
-
-                            <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
-                                <span class="dropdown-header">Options</span>
-                                <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/illustrations/copy-icon.svg" alt="Image Description">
-                                    Copy
-                                </a>
-                                <a id="export-print" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/illustrations/print-icon.svg" alt="Image Description">
-                                    Print
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <span class="dropdown-header">Download options</span>
-                                <a id="export-excel" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/brands/excel-icon.svg" alt="Image Description">
-                                    Excel
-                                </a>
-                                <a id="export-csv" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
-                                    .CSV
-                                </a>
-                                <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/brands/pdf-icon.svg" alt="Image Description">
-                                    PDF
-                                </a>
-                            </div>
-                        </div>
-                        <!-- End Dropdown -->
-
-                        <!-- Dropdown -->
-
-                        <!-- End Dropdown -->
-                    </div>
-                </div>
-                <!-- End Header -->
-
-                <!-- Table -->
-                <div class="table-responsive datatable-custom">
-                    <table id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
-                        "columnDefs": [{
-                      "targets": [0, 7],
-                      "orderable": false
-                    }],
-                   "order": [],
-                   "info": {
-                     "totalQty": "#datatableWithPaginationInfoTotalQty"
-                   },
-                   "search": "#datatableSearch",
-                   "entries": "#datatableEntries",
-                   "pageLength": 15,
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatablePagination"
-                 }'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="table-column-pe-0">
-                                    numero
-                                    <!-- <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
-                                        <label class="form-check-label" for="datatableCheckAll"></label>
-                                    </div> -->
-                                </th>
-                                <th class="table-column-ps-0">Nom du medicamant</th>
-                                <th>Prix achat</th>
-                                <th>Prix de vente</th>
-                                <th>Date creation</th>
-
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <?php $requete = $db->query("SELECT * FROM medicaments ORDER BY nom_med ASC");
-                            while ($g = $requete->fetch()) {
-                            ?>
-
-
-
-                                <!-- modal triage -->
-
-                                <div id="exampleModalCenter<?= $g['id_med']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalCenterTitle">Modifier le medicamant : <?= $g['nom_med']; ?></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="" method="POST">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="nom_med" value="<?= $g['nom_med']; ?>">
-                                                            <input type="hidden" name="id_med" value="<?= $g['id_med']; ?>">
-                                                        </div>
-
-
-
-                                                    </div>
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
-                                                <button type="submit" name="btn_tri" class="btn btn-warning">Modifier</button>
-                                                </form>
-                                            </div>
-                                        </div>
                                     </div>
+                                    <div class="col-md-8">
+                                        <h1 style="font-size: 50px;" class=" text-primary">CLINIQUE NOTRE VIE</h1>
+                                        <h1 class="text-center text-danger">CLINOVIE</h1>
+                                    </div>
+
                                 </div>
+                                <!-- End Col -->
 
-                                <!-- end modal triage -->
-                                <tr>
-                                    <td class="table-column-pe-0">
+                                <div class="">
+                                    <div>
+                                        <h2 class="text-center">FICHE DE LABO</h2>
 
-                                        <?= $g['id_med']; ?>
-
-
-                                    </td>
-                                    <td class="table-column-ps-0">
-                                        <?= $g['nom_med']; ?>
-                                    </td>
-                                    <td>
-                                        <?= $g['prix_a']; ?> $
-                                    </td>
-                                    <td>
-                                        <?= $g['prix_v']; ?> $
-                                    </td>
-                                    <td><?= $g['created_med']; ?> </td>
+                                    </div>
 
 
-                                    <td>
-
-                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_med']; ?>">
-                                            <i class="bi-pencil-fill me-1"></i> Modifier
-                                        </button>
-
-                                    </td>
-                                </tr>
-                            <?php } ?>
-
-
-                        </tbody>
-                    </table>
-                </div>
-                <!-- End Table -->
-                <div class="card-footer">
-                    <!-- Pagination -->
-                    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-                        <div class="col-sm mb-2 mb-sm-0">
-                            <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                                <span class="me-2">Showing:</span>
-
-                                <!-- Select -->
-                                <div class="tom-select-custom">
-                                    <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
-                            "searchInDropdown": false,
-                            "hideSearch": true
-                          }'>
-                                        <option value="4">4</option>
-                                        <option value="6">6</option>
-                                        <option value="8" selected>8</option>
-                                        <option value="12">12</option>
-                                    </select>
                                 </div>
-                                <!-- End Select -->
-
-                                <span class="text-secondary me-2">of</span>
-
-                                <!-- Pagination Quantity -->
-                                <span id="datatableWithPaginationInfoTotalQty"></span>
+                                <!-- End Col -->
                             </div>
-                        </div>
-                        <!-- End Col -->
+                            <!-- End Row -->
 
-                        <div class="col-sm-auto">
-                            <div class="d-flex justify-content-center justify-content-sm-end">
-                                <!-- Pagination -->
-                                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                            <div class="row justify-content-md-between mb-3">
+                                <div class="col-md">
+                                    <h4>Nom & Post Nom & Prenom: <?= ucwords($carte->noms); ?> </h4>
+                                    <h4>Sexe : <?= ucwords($carte->genre); ?> </h4>
+                                    <h4>Date de naissance : <?= ucwords($carte->date_naiss); ?> // Age <?php
+                                                                                                        $daten = $carte->date_naiss;
+                                                                                                        $today = date("Y-m-d");
+                                                                                                        $diff = date_diff(date_create($daten), date_create($today));
+                                                                                                        echo $diff->format('%y');
+
+                                                                                                        ?> An(s)</h4>
+                                    <h4>Categorie : <?= ucwords($carte->categorie); ?> </h4>
+                                    <h4>Personne a contacter : <?= ucwords($carte->nom_respo); ?> // <?= ucwords($carte->contact_respo); ?> </h4>
+
+
+                                </div>
+                                <!-- End Col -->
+
+                                <div class="col-md text-md-end">
+                                    <dl class="row">
+                                        <dt class="col-sm-8">Num du dossier:</dt>
+                                        <dd class="col-sm-4">00<?= ucwords($carte->id_fiche); ?></dd>
+                                    </dl>
+
+                                </div>
+                                <!-- End Col -->
                             </div>
+                            <!-- End Row -->
+                            <h4 class="text-center">ordonnance</h4>
+
+                            <!-- Table -->
+
+
+
+                            <div>
+
+                                <table class="table table-borderless table-thead-bordered text-center">
+                                    <tr>
+                                    
+                                        <th>Medicament</th>
+                                        <th>Categorie</th>
+                                        <th>Dosage</th>
+                                        <th>Posologie</th>
+                                        <th>Duree</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                       
+                                    </tr>
+                                    <tbody>
+                                        <?php
+                                        $ref_fiche = $_GET['id_fiche'];
+
+                                        $requete = $db->query("SELECT * FROM ordonnance WHERE ref_fiche=$ref_fiche");
+                                        while ($g = $requete->fetch()) {
+                                        ?>
+
+                                            <div class="modal fade" id="exampleModal<?= $g['id_ordo']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Completer le resultat de <?= $g['ref_med']; ?></h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="" method="post">
+                 
+                                                        </div>
+                                                        <input type="hidden" name="id_ordo" value="<?= $g['id_ordo']; ?>">
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                                            <button type="submit" name="btn_res" class="btn btn-primary">Enregistrer</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <tr>
+                                               
+                                                <td><?= $g['ref_med']; ?></td>
+                                                <td><?= $g['categorie']; ?></td>
+                                                <td><?= $g['dosage']; ?></td>
+                                                <td><?= $g['posologie']; ?></td>
+                                                <td><?= $g['duree']; ?></td>
+                                                <td><?= $g['status']; ?></td>
+                                                <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<?= $g['id_ordo']; ?>">
+                                                        Livrer
+                                                    </button>
+                                                </td>
+                                                
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                                <!-- End Table -->
+
+                                <br>
+                            </div>
+                            
+                              
+
+
+                            <div>
+
+
+
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                            <!-- End Row -->
+
+
                         </div>
-                        <!-- End Col -->
+
                     </div>
-                    <!-- End Pagination -->
+
+                    <!-- End Card -->
+
+                    <!-- Footer -->
+
+                    <!-- End Footer -->
                 </div>
-                <!-- End Footer -->
             </div>
 
             <!-- Footer -->
 
-            <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau medicament</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="" method="POST" autocomplete="off">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="text" class="form-control" name="nom_med" placeholder="nom medicament" required>
-                                    </div>
-                                    <br>
-                                    <br>
-                                    <br>
-                                    <div class="col-md-6">
-                                        <input type="number" class="form-control" name="prix_a" step="any" placeholder="Prix d'achat" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="number" class="form-control" name="prix_v" step="any" placeholder="Prix de vente" required>
-                                    </div>
-
-
-
-                                </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php include '../part/_foot.php' ?>
 
             <!-- End Footer -->
-        </div>
-        <!-- End Card -->
-        </div>
-        <!-- End Content -->
-
-        <!-- Footer -->
-
-        <?php include '../part/_foot.php' ?>
-
-        <!-- End Footer -->
     </main>
     <!-- ========== END MAIN CONTENT ========== -->
 
@@ -964,6 +852,8 @@ if (isset($_POST['btn_submit'])) {
             }
         })()
     </script>
+
+
 
     <!-- End Style Switcher JS -->
 </body>

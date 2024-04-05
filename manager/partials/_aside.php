@@ -107,8 +107,8 @@
                 </a>
 
                 <div id="navbarP" class="nav-collapse collapse " data-bs-parent="#navbarP">
-                <a class="nav-link " href="ordonnances">Ordonnances</a>
-                  <a class="nav-link " href="medicaments">Medicaments</a>
+                <a class="nav-link " href="ordonnance">Ordonnances</a>
+                  <a class="nav-link " href="medicament">Medicaments</a>
                   
                   
                   

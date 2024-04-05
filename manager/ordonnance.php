@@ -13,57 +13,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 ?>
 
-<?php
-if (isset($_POST['btn_submit'])) {
-    extract($_POST);
 
-    $nom_labo = htmlspecialchars($_POST['nom_med']);
-    $prix_a = htmlspecialchars($_POST['prix_a']);
-    $prix_v = htmlspecialchars($_POST['prix_v']);
-
-
-    $check_query = "SELECT * FROM medicaments
-            WHERE nom_med=:nom_med
-           ";
-    $statement = $db->prepare($check_query);
-    $check_data = array(
-        ':nom_med'   =>  $nom_med
-
-    );
-    if ($statement->execute($check_data)) {
-        if ($statement->rowCount() > 1) {
-            echo "
-                err existe
-                ";
-        } else {
-            if ($statement->rowCount() == 0) {
-
-
-
-                $reque = $db->prepare("INSERT INTO medicaments (nom_med,prix_a,prix_v) VALUES (:nom_med,:prix_a,:prix_v)");
-
-                $result = $reque->execute(array(
-
-                    'nom_med' => $nom_med,
-                    'prix_a' => $prix_a,
-                    'prix_v' => $prix_v
-
-                ));
-                if ($result) {
-                    echo "
-   valider
-     ";
-                } else {
-                    echo "err";
-                }
-            }
-        }
-    }
-}
-
-
-
-?>
 
 
 <!DOCTYPE html>
@@ -302,16 +252,9 @@ if (isset($_POST['btn_submit'])) {
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Configuration des medicamants</h1>
+                        <h1 class="page-header-title">Ordonnances</h1>
                     </div>
                     <!-- End Col -->
-                    <div class="col-sm-auto">
-                        <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                            <i class="bi-plus"></i>
-                            Nouveau medicament
-                        </button>
-
-                    </div>
 
 
                     <!-- End Col -->
@@ -335,7 +278,7 @@ if (isset($_POST['btn_submit'])) {
                                 <div class="input-group-prepend input-group-text">
                                     <i class="bi-search"></i>
                                 </div>
-                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un medicamant" aria-label="Search users">
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un patient" aria-label="Search users">
                             </div>
                             <!-- End Search -->
                         </form>
@@ -388,9 +331,9 @@ if (isset($_POST['btn_submit'])) {
                 <!-- End Header -->
 
                 <!-- Table -->
-                <div class="table-responsive datatable-custom">
+                <div class="table-responsive datatable-custom position-relative">
                     <table id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
-                        "columnDefs": [{
+                   "columnDefs": [{
                       "targets": [0, 7],
                       "orderable": false
                     }],
@@ -408,84 +351,69 @@ if (isset($_POST['btn_submit'])) {
                         <thead class="thead-light">
                             <tr>
                                 <th class="table-column-pe-0">
-                                    numero
-                                    <!-- <div class="form-check">
+                                    <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
                                         <label class="form-check-label" for="datatableCheckAll"></label>
-                                    </div> -->
+                                    </div>
                                 </th>
-                                <th class="table-column-ps-0">Nom du medicamant</th>
-                                <th>Prix achat</th>
-                                <th>Prix de vente</th>
-                                <th>Date creation</th>
+                                <th class="table-column-ps-0">Noms du patient</th>
+                                <th>Poids</th>
+                                <th>Taille</th>
+                                <th>Temperature</th>
+                                <th>Pouls</th>
+                                <th>SPO2 ET FR</th>
 
+                                
                                 <th>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM medicaments ORDER BY nom_med ASC");
+                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE status= 4");
                             while ($g = $requete->fetch()) {
                             ?>
 
 
 
-                                <!-- modal triage -->
 
-                                <div id="exampleModalCenter<?= $g['id_med']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalCenterTitle">Modifier le medicamant : <?= $g['nom_med']; ?></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="" method="POST">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <input type="text" class="form-control" name="nom_med" value="<?= $g['nom_med']; ?>">
-                                                            <input type="hidden" name="id_med" value="<?= $g['id_med']; ?>">
-                                                        </div>
-
-
-
-                                                    </div>
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
-                                                <button type="submit" name="btn_tri" class="btn btn-warning">Modifier</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- end modal triage -->
                                 <tr>
                                     <td class="table-column-pe-0">
 
-                                        <?= $g['id_med']; ?>
+                                        <?= $g['id_fiche']; ?>
 
 
                                     </td>
                                     <td class="table-column-ps-0">
-                                        <?= $g['nom_med']; ?>
+                                        <a class="d-flex align-items-center" href="#">
+                                            <div class="avatar avatar-circle">
+                                                <img class="avatar-img" src="../assets/img/prof/img.jpg" alt="Image Description">
+                                            </div>
+                                            <div class="ms-3">
+                                                <span class="d-block h5 text-inherit mb-0"><?= $g['noms']; ?><i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></span>
+                                                <span class="d-block fs-5 text-body"><?= $g['categorie']; ?></span>
+                                            </div>
+                                        </a>
                                     </td>
                                     <td>
-                                        <?= $g['prix_a']; ?> $
+                                        <?= $g['poids']; ?> Kg
+                                    </td>
+                                    <td><?= $g['taille']; ?> m</td>
+                                    <td>
+                                        <?= $g['temperature']; ?> Degrer
                                     </td>
                                     <td>
-                                        <?= $g['prix_v']; ?> $
+                                        <?= $g['pouls']; ?> bpm
+
                                     </td>
-                                    <td><?= $g['created_med']; ?> </td>
+                                    <td>SPO2 : <?= $g['spo2']; ?>
+                                        <span class="d-block fs-5 text-body">FR : <?= $g['frequence']; ?></span>
 
-
+                                    </td>
+                                  
                                     <td>
+                                        <a class="btn btn-outline-primary btn-sm" href="ordonnances?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
 
-                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_med']; ?>">
-                                            <i class="bi-pencil-fill me-1"></i> Modifier
-                                        </button>
+                                      
 
                                     </td>
                                 </tr>
@@ -497,90 +425,50 @@ if (isset($_POST['btn_submit'])) {
                 </div>
                 <!-- End Table -->
                 <div class="card-footer">
-                    <!-- Pagination -->
-                    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-                        <div class="col-sm mb-2 mb-sm-0">
-                            <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                                <span class="me-2">Showing:</span>
+          <!-- Pagination -->
+          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+            <div class="col-sm mb-2 mb-sm-0">
+              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                <span class="me-2">Showing:</span>
 
-                                <!-- Select -->
-                                <div class="tom-select-custom">
-                                    <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
+                <!-- Select -->
+                <div class="tom-select-custom">
+                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }'>
-                                        <option value="4">4</option>
-                                        <option value="6">6</option>
-                                        <option value="8" selected>8</option>
-                                        <option value="12">12</option>
-                                    </select>
-                                </div>
-                                <!-- End Select -->
-
-                                <span class="text-secondary me-2">of</span>
-
-                                <!-- Pagination Quantity -->
-                                <span id="datatableWithPaginationInfoTotalQty"></span>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-sm-auto">
-                            <div class="d-flex justify-content-center justify-content-sm-end">
-                                <!-- Pagination -->
-                                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-                    </div>
-                    <!-- End Pagination -->
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="8" selected>8</option>
+                    <option value="12">12</option>
+                  </select>
                 </div>
-                <!-- End Footer -->
+                <!-- End Select -->
+
+                <span class="text-secondary me-2">of</span>
+
+                <!-- Pagination Quantity -->
+                <span id="datatableWithPaginationInfoTotalQty"></span>
+              </div>
             </div>
+            <!-- End Col -->
 
-            <!-- Footer -->
-
-            <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau medicament</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="" method="POST" autocomplete="off">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="text" class="form-control" name="nom_med" placeholder="nom medicament" required>
-                                    </div>
-                                    <br>
-                                    <br>
-                                    <br>
-                                    <div class="col-md-6">
-                                        <input type="number" class="form-control" name="prix_a" step="any" placeholder="Prix d'achat" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="number" class="form-control" name="prix_v" step="any" placeholder="Prix de vente" required>
-                                    </div>
-
-
-
-                                </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                            <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-sm-auto">
+              <div class="d-flex justify-content-center justify-content-sm-end">
+                <!-- Pagination -->
+                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+              </div>
             </div>
+            <!-- End Col -->
+          </div>
+          <!-- End Pagination -->
+        </div>
+        <!-- End Footer -->
+      </div>
 
-            <!-- End Footer -->
-        </div>
-        <!-- End Card -->
-        </div>
+                <!-- Footer -->
+
+
         <!-- End Content -->
 
         <!-- Footer -->
