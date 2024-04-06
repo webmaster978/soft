@@ -251,7 +251,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
     <!-- ========== HEADER ========== -->
 
 
-   
+
 
     <!-- ========== END HEADER ========== -->
 
@@ -260,7 +260,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
     <!-- ========== MAIN CONTENT ========== -->
     <!-- Navbar Vertical -->
 
-    
+
 
 
 
@@ -348,8 +348,10 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
 
 
                                 </table>
-                                <h4>Plaintes : <?= ucwords($carte->plaintes); ?><hr> </h4>
-                                
+                                <h4>Plaintes : <?= ucwords($carte->plaintes); ?>
+                                    <hr>
+                                </h4>
+
 
 
 
@@ -357,73 +359,155 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
                             <!-- End Table -->
                             <form action="" method="post">
                                 <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
-                            <div class="row">
-                            <h5> CA  : <small class="text-muted text-underline"><?= $carte->ca; ?></small></h5>
-                            <hr>
-                               
-                            </div>
-                            
-                           
-                            <div class="row">
-                            <h5> ATCDS  : <small class="text-muted text-underline"><?= $carte->atcds; ?></small></h5>
-                            <hr>
-                                
-                            </div>
-                           
-                           
-                            <div class="row">
-                            <h5> HM  : <small class="text-muted text-underline"><?= $carte->hm; ?></small></h5>
-                            <hr>
-                                
-                            </div>
-                           
-                            
-                            <div class="row">
-                            <h5> Tete ET Cou:EG  : <small class="text-muted text-underline"><?= $carte->cou; ?></small></h5>
-                            <hr>
-                                
-                            </div>
-                            
-                            
-                            <div class="row">
-                            <h5> Thorax  : <small class="text-muted text-underline"><?= $carte->thorax; ?></small></h5>
-                            <hr>
-                               
-                            </div>
-                            
-                            <div class="row">
-                            <h5> Abdomen  : <small class="text-muted text-underline"><?= $carte->abdomen; ?></small></h5>
-                            <hr>
-                                
-                            </div>
-                            
-                            <div class="row">
-                            <h5> Appareil Locomoteur : <small class="text-muted text-underline"><?= $carte->locomoteur; ?></small></h5>
-                            <hr>
-                                
-                            </div>
-                            
-                            <div class="row">
-                            <h5> Appareil genitaux  : <small class="text-muted text-underline"><?= $carte->genitaux; ?></small></h5>
-                            <hr>
-                                
-                            </div>
-                            
-                            <div class="row">
-                            <h5> Diagnostic de presomption  : <small class="text-muted text-underline"><?= $carte->diagno; ?></small></h5>
-                            <hr>
-                                
-                            </div>
-                            <br>
-                           
-                            </form>
-                            
+                                <div class="row">
+                                    <h5> CA : <small class="text-muted text-underline"><?= $carte->ca; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <h5> ATCDS : <small class="text-muted text-underline"><?= $carte->atcds; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <h5> HM : <small class="text-muted text-underline"><?= $carte->hm; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <h5> Tete ET Cou:EG : <small class="text-muted text-underline"><?= $carte->cou; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <h5> Thorax : <small class="text-muted text-underline"><?= $carte->thorax; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+                                <div class="row">
+                                    <h5> Abdomen : <small class="text-muted text-underline"><?= $carte->abdomen; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+                                <div class="row">
+                                    <h5> Appareil Locomoteur : <small class="text-muted text-underline"><?= $carte->locomoteur; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+                                <div class="row">
+                                    <h5> Appareil genitaux : <small class="text-muted text-underline"><?= $carte->genitaux; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+                                <div class="row">
+                                    <h5> Diagnostic de presomption : <small class="text-muted text-underline"><?= $carte->diagno; ?></small></h5>
+                                    <hr>
+
+                                </div>
+                                <br>
+                                <h3 class="text-center">Examens labo et paraclinique</h3>
+
+                                <div>
+
+                                    <table class="table table-borderless table-thead-bordered text-center">
+                                        <tr>
+
+                                            <th>Examens faitent</th>
+                                            <th>Resultat</th>
+
+                                        </tr>
+                                        <tbody>
+                                            <?php
+                                            $name = $_GET['id_fiche'];
+
+                                            $requete = $db->query("SELECT * FROM user_data WHERE name=$name");
+                                            while ($g = $requete->fetch()) {
+                                            ?>
+
+
+                                                <tr>
+
+                                                    <td><?= $g['email']; ?></td>
+                                                    <td><?= $g['resultat']; ?></td>
+
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                    <!-- End Table -->
+
+                                    <br>
+                                </div>
+
+                                <h3 class="text-center">Ordonnance</h3>
+
+                                <div>
+
+                                    <table class="table table-borderless table-thead-bordered text-center">
+                                        <tr>
+
+                                            <th>Medicament</th>
+                                            <th>Categorie</th>
+                                            <th>Dosage</th>
+                                            <th>Posologie</th>
+                                            <th>Duree</th>
+                                            <th>Status</th>
+                                            
+
+                                        </tr>
+                                        <tbody>
+                                            <?php
+                                            $ref_fiche = $_GET['id_fiche'];
+
+                                            $requete = $db->query("SELECT * FROM ordonnance WHERE ref_fiche=$ref_fiche");
+                                            while ($g = $requete->fetch()) {
+                                                $liv = '';
+                                                if($g['status'] == '1'){
+                                                    $liv= "<span class='badge badge-warning'>pas encore livrer</span>";
+                                                } else {
+                                                    $liv= "<span class='badge badge-success'>livrer</span>";
+
+                                                }
+                                            ?>
+
+
+                                                <tr>
+
+                                                    <td><?= $g['ref_med']; ?></td>
+                                                    <td><?= $g['categorie']; ?></td>
+                                                    <td><?= $g['dosage']; ?></td>
+                                                    <td><?= $g['posologie']; ?></td>
+                                                    <td><?= $g['duree']; ?></td>
+                                                    <td><?php echo $liv; ?></td>
+                                                   
+
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                    <!-- End Table -->
+
+                                    <br>
+                                </div>
 
 
 
 
 
-                            <!-- End Row -->
+
+                                <!-- End Row -->
 
 
                         </div>
@@ -434,7 +518,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
 
                     <!-- Footer -->
                     <div class="d-flex justify-content-end d-print-none gap-3">
-                        
+
 
                         <a class="btn btn-primary" href="javascript:;" onclick="window.print(); return false;">
                             <i class="bi-printer me-1"></i> Imprimer la fiche
@@ -446,7 +530,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
 
             <!-- Footer -->
 
-           
+
 
             <!-- End Footer -->
     </main>

@@ -17,16 +17,16 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 <?php
 if (isset($_POST['btn_res'])) {
-    $resultat = htmlspecialchars($_POST['resultat']);
-    $id_user = htmlspecialchars($_POST['id_user']);
+    $id_ordo = htmlspecialchars($_POST['id_ordo']);
+    $status = htmlspecialchars($_POST['status']);
 
-    $ref_lab = $_SESSION['PROFILE']['id_utilisateur'];
+    $ord_liv = $_SESSION['PROFILE']['id_utilisateur'];
 
-    $consult = $db->prepare("UPDATE user_data SET resultat=:resultat,ref_lab=:ref_lab WHERE id_user=:id_user");
+    $consult = $db->prepare("UPDATE ordonnance SET status=:status,ord_liv=:ord_liv WHERE id_ordo=:id_ordo");
     $consult->execute(array(
-        'resultat' => $resultat,
-        'id_user' => $id_user,
-        'ref_lab' => $_SESSION['PROFILE']['id_utilisateur']
+        'id_ordo' => $id_ordo,
+        'status' => $status,
+        'ord_liv' => $_SESSION['PROFILE']['id_utilisateur']
         
     ));
 
@@ -391,23 +391,33 @@ if (isset($_POST['btn_res'])) {
 
                                         $requete = $db->query("SELECT * FROM ordonnance WHERE ref_fiche=$ref_fiche");
                                         while ($g = $requete->fetch()) {
+
+                                            $liv = '';
+                                            if($g['status'] == '1'){
+                                                $liv= "<span class='badge bg-warning'>pas encore livrer</span>";
+                                            } else {
+                                                $liv= "<span class='badge bg-success'>livrer</span>";
+
+                                            }
                                         ?>
 
                                             <div class="modal fade" id="exampleModal<?= $g['id_ordo']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Completer le resultat de <?= $g['ref_med']; ?></h5>
+                                                            <h5 class="modal-title" id="exampleModalLabel">Livraison de <?= $g['ref_med']; ?></h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <form action="" method="post">
+                                                                <h2>Etes vous sur de vouloiur livrer <?= $g['ref_med']; ?> ?? </h2>
                  
                                                         </div>
                                                         <input type="hidden" name="id_ordo" value="<?= $g['id_ordo']; ?>">
+                                                        <input type="hidden" name="status" value="2">
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                                                            <button type="submit" name="btn_res" class="btn btn-primary">Enregistrer</button>
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
+                                                            <button type="submit" name="btn_res" class="btn btn-primary">Livrer</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -419,9 +429,10 @@ if (isset($_POST['btn_res'])) {
                                                 <td><?= $g['categorie']; ?></td>
                                                 <td><?= $g['dosage']; ?></td>
                                                 <td><?= $g['posologie']; ?></td>
-                                                <td><?= $g['duree']; ?></td>
-                                                <td><?= $g['status']; ?></td>
+                                                <td><?= $g['duree']; ?> Jours</td>
+                                                <td class="text tex-black"><?php echo $liv; ?></td>
                                                 <td>
+                                                    
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<?= $g['id_ordo']; ?>">
                                                         Livrer
                                                     </button>
