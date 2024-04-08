@@ -1,6 +1,6 @@
 <?php
 require '../config/database.php';
-if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'labo') {
+if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'admin') {
     header('location:../login');
 } else {
     $recup_informations = $db->prepare("SELECT * FROM fonction INNER JOIN tbl_agent ON fonction.id_fonction=tbl_agent.ref_fonction WHERE id_utilisateur=:id_utilisateur");
@@ -252,7 +252,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Liste d'attente pour l'examen du labo</h1>
+                        <h1 class="page-header-title">Rapport du labo</h1>
                     </div>
                     <!-- End Col -->
 

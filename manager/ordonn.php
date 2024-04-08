@@ -11,27 +11,35 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 }
 
 
+
+
 ?>
 
 <?php
+if (isset($_POST['btn_res'])) {
+    $resultat = htmlspecialchars($_POST['resultat']);
+    $id_user = htmlspecialchars($_POST['id_user']);
 
+    $ref_lab = $_SESSION['PROFILE']['id_utilisateur'];
 
-$id_fiche = $_GET['id_fiche'];
+    $consult = $db->prepare("UPDATE user_data SET resultat=:resultat,ref_lab=:ref_lab WHERE id_user=:id_user");
+    $consult->execute(array(
+        'resultat' => $resultat,
+        'id_user' => $id_user,
+        'ref_lab' => $_SESSION['PROFILE']['id_utilisateur']
+        
+    ));
 
+    if ($consult) {
+        echo 'valider';
+    } else {
+        echo 'err';
+    }
+}
 
-
-$card = $db->prepare("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE id_fiche=:id_fiche");
-$card->execute([
-    'id_fiche' => $id_fiche
-]);
-$carte = $card->fetch(PDO::FETCH_OBJ);
 
 
 ?>
-
-
-
-
 
 
 
@@ -45,7 +53,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Fiche de consultation de <?= ucwords($carte->noms); ?></title>
+    <title>Users | Front - Admin &amp; Dashboard Template</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">
@@ -58,6 +66,17 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
 
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
+
+
 
     <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
     <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
@@ -251,7 +270,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
     <!-- ========== HEADER ========== -->
 
 
-
+    <?php include 'partials/_header.php' ?>
 
     <!-- ========== END HEADER ========== -->
 
@@ -260,9 +279,27 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
     <!-- ========== MAIN CONTENT ========== -->
     <!-- Navbar Vertical -->
 
+    <?php include 'partials/_aside.php' ?>
+
+    <?php
+
+
+    $id_fiche = $_GET['id_fiche'];
 
 
 
+    $card = $db->prepare("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE id_fiche=:id_fiche");
+    $card->execute([
+        'id_fiche' => $id_fiche
+    ]);
+    $carte = $card->fetch(PDO::FETCH_OBJ);
+
+
+
+
+
+
+    ?>
 
     <main id="content" role="main" class="main">
         <!-- Content -->
@@ -281,7 +318,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
 
                                     </div>
                                     <div class="col-md-8">
-                                        <h1 style="font-size: 30px;" class=" text-primary">CLINIQUE NOTRE VIE</h1>
+                                        <h1 style="font-size: 50px;" class=" text-primary">CLINIQUE NOTRE VIE</h1>
                                         <h1 class="text-center text-danger">CLINOVIE</h1>
                                     </div>
 
@@ -290,7 +327,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
 
                                 <div class="">
                                     <div>
-                                        <h2 class="text-center">FICHE DE CONSULTATION</h2>
+                                        <h2 class="text-center">FICHE DE LABO</h2>
 
                                     </div>
 
@@ -322,192 +359,194 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
                                     <dl class="row">
                                         <dt class="col-sm-8">Num du dossier:</dt>
                                         <dd class="col-sm-4">00<?= ucwords($carte->id_fiche); ?></dd>
-                                        <dt class="col-sm-8">Date consultation:</dt>
-                                        <dd class="col-sm-4"><?= $carte->created_tri; ?></dd>
                                     </dl>
 
                                 </div>
                                 <!-- End Col -->
                             </div>
                             <!-- End Row -->
-                            <h4 class="text-center">CLINIQUE</h4>
+                            <h4 class="text-center">RESULTAT LABO</h4>
 
                             <!-- Table -->
-                            <div class="">
-                                <table class="table table-borderless table-nowrap table-align-middle">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>Poids : <?= ucwords($carte->poids); ?> Kg</th>
-                                            <th>Taille : <?= ucwords($carte->taille); ?> cm</th>
-                                            <th>Temp : <?= ucwords($carte->temperature); ?> C</th>
-                                            <th>Pouls : <?= ucwords($carte->pouls); ?> bpm</th>
-                                            <th>FR : <?= ucwords($carte->frequence); ?></th>
-                                            <th>SPO2 : <?= ucwords($carte->spo2); ?> bpm</th>
-                                        </tr>
-                                    </thead>
 
 
+
+                            <div>
+
+                                <table class="table table-borderless table-thead-bordered text-center">
+                                    <tr>
+                                    
+                                        <th>Examen a faire</th>
+                                        <th>Resultat</th>
+                                       
+                                    </tr>
+                                    <tbody>
+                                        <?php
+                                        $name = $_GET['id_fiche'];
+
+                                        $requete = $db->query("SELECT * FROM user_data WHERE name=$name");
+                                        while ($g = $requete->fetch()) {
+                                        ?>
+
+                                            <div class="modal fade" id="exampleModal<?= $g['id_user']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Completer le resultat de <?= $g['email']; ?></h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="" method="post">
+                                                                <textarea class="form-control" name="resultat" id="" cols="30" rows="10">
+
+                                                                </textarea>
+                                                        </div>
+                                                        <input type="hidden" name="id_user" value="<?= $g['id_user']; ?>">
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                                            <button type="submit" name="btn_res" class="btn btn-primary">Enregistrer</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <tr>
+                                               
+                                                <td><?= $g['email']; ?></td>
+                                                <td><?= $g['resultat']; ?></td>
+                                                
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
                                 </table>
-                                <h4>Plaintes : <?= ucwords($carte->plaintes); ?>
-                                    <hr>
-                                </h4>
+                                <!-- End Table -->
 
+                                <br>
+                            </div>
+                            
+                                <h3>Ordonnance pour la fiche numero <?= $carte->id_fiche; ?> </h3>
+                                <form id="form1" name="form1" method="post">
+                                    <div class="form-group">
+                                        
+                                        <input type="hidden" name="ref_fiche" class="form-control" id="ref_fiche" value="<?= $carte->id_fiche; ?>" readonly>
+                                    </div>
+                                    <div class="row">
+                                   <div class="col-md-3">
+                                   
+                                        <label for="pwd">Selectionner un medicament:</label>
+                                        <div class="tom-select-custom">
+                                            <select class="js-select form-select" name="ref_med" id="ref_med" autocomplete="off" data-hs-tom-select-options='{
+            "placeholder": "Selectionner un medicament..."
+          }'>
+                                                <?php $lab = $db->query("SELECT * FROM medicaments");
+                                                while ($gaa = $lab->fetch()) {
+                                                ?>
+                                                    <option value="">Selectionner un examen ...</option>
+                                                    <option value="<?= $gaa['nom_med']; ?>"><?= $gaa['nom_med']; ?></option>
+
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        
+                                       
+                                   
+
+                                   </div>
+                                   <div class="col-md-2">
+                                    <label for="">Categorie</label>
+                                    <select class="form-control" name="categorie" id="categorie">
+                                        <option>--Categorie--</option>
+                                        <option value="comprimer">Comprimer</option>
+                                        <option value="sirop">sirop</option>
+                                        <option value="injection">injection</option>
+                                        <option value="tube">tube</option>
+                                        
+                                    </select>
+
+                                   </div>
+
+                                   <div class="col-md-2">
+                                    <label for="">Dosage</label>
+                                    <select class="form-control" name="dosage" id="dosage">
+                                        <option>--Dosage--</option>
+                                        <option value="500 mg">500 mg</option>
+                                        <option value="250 mg">250 mg</option>
+                                        <option value="10 ml">10 ml</option>
+                                        
+                                        
+                                    </select>
+
+                                   </div>
+
+                                   <div class="col-md-2">
+                                    <label for="">Posologie</label>
+                                    <select class="form-control" name="posologie" id="posologie">
+                                        <option>--Posologie--</option>
+                                        <option value="3 x 1"> 3 x 1</option>
+                                        <option value="2 x 1"> 2 x 1</option>
+                                        <option value="1 x 1"> 1 x 1</option>
+                                        
+                                        
+                                    </select>
+
+                                   </div>
+
+                                   <div class="col-md-2">
+                                    <label for="">Duree</label>
+                                    <select class="form-control" name="duree" id="duree">
+                                        <option>--Duree--</option>
+                                        <option value="1 jours">1 jours</option>
+                                        <option value="2">2 jours</option>
+                                        <option value="3">3 jours</option>
+                                        
+                                        
+                                    </select>
+
+                                   </div>
+
+
+
+                                   </div>
+                                  
+
+                                    <input type="button" name="send" class="btn btn-primary" value="Ajouter a la liste" id="butsend">
+                                    <input type="button" name="save" class="btn btn-primary" value="Enregistrer" id="butsave">
+                                </form>
+                                <table id="table1" name="table1" class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>Numero</th>
+                                            <th>Numero de la fiche</th>
+                                            <th>Medicaments</th>
+                                            <th>categorie</th>
+                                            <th>Dosage</th>
+                                            <th>Posologie</th>
+                                            <th>Duree</th>
+                                            <th>Action</th>
+                                        <tr>
+                                    </tbody>
+                                </table>
+                            
+
+
+                            <div>
 
 
 
                             </div>
-                            <!-- End Table -->
-                            <form action="" method="post">
-                                <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
-                                <div class="row">
-                                    <h5> CA : <small class="text-muted text-underline"><?= $carte->ca; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <h5> ATCDS : <small class="text-muted text-underline"><?= $carte->atcds; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <h5> HM : <small class="text-muted text-underline"><?= $carte->hm; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <h5> Tete ET Cou:EG : <small class="text-muted text-underline"><?= $carte->cou; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <h5> Thorax : <small class="text-muted text-underline"><?= $carte->thorax; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-                                <div class="row">
-                                    <h5> Abdomen : <small class="text-muted text-underline"><?= $carte->abdomen; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-                                <div class="row">
-                                    <h5> Appareil Locomoteur : <small class="text-muted text-underline"><?= $carte->locomoteur; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-                                <div class="row">
-                                    <h5> Appareil genitaux : <small class="text-muted text-underline"><?= $carte->genitaux; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-                                <div class="row">
-                                    <h5> Diagnostic de presomption : <small class="text-muted text-underline"><?= $carte->diagno; ?></small></h5>
-                                    <hr>
-
-                                </div>
-                                <br>
-                                <h3 class="text-center">Examens labo et paraclinique</h3>
-
-                                <div>
-
-                                    <table class="table table-borderless table-thead-bordered text-center">
-                                        <tr>
-
-                                            <th>Examens faitent</th>
-                                            <th>Resultat</th>
-
-                                        </tr>
-                                        <tbody>
-                                            <?php
-                                            $name = $_GET['id_fiche'];
-
-                                            $requete = $db->query("SELECT * FROM user_data WHERE name=$name");
-                                            while ($g = $requete->fetch()) {
-                                            ?>
-
-
-                                                <tr>
-
-                                                    <td><?= $g['email']; ?></td>
-                                                    <td><?= $g['resultat']; ?></td>
-
-                                                </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                    <!-- End Table -->
-
-                                    <br>
-                                </div>
-
-                                <h3 class="text-center">Ordonnance</h3>
-
-                                <div>
-
-                                    <table class="table table-borderless table-thead-bordered text-center">
-                                        <tr>
-
-                                            <th>Medicament</th>
-                                            <th>Categorie</th>
-                                            <th>Dosage</th>
-                                            <th>Posologie</th>
-                                            <th>Duree</th>
-                                            <th>Status</th>
-                                            
-
-                                        </tr>
-                                        <tbody>
-                                            <?php
-                                            $ref_fiche = $_GET['id_fiche'];
-
-                                            $requete = $db->query("SELECT * FROM ordonnance WHERE ref_fiche=$ref_fiche");
-                                            while ($g = $requete->fetch()) {
-                                                $liv = '';
-                                                if($g['status'] == '1'){
-                                                    $liv= "<span class='badge badge-warning'>pas encore livrer</span>";
-                                                } else {
-                                                    $liv= "<span class='badge badge-success'>livrer</span>";
-
-                                                }
-                                            ?>
-
-
-                                                <tr>
-
-                                                    <td><?= $g['ref_med']; ?></td>
-                                                    <td><?= $g['categorie']; ?></td>
-                                                    <td><?= $g['dosage']; ?></td>
-                                                    <td><?= $g['posologie']; ?></td>
-                                                    <td><?= $g['duree']; ?></td>
-                                                    <td><?php echo $liv; ?></td>
-                                                   
-
-                                                </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                    <!-- End Table -->
-
-                                    <br>
-                                </div>
 
 
 
 
 
 
-                                <!-- End Row -->
+
+
+
+
+
+
+                            <!-- End Row -->
 
 
                         </div>
@@ -517,20 +556,14 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
                     <!-- End Card -->
 
                     <!-- Footer -->
-                    <div class="d-flex justify-content-end d-print-none gap-3">
 
-
-                        <a class="btn btn-primary" href="javascript:;" onclick="window.print(); return false;">
-                            <i class="bi-printer me-1"></i> Imprimer la fiche
-                        </a>
-                    </div>
                     <!-- End Footer -->
                 </div>
             </div>
 
             <!-- Footer -->
 
-
+            <?php include '../part/_foot.php' ?>
 
             <!-- End Footer -->
     </main>
@@ -908,6 +941,68 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
                 HSCore.components.HSMask.init('.js-input-mask')
             }
         })()
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var id = 1;
+            /*Assigning id and class for tr and td tags for separation.*/
+            $("#butsend").click(function() {
+                var newid = id++;
+                $("#table1").append('<tr valign="top" id="' + newid + '">\n\
+    <td width="100px" >' + newid + '</td>\n\
+    <td width="100px" class="ref_fiche' + newid + '">' + $("#ref_fiche").val() + '</td>\n\
+    <td width="100px" class="ref_med' + newid + '">' + $("#ref_med").val() + '</td>\n\
+    <td width="100px" class="categorie' + newid + '">' + $("#categorie").val() + '</td>\n\
+    <td width="100px" class="dosage' + newid + '">' + $("#dosage").val() + '</td>\n\
+    <td width="100px" class="posologie' + newid + '">' + $("#posologie").val() + '</td>\n\
+    <td width="100px" class="duree' + newid + '">' + $("#duree").val() + '</td>\n\
+    <td width="100px"><a href="javascript:void(0);" class="remCF">Supprimer</a></td>\n\ </tr>');
+            });
+            $("#table1").on('click', '.remCF', function() {
+                $(this).parent().parent().remove();
+            });
+            /*crating new click event for save button*/
+            $("#butsave").click(function() {
+                var lastRowId = $('#table1 tr:last').attr("id"); /*finds id of the last row inside table*/
+                var ref_fiche = new Array();
+                var ref_med = new Array();
+                var categorie = new Array();
+                var dosage = new Array();
+                var posologie = new Array();
+                var duree = new Array();
+                for (var i = 1; i <= lastRowId; i++) {
+                    ref_fiche.push($("#" + i + " .ref_fiche" + i).html()); /*pushing all the names listed in the table*/
+                    ref_med.push($("#" + i + " .ref_med" + i).html());
+                    categorie.push($("#" + i + " .categorie" + i).html());
+                    dosage.push($("#" + i + " .dosage" + i).html());
+                    posologie.push($("#" + i + " .posologie" + i).html());
+                    duree.push($("#" + i + " .duree" + i).html());
+                     /*pushing all the emails listed in the table*/
+                }
+                var sendfiche = JSON.stringify(ref_fiche);
+                var sendmed = JSON.stringify(ref_med);
+                var sendcat = JSON.stringify(categorie);
+                var senddos = JSON.stringify(dosage);
+                var sendpos = JSON.stringify(posologie);
+                var senddure = JSON.stringify(duree);
+                $.ajax({
+                    url: "savo.php",
+                    type: "post",
+                    data: {
+                        ref_fiche: sendfiche,
+                        ref_med: sendmed,
+                        categorie:sendcat,
+                        dosage:senddos,
+                        posologie:sendpos,
+                        duree:senddure
+                    },
+                    success: function(data) {
+                        alert(data); /* alerts the response from php.*/
+                    }
+                });
+            });
+        });
     </script>
 
     <!-- End Style Switcher JS -->

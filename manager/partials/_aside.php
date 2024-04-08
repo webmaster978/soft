@@ -78,6 +78,7 @@
 
                 <div id="navbarCons" class="nav-collapse collapse " data-bs-parent="#navbarCons">
                   <a class="nav-link " href="consultations">Nouvelle</a>
+                  <a class="nav-link " href="resultat">Resultat</a>
                   <a class="nav-link " href="rapport_consult">Rapport</a>
                   
                   
@@ -94,6 +95,21 @@
                   <a class="nav-link " href="labos">Nouveau cas</a>
                   <a class="nav-link " href="rapport_labo">Rapport</a>
                   <a class="nav-link " href="examen_labo">Liste des examens</a>
+                  
+                  
+                </div>
+                
+              </div>
+              <div class="nav-item">
+                <a class="nav-link dropdown-toggle " href="#navbarP" role="button" data-bs-toggle="collapse" data-bs-target="#navbarP" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
+                  <i class="bi-book nav-icon"></i>
+                  <span class="nav-link-title">Pharmacie</span>
+                </a>
+
+                <div id="navbarP" class="nav-collapse collapse " data-bs-parent="#navbarP">
+                <a class="nav-link " href="ordonnance">Ordonnances</a>
+                  <a class="nav-link " href="medicament">Medicaments</a>
+                  
                   
                   
                 </div>

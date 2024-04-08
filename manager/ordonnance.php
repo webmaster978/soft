@@ -13,25 +13,6 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 ?>
 
-<?php
-
-
-$id_fiche = $_GET['id_fiche'];
-
-
-
-$card = $db->prepare("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE id_fiche=:id_fiche");
-$card->execute([
-    'id_fiche' => $id_fiche
-]);
-$carte = $card->fetch(PDO::FETCH_OBJ);
-
-
-?>
-
-
-
-
 
 
 
@@ -45,7 +26,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Fiche de consultation de <?= ucwords($carte->noms); ?></title>
+    <title>Users | Front - Admin &amp; Dashboard Template</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">
@@ -251,7 +232,7 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
     <!-- ========== HEADER ========== -->
 
 
-
+    <?php include 'partials/_header.php' ?>
 
     <!-- ========== END HEADER ========== -->
 
@@ -260,279 +241,241 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
     <!-- ========== MAIN CONTENT ========== -->
     <!-- Navbar Vertical -->
 
-
-
-
+    <?php include 'partials/_aside.php' ?>
 
     <main id="content" role="main" class="main">
         <!-- Content -->
         <div class="content container-fluid">
             <!-- Page Header -->
+            <div class="page-header">
+                <div class="row align-items-end">
+                    <div class="col-sm mb-2 mb-sm-0">
 
-            <div class="row">
-                <div class="col-lg-12 mb-5 mb-lg-0">
-                    <!-- Card -->
-                    <div class="card card-lg mb-5">
-                        <div class="card-body">
-                            <div class="row justify-content-lg-between">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <img src="../assets/img/logo/lg.png" alt="Logo">
 
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h1 style="font-size: 30px;" class=" text-primary">CLINIQUE NOTRE VIE</h1>
-                                        <h1 class="text-center text-danger">CLINOVIE</h1>
-                                    </div>
-
-                                </div>
-                                <!-- End Col -->
-
-                                <div class="">
-                                    <div>
-                                        <h2 class="text-center">FICHE DE CONSULTATION</h2>
-
-                                    </div>
-
-
-                                </div>
-                                <!-- End Col -->
-                            </div>
-                            <!-- End Row -->
-
-                            <div class="row justify-content-md-between mb-3">
-                                <div class="col-md">
-                                    <h4>Nom & Post Nom & Prenom: <?= ucwords($carte->noms); ?> </h4>
-                                    <h4>Sexe : <?= ucwords($carte->genre); ?> </h4>
-                                    <h4>Date de naissance : <?= ucwords($carte->date_naiss); ?> // Age <?php
-                                                                                                        $daten = $carte->date_naiss;
-                                                                                                        $today = date("Y-m-d");
-                                                                                                        $diff = date_diff(date_create($daten), date_create($today));
-                                                                                                        echo $diff->format('%y');
-
-                                                                                                        ?> An(s)</h4>
-                                    <h4>Categorie : <?= ucwords($carte->categorie); ?> </h4>
-                                    <h4>Personne a contacter : <?= ucwords($carte->nom_respo); ?> // <?= ucwords($carte->contact_respo); ?> </h4>
-
-
-                                </div>
-                                <!-- End Col -->
-
-                                <div class="col-md text-md-end">
-                                    <dl class="row">
-                                        <dt class="col-sm-8">Num du dossier:</dt>
-                                        <dd class="col-sm-4">00<?= ucwords($carte->id_fiche); ?></dd>
-                                        <dt class="col-sm-8">Date consultation:</dt>
-                                        <dd class="col-sm-4"><?= $carte->created_tri; ?></dd>
-                                    </dl>
-
-                                </div>
-                                <!-- End Col -->
-                            </div>
-                            <!-- End Row -->
-                            <h4 class="text-center">CLINIQUE</h4>
-
-                            <!-- Table -->
-                            <div class="">
-                                <table class="table table-borderless table-nowrap table-align-middle">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>Poids : <?= ucwords($carte->poids); ?> Kg</th>
-                                            <th>Taille : <?= ucwords($carte->taille); ?> cm</th>
-                                            <th>Temp : <?= ucwords($carte->temperature); ?> C</th>
-                                            <th>Pouls : <?= ucwords($carte->pouls); ?> bpm</th>
-                                            <th>FR : <?= ucwords($carte->frequence); ?></th>
-                                            <th>SPO2 : <?= ucwords($carte->spo2); ?> bpm</th>
-                                        </tr>
-                                    </thead>
-
-
-                                </table>
-                                <h4>Plaintes : <?= ucwords($carte->plaintes); ?>
-                                    <hr>
-                                </h4>
-
-
-
-
-                            </div>
-                            <!-- End Table -->
-                            <form action="" method="post">
-                                <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
-                                <div class="row">
-                                    <h5> CA : <small class="text-muted text-underline"><?= $carte->ca; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <h5> ATCDS : <small class="text-muted text-underline"><?= $carte->atcds; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <h5> HM : <small class="text-muted text-underline"><?= $carte->hm; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <h5> Tete ET Cou:EG : <small class="text-muted text-underline"><?= $carte->cou; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-
-                                <div class="row">
-                                    <h5> Thorax : <small class="text-muted text-underline"><?= $carte->thorax; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-                                <div class="row">
-                                    <h5> Abdomen : <small class="text-muted text-underline"><?= $carte->abdomen; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-                                <div class="row">
-                                    <h5> Appareil Locomoteur : <small class="text-muted text-underline"><?= $carte->locomoteur; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-                                <div class="row">
-                                    <h5> Appareil genitaux : <small class="text-muted text-underline"><?= $carte->genitaux; ?></small></h5>
-                                    <hr>
-
-                                </div>
-
-                                <div class="row">
-                                    <h5> Diagnostic de presomption : <small class="text-muted text-underline"><?= $carte->diagno; ?></small></h5>
-                                    <hr>
-
-                                </div>
-                                <br>
-                                <h3 class="text-center">Examens labo et paraclinique</h3>
-
-                                <div>
-
-                                    <table class="table table-borderless table-thead-bordered text-center">
-                                        <tr>
-
-                                            <th>Examens faitent</th>
-                                            <th>Resultat</th>
-
-                                        </tr>
-                                        <tbody>
-                                            <?php
-                                            $name = $_GET['id_fiche'];
-
-                                            $requete = $db->query("SELECT * FROM user_data WHERE name=$name");
-                                            while ($g = $requete->fetch()) {
-                                            ?>
-
-
-                                                <tr>
-
-                                                    <td><?= $g['email']; ?></td>
-                                                    <td><?= $g['resultat']; ?></td>
-
-                                                </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                    <!-- End Table -->
-
-                                    <br>
-                                </div>
-
-                                <h3 class="text-center">Ordonnance</h3>
-
-                                <div>
-
-                                    <table class="table table-borderless table-thead-bordered text-center">
-                                        <tr>
-
-                                            <th>Medicament</th>
-                                            <th>Categorie</th>
-                                            <th>Dosage</th>
-                                            <th>Posologie</th>
-                                            <th>Duree</th>
-                                            <th>Status</th>
-                                            
-
-                                        </tr>
-                                        <tbody>
-                                            <?php
-                                            $ref_fiche = $_GET['id_fiche'];
-
-                                            $requete = $db->query("SELECT * FROM ordonnance WHERE ref_fiche=$ref_fiche");
-                                            while ($g = $requete->fetch()) {
-                                                $liv = '';
-                                                if($g['status'] == '1'){
-                                                    $liv= "<span class='badge badge-warning'>pas encore livrer</span>";
-                                                } else {
-                                                    $liv= "<span class='badge badge-success'>livrer</span>";
-
-                                                }
-                                            ?>
-
-
-                                                <tr>
-
-                                                    <td><?= $g['ref_med']; ?></td>
-                                                    <td><?= $g['categorie']; ?></td>
-                                                    <td><?= $g['dosage']; ?></td>
-                                                    <td><?= $g['posologie']; ?></td>
-                                                    <td><?= $g['duree']; ?></td>
-                                                    <td><?php echo $liv; ?></td>
-                                                   
-
-                                                </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                    <!-- End Table -->
-
-                                    <br>
-                                </div>
-
-
-
-
-
-
-                                <!-- End Row -->
-
-
-                        </div>
-
+                        <h1 class="page-header-title">Ordonnances</h1>
                     </div>
-
-                    <!-- End Card -->
-
-                    <!-- Footer -->
-                    <div class="d-flex justify-content-end d-print-none gap-3">
+                    <!-- End Col -->
 
 
-                        <a class="btn btn-primary" href="javascript:;" onclick="window.print(); return false;">
-                            <i class="bi-printer me-1"></i> Imprimer la fiche
-                        </a>
-                    </div>
-                    <!-- End Footer -->
+                    <!-- End Col -->
                 </div>
+                <!-- End Row -->
             </div>
+            <!-- End Page Header -->
 
-            <!-- Footer -->
+            <!-- Stats -->
+
+            <!-- End Stats -->
+
+            <!-- Card -->
+            <div class="card">
+                <!-- Header -->
+                <div class="card-header card-header-content-md-between">
+                    <div class="mb-2 mb-md-0">
+                        <form>
+                            <!-- Search -->
+                            <div class="input-group input-group-merge input-group-flush">
+                                <div class="input-group-prepend input-group-text">
+                                    <i class="bi-search"></i>
+                                </div>
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un patient" aria-label="Search users">
+                            </div>
+                            <!-- End Search -->
+                        </form>
+                    </div>
+
+                    <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
+                        <!-- Datatable Info -->
+
+                        <!-- End Datatable Info -->
+
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi-download me-2"></i> Export
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
+                                <span class="dropdown-header">Options</span>
+                                <a id="export-copy" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/illustrations/copy-icon.svg" alt="Image Description">
+                                    Copy
+                                </a>
+                                <a id="export-print" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/illustrations/print-icon.svg" alt="Image Description">
+                                    Print
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <span class="dropdown-header">Download options</span>
+                                <a id="export-excel" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/brands/excel-icon.svg" alt="Image Description">
+                                    Excel
+                                </a>
+                                <a id="export-csv" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
+                                    .CSV
+                                </a>
+                                <a id="export-pdf" class="dropdown-item" href="javascript:;">
+                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/brands/pdf-icon.svg" alt="Image Description">
+                                    PDF
+                                </a>
+                            </div>
+                        </div>
+                        <!-- End Dropdown -->
+
+                        <!-- Dropdown -->
+
+                        <!-- End Dropdown -->
+                    </div>
+                </div>
+                <!-- End Header -->
+
+                <!-- Table -->
+                <div class="table-responsive datatable-custom position-relative">
+                    <table id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
+                   "columnDefs": [{
+                      "targets": [0, 7],
+                      "orderable": false
+                    }],
+                   "order": [],
+                   "info": {
+                     "totalQty": "#datatableWithPaginationInfoTotalQty"
+                   },
+                   "search": "#datatableSearch",
+                   "entries": "#datatableEntries",
+                   "pageLength": 15,
+                   "isResponsive": false,
+                   "isShowPaging": false,
+                   "pagination": "datatablePagination"
+                 }'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="table-column-pe-0">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
+                                        <label class="form-check-label" for="datatableCheckAll"></label>
+                                    </div>
+                                </th>
+                                <th class="table-column-ps-0">Noms du patient</th>
+                                <th>Poids</th>
+                                <th>Taille</th>
+                                <th>Temperature</th>
+                                <th>Pouls</th>
+                                <th>SPO2 ET FR</th>
+
+                                
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE status= 4");
+                            while ($g = $requete->fetch()) {
+                            ?>
 
 
 
-            <!-- End Footer -->
+
+                                <tr>
+                                    <td class="table-column-pe-0">
+
+                                        <?= $g['id_fiche']; ?>
+
+
+                                    </td>
+                                    <td class="table-column-ps-0">
+                                        <a class="d-flex align-items-center" href="#">
+                                            <div class="avatar avatar-circle">
+                                                <img class="avatar-img" src="../assets/img/prof/img.jpg" alt="Image Description">
+                                            </div>
+                                            <div class="ms-3">
+                                                <span class="d-block h5 text-inherit mb-0"><?= $g['noms']; ?><i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></span>
+                                                <span class="d-block fs-5 text-body"><?= $g['categorie']; ?></span>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <?= $g['poids']; ?> Kg
+                                    </td>
+                                    <td><?= $g['taille']; ?> m</td>
+                                    <td>
+                                        <?= $g['temperature']; ?> Degrer
+                                    </td>
+                                    <td>
+                                        <?= $g['pouls']; ?> bpm
+
+                                    </td>
+                                    <td>SPO2 : <?= $g['spo2']; ?>
+                                        <span class="d-block fs-5 text-body">FR : <?= $g['frequence']; ?></span>
+
+                                    </td>
+                                  
+                                    <td>
+                                        <a class="btn btn-outline-primary btn-sm" href="ordonnances?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
+
+                                      
+
+                                    </td>
+                                </tr>
+                            <?php } ?>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End Table -->
+                <div class="card-footer">
+          <!-- Pagination -->
+          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+            <div class="col-sm mb-2 mb-sm-0">
+              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                <span class="me-2">Showing:</span>
+
+                <!-- Select -->
+                <div class="tom-select-custom">
+                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
+                            "searchInDropdown": false,
+                            "hideSearch": true
+                          }'>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="8" selected>8</option>
+                    <option value="12">12</option>
+                  </select>
+                </div>
+                <!-- End Select -->
+
+                <span class="text-secondary me-2">of</span>
+
+                <!-- Pagination Quantity -->
+                <span id="datatableWithPaginationInfoTotalQty"></span>
+              </div>
+            </div>
+            <!-- End Col -->
+
+            <div class="col-sm-auto">
+              <div class="d-flex justify-content-center justify-content-sm-end">
+                <!-- Pagination -->
+                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+              </div>
+            </div>
+            <!-- End Col -->
+          </div>
+          <!-- End Pagination -->
+        </div>
+        <!-- End Footer -->
+      </div>
+
+                <!-- Footer -->
+
+
+        <!-- End Content -->
+
+        <!-- Footer -->
+
+        <?php include '../part/_foot.php' ?>
+
+        <!-- End Footer -->
     </main>
     <!-- ========== END MAIN CONTENT ========== -->
 
