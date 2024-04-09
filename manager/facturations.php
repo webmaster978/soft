@@ -329,7 +329,7 @@ if (isset($_POST['btn_res'])) {
 
                                 <div class="">
                                     <div>
-                                        <h2 class="text-center">FICHE DE LABO</h2>
+                                        <h2 class="text-center">FACTURE</h2>
 
                                     </div>
 
@@ -367,7 +367,7 @@ if (isset($_POST['btn_res'])) {
                                 <!-- End Col -->
                             </div>
                             <!-- End Row -->
-                            <h4 class="text-center">ordonnance</h4>
+                            <h4 class="text-center">CONSULTATION</h4>
 
                             <!-- Table -->
 
@@ -375,106 +375,60 @@ if (isset($_POST['btn_res'])) {
 
                             <div>
 
-                                <table class="table table-borderless table-thead-bordered text-center">
+
+                            <table class="table table-borderless table-thead-bordered text-center">
                                     <tr>
-
-                                        <th>Medicament</th>
-                                        <th>Categorie</th>
-                                        <th>Dosage</th>
-                                        <th>Posologie</th>
-                                        <th>Duree</th>
-                                        <th>Prix de vente</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-
+                                    
+                                        <th>Examen a faire</th>
+                                       
+                                        <th>Prix</th>
                                     </tr>
                                     <tbody>
                                         <?php
-                                        $ref_fiche = $_GET['id_fiche'];
+                                        $name = $_GET['id_fiche'];
 
-                                        $requete = $db->query("SELECT * FROM `ordonnance` INNER JOIN medicaments ON ordonnance.ref_med = medicaments.nom_med WHERE ref_fiche=$ref_fiche");
+                                        $requete = $db->query("SELECT * FROM user_data INNER JOIN labo ON user_data.email = labo.nom_labo WHERE name=$name");
                                         while ($g = $requete->fetch()) {
-
-                                            $liv = '';
-                                            if ($g['status'] == '1') {
-                                                $liv = "<span class='badge bg-warning'>pas encore livrer</span>";
-                                            } else {
-                                                $liv = "<span class='badge bg-success'>livrer</span>";
-                                            }
                                         ?>
 
-                                            <div class="modal fade" id="exampleModal<?= $g['id_ordo']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Livraison de <?= $g['ref_med']; ?></h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <form action="" method="post">
-                                                                <h2>Etes vous sur de vouloiur livrer <?= $g['ref_med']; ?> ?? </h2>
-                                                                <!-- Quantity -->
-                                                                <div class="quantity-counter">
-                                                                    <div class="js-quantity-counter row align-items-center">
-                                                                        <div class="col">
-                                                                            <span class="d-block small">Selectionner la quantite</span>
-                                                                            <input class="js-result form-control form-control-quantity-counter" name="quantite" type="text" value="1" Required>
-                                                                        </div>
-                                                                        <!-- End Col -->
 
-                                                                        <div class="col-auto">
-                                                                            <a class="js-minus btn btn-outline-secondary btn-xs btn-icon rounded-circle" href="javascript:;">
-                                                                                <svg width="8" height="2" viewBox="0 0 8 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                    <path d="M0 1C0 0.723858 0.223858 0.5 0.5 0.5H7.5C7.77614 0.5 8 0.723858 8 1C8 1.27614 7.77614 1.5 7.5 1.5H0.5C0.223858 1.5 0 1.27614 0 1Z" fill="currentColor" />
-                                                                                </svg>
-                                                                            </a>
-                                                                            <a class="js-plus btn btn-outline-secondary btn-xs btn-icon rounded-circle" href="javascript:;">
-                                                                                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                    <path d="M4 0C4.27614 0 4.5 0.223858 4.5 0.5V3.5H7.5C7.77614 3.5 8 3.72386 8 4C8 4.27614 7.77614 4.5 7.5 4.5H4.5V7.5C4.5 7.77614 4.27614 8 4 8C3.72386 8 3.5 7.77614 3.5 7.5V4.5H0.5C0.223858 4.5 0 4.27614 0 4C0 3.72386 0.223858 3.5 0.5 3.5H3.5V0.5C3.5 0.223858 3.72386 0 4 0Z" fill="currentColor" />
-                                                                                </svg>
-                                                                            </a>
-                                                                        </div>
-                                                                        <!-- End Col -->
-                                                                    </div>
-                                                                    <!-- End Row -->
-                                                                </div>
-                                                                <!-- End Quantity -->
-
-                                                        </div>
-                                                        <input type="hidden" name="id_ordo" value="<?= $g['id_ordo']; ?>">
-                                                        <input type="hidden" name="status" value="2">
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
-                                                            <button type="submit" name="btn_res" class="btn btn-primary">Livrer</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <tr>
-
-                                                <td><?= $g['ref_med']; ?></td>
-                                                <td><?= $g['categorie']; ?></td>
-                                                <td><?= $g['dosage']; ?></td>
-                                                <td><?= $g['posologie']; ?></td>
-                                                <td><?= $g['duree']; ?> Jours</td>
-
-                                                <td><?= $g['prix_v']; ?> $</td>
-                                                <td class="text tex-black"><?php echo $liv; ?></td>
-                                                <td>
-
-                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<?= $g['id_ordo']; ?>">
-                                                        Livrer
-                                                    </button>
-                                                </td>
-
+                                               
+                                                <td><?= $g['email']; ?></td>
+                                              
+                                                <td><?= $g['prix']; ?> $</td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
                                 </table>
-                                <!-- End Table -->
+                                <h4 class="text-center">Para clinique</h4>
+                                <table class="table table-borderless table-thead-bordered text-center">
+                                    <tr>
+                                    
+                                        <th>Examen a faire</th>
+                                       
+                                        <th>Prix</th>
+                                    </tr>
+                                    <tbody>
+                                        <?php
+                                        $name = $_GET['id_fiche'];
 
-                                <br>
+                                        $requet = $db->query("SELECT * FROM user_data WHERE name=$name AND categorie='imagerie'");
+                                        while ($ga = $requet->fetch()) {
+                                        ?>
+
+
+                                            <tr>
+                                               
+                                                <td><?= $ga['email']; ?></td>
+                                              
+                                                <td><?= $ga['px']; ?> $</td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+
+                               
                             </div>
 
 
