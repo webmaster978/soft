@@ -478,7 +478,15 @@ if (isset($_POST['btn_imagerie'])) {
                                 <div class="row">
                                     <label class="col-sm-1 col-form-label">ATCDS :</label>
                                     <div class="col-sm-11">
-                                        <textarea class="form-control" name="atcds" placeholder="atcds" value="<?= $carte->atcds; ?>"> <?= $carte->atcds; ?></textarea>
+                                    <?php 
+                                    $ref_patient = $carte->ref_patient;
+                                    $rat = $db->query("SELECT atcds FROM fiches WHERE ref_patient=$ref_patient");
+                            while ($gat = $rat->fetch()) {
+                            ?>
+                            <textarea class="form-control" name="atcds" placeholder="atcds" value="<?= $gat['atcds']; ?>"> <?= $gat['atcds']; ?></textarea>
+
+                             <?php } ?>
+                                        
                                     </div>
                                 </div>
                                 <br>

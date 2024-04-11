@@ -117,7 +117,7 @@
               </div>
               <div class="nav-item">
                 <a class="nav-link dropdown-toggle " href="#navbarFin" role="button" data-bs-toggle="collapse" data-bs-target="#navbarFin" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
-                  <i class="bi-book nav-icon"></i>
+                  <i class="bi-cash nav-icon"></i>
                   <span class="nav-link-title">Finances</span>
                 </a>
 
@@ -132,13 +132,14 @@
               </div>
               <div class="nav-item">
                 <a class="nav-link dropdown-toggle " href="#navbarRh" role="button" data-bs-toggle="collapse" data-bs-target="#navbarRh" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
-                  <i class="bi-book nav-icon"></i>
+                  <i class="bi-person nav-icon"></i>
                   <span class="nav-link-title">RH</span>
                 </a>
 
                 <div id="navbarRh" class="nav-collapse collapse" data-bs-parent="#navbarRh">
                 <a class="nav-link " href="personnel">Personnels</a>
                   <a class="nav-link " href="access">Access</a>
+                  <a class="nav-link " href="departement">Departement</a>
                   
                   
                   

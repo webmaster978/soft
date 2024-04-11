@@ -78,63 +78,7 @@ if (isset($_POST['btn_submit'])) {
 
 ?>
 
-<?php
-if (isset($_POST['btn_tri'])) {
-    extract($_POST);
 
-    $ref_patient = htmlspecialchars($_POST['ref_patient']);
-    $date_t = htmlspecialchars($_POST['date_t']);
-    $description = htmlspecialchars($_POST['description']);
-    $status = 5;
-    $ref_tri = $_SESSION['PROFILE']['id_utilisateur'];
-
-
-
-    $check_query = "SELECT * FROM fiches
-            WHERE ref_patient=:ref_patient AND status=:status
-           ";
-    $statement = $db->prepare($check_query);
-    $check_data = array(
-        ':ref_patient'   =>  $ref_patient,
-        ':status' => $status
-
-    );
-    if ($statement->execute($check_data)) {
-        if ($statement->rowCount() > 1) {
-            echo "
-                err existe
-                ";
-        } else {
-            if ($statement->rowCount() == 0) {
-
-
-
-                $reque = $db->prepare("INSERT INTO fiches (ref_patient,date_t,description,status,ref_tri) VALUES (:ref_patient,:date_t,:description,:status,:ref_tri) ");
-
-                $result = $reque->execute(array(
-
-                    'ref_patient' => $ref_patient,
-                    'date_t' => $date_t,
-                    'description' => $description,
-                    'status' => $status,
-                    'ref_tri' => $_SESSION['PROFILE']['id_utilisateur']
-
-                ));
-                if ($result) {
-                    echo "
-   valider
-     ";
-                } else {
-                    echo "err";
-                }
-            }
-        }
-    }
-}
-
-
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -145,7 +89,7 @@ if (isset($_POST['btn_tri'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Users | Front - Admin &amp; Dashboard Template</title>
+    <title>Personnels | Clinovie soft</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">
@@ -371,14 +315,14 @@ if (isset($_POST['btn_tri'])) {
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Nos patients</h1>
+                        <h1 class="page-header-title">Nos Personnels</h1>
                     </div>
                     <!-- End Col -->
 
                     <div class="col-sm-auto">
                         <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                             <i class="bi-person"></i>
-                            Nouveau patient
+                            Nouveau Personnel
                         </button>
 
                     </div>
@@ -403,7 +347,7 @@ if (isset($_POST['btn_tri'])) {
                                 <div class="input-group-prepend input-group-text">
                                     <i class="bi-search"></i>
                                 </div>
-                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un patient" aria-label="Search users">
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un agent" aria-label="Search users">
                             </div>
                             <!-- End Search -->
                         </form>
@@ -589,10 +533,7 @@ if (isset($_POST['btn_tri'])) {
                                     </td>
                                     <td><?= $g['categorie']; ?></td>
                                     <td>
-                                        <!-- <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                            <i class="bi-pencil-fill me-1"></i>
-                                            Modifier
-                                        </button> -->
+                                       
                                         <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_patient']; ?>">
                                             <i class="bi-pencil-fill me-1"></i> Triage
                                         </button>
@@ -662,7 +603,7 @@ if (isset($_POST['btn_tri'])) {
                                 <form action="" method="POST" autocomplete="off">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <input type="text" class="form-control" name="noms" placeholder="Nom du patients" required>
+                                            <input type="text" class="form-control" name="nom_complet" placeholder="Nom de l'agent" required>
                                         </div>
                                         <br>
                                         <br>
@@ -698,7 +639,7 @@ if (isset($_POST['btn_tri'])) {
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="categorie" id="">
-                                                <option>--Categorie--</option>
+                                                <option>--Departement--</option>
                                                 <option value="abonnee">Abonnee</option>
                                                 <option value="non abonnee">Non abonnee</option>
                                             </select>
