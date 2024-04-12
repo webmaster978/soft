@@ -110,7 +110,7 @@
               
                 <!-- End Dropdown -->
 
-                <a class="dropdown-item" href="#">Gerer les utilisateurs</a>
+              
 
                 <div class="dropdown-divider"></div>
 
