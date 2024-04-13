@@ -575,10 +575,7 @@ if (isset($_POST['btn_tri'])) {
                                     </td>
                                     <td><?= $g['categorie']; ?></td>
                                     <td>
-                                        <!-- <button type="button" class="btn btn-warning rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                                            <i class="bi-pencil-fill me-1"></i>
-                                            Modifier
-                                        </button> -->
+                                        
                                         <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_patient']; ?>">
                                             <i class="bi-pencil-fill me-1"></i> Triage
                                         </button>

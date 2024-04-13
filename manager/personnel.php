@@ -596,7 +596,7 @@ if (isset($_POST['btn_submit'])) {
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau patient</h5>
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau agent</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -619,36 +619,36 @@ if (isset($_POST['btn_submit'])) {
                                         </div>
                                         <div class="col-md-6">
                                             <label for="">Date de naissance</label>
-                                            <input type="date" class="form-control" name="date_naiss" placeholder="date de naissance" required>
+                                            <input type="date" class="form-control" name="date_naissance" placeholder="date de naissance" required>
                                         </div>
                                         <br>
                                         <br>
                                         <br>
                                         <br>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="nom_respo" placeholder="nom du reponsable" required>
+                                            <input type="text" class="form-control" name="specialite" placeholder="specialite" required>
                                         </div>
                                         <div class="col-md-6">
-                                            <input type="number" class="form-control" name="contact_respo" placeholder="contact du reponsable" required>
+                                            <input type="file" class="form-control" name="contact_respo" placeholder="contact du reponsable" required>
                                         </div>
                                         <br>
                                         <br>
                                         <br>
                                         <div class="col-md-6">
-                                            <input type="number" class="form-control" name="contact" placeholder="cobract du patient" required>
+                                            <input type="number" class="form-control" name="contact_agent" placeholder="contact agent" required>
                                         </div>
                                         <div class="col-md-6">
                                             <select class="form-control" name="categorie" id="">
                                                 <option>--Departement--</option>
-                                                <option value="abonnee">Abonnee</option>
-                                                <option value="non abonnee">Non abonnee</option>
+                                                <option value="medecine interne">medecine interne</option>
+                                                <option value="Administration">Administration</option>
                                             </select>
                                         </div>
                                         <br>
                                         <br>
                                         <br>
                                         <div class="col-md-12">
-                                            <input type="text" class="form-control" name="adresse" placeholder="adresse" required>
+                                            <input type="text" class="form-control" name="adresse_agent" placeholder="adresse" required>
 
                                         </div>
                                         <br>

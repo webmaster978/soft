@@ -430,6 +430,53 @@ if (isset($_POST['btn_res'])) {
 
                                
                             </div>
+                            <h3 class="text-center">Ordonnances</h3>
+                            <div>
+                            <table class="table table-borderless table-thead-bordered text-center">
+                                    <tr>
+
+                                        <th>Medicament</th>
+                                        <th>Categorie</th>
+                                        <th>Dosage</th>
+                                        <th>Posologie</th>
+                                        <th>Duree</th>
+                                        <th>Prix de vente</th>
+                                        <th>Status</th>
+                                        
+
+                                    </tr>
+                                    <tbody>
+                                        <?php
+                                        $ref_fiche = $_GET['id_fiche'];
+
+                                        $requete = $db->query("SELECT * FROM `ordonnance` INNER JOIN medicaments ON ordonnance.ref_med = medicaments.nom_med WHERE ref_fiche=$ref_fiche");
+                                        while ($g = $requete->fetch()) {
+
+                                            $liv = '';
+                                            if ($g['status'] == '1') {
+                                                $liv = "<span class='badge bg-warning'>pas encore livrer</span>";
+                                            } else {
+                                                $liv = "<span class='badge bg-success'>livrer</span>";
+                                            }
+                                        ?>
+
+                                            <tr>
+
+                                                <td><?= $g['ref_med']; ?></td>
+                                                <td><?= $g['categorie']; ?></td>
+                                                <td><?= $g['dosage']; ?></td>
+                                                <td><?= $g['posologie']; ?></td>
+                                                <td><?= $g['duree']; ?> Jours</td>
+
+                                                <td><?= $g['quantite']; ?> $</td>
+                                                <td class="text tex-black"><?php echo $liv; ?></td>
+                                            
+
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
 
 
 
