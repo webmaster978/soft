@@ -1,19 +1,3 @@
-<?php
-require '../config/database.php';
-if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'consultation') {
-    header('location:../login');
-} else {
-    $recup_informations = $db->prepare("SELECT * FROM fonction INNER JOIN tbl_agent ON fonction.id_fonction=tbl_agent.ref_fonction WHERE id_utilisateur=:id_utilisateur");
-    $recup_informations->execute([
-        'id_utilisateur' => $_SESSION['PROFILE']['id_utilisateur']
-    ]);
-    $user_infos = $recup_informations->fetch(PDO::FETCH_OBJ);
-}
-
-
-?>
-
-
 
 
 <!DOCTYPE html>
@@ -252,7 +236,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Rapport de consultation</h1>
+                        <h1 class="page-header-title">Rapport du labo</h1>
                     </div>
                     <!-- End Col -->
 
@@ -369,7 +353,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE plaintes!='' ORDER BY id_fiche DESC ");
+                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient");
                             while ($g = $requete->fetch()) {
                             ?>
 
@@ -411,7 +395,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                                     </td>
                                     <td><?= $g['plaintes']; ?></td>
                                     <td>
-                                        <a class="btn btn-outline-primary btn-sm rounded-pill" href="rapc?id_fiche=<?= $g['id_fiche']; ?>"><i class="bi-print"></i> Imprimer</a>
+                                        <a class="btn btn-outline-primary btn-sm" href="ordonn?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
 
                                       
 

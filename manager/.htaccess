@@ -25,3 +25,4 @@ RewriteRule ^facturations$ facturations.php
 RewriteRule ^personnel$ personnel.php
 RewriteRule ^access$ access.php
 RewriteRule ^departement$ departement.php
+RewriteRule ^facture$ facture.php

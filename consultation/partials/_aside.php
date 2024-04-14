@@ -65,6 +65,7 @@
 
                 <div id="navbarCons" class="nav-collapse collapse " data-bs-parent="#navbarCons">
                   <a class="nav-link " href="consultations">Nouvelle</a>
+                  <a class="nav-link " href="resultat">Resultat</a>
                   <a class="nav-link " href="rapport_consult">Rapport</a>
                   
                   

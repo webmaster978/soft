@@ -10,6 +10,5 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
     $user_infos = $recup_informations->fetch(PDO::FETCH_OBJ);
 }
 
-
 ?>
-<?php require '../admin/_view.rapc.php' ?>
+<?php require '../admin/_view.ordon.php' ?>

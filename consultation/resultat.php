@@ -12,4 +12,5 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 
 ?>
-<?php require '../admin/_view.rapc.php' ?>
+
+<?php require '../admin/_view.result.php' ?>

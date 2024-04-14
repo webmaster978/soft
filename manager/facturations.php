@@ -15,33 +15,6 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 ?>
 
-<?php
-if (isset($_POST['btn_res'])) {
-    $id_ordo = htmlspecialchars($_POST['id_ordo']);
-    $status = htmlspecialchars($_POST['status']);
-    $quantite = htmlspecialchars($_POST['quantite']);
-
-    $ord_liv = $_SESSION['PROFILE']['id_utilisateur'];
-
-    $consult = $db->prepare("UPDATE ordonnance SET status=:status,ord_liv=:ord_liv,quantite=:quantite WHERE id_ordo=:id_ordo");
-    $consult->execute(array(
-        'id_ordo' => $id_ordo,
-        'status' => $status,
-        'quantite' => $quantite,
-        'ord_liv' => $_SESSION['PROFILE']['id_utilisateur']
-
-    ));
-
-    if ($consult) {
-        echo 'valider';
-    } else {
-        echo 'err';
-    }
-}
-
-
-
-?>
 
 
 
@@ -302,6 +275,33 @@ if (isset($_POST['btn_res'])) {
 
 
     ?>
+    <?php
+    if (isset($_POST['btn_fact'])) {
+        $id_fiche = htmlspecialchars($_POST['id_fiche']);
+        $fr_consult = htmlspecialchars($_POST['fr_consult']);
+        $autre = htmlspecialchars($_POST['autre']);
+        $autre_consult = htmlspecialchars($_POST['autre_consult']);
+
+
+        $consult = $db->prepare("UPDATE fiches SET fr_consult=:fr_consult,autre=:autre,autre_consult=:autre_consult WHERE id_fiche=:id_fiche");
+        $consult->execute(array(
+            'id_fiche' => $id_fiche,
+            'fr_consult' => $fr_consult,
+            'autre' => $autre,
+            'autre_consult' => $autre_consult
+
+        ));
+
+        if ($consult) {
+            echo 'valider';
+        } else {
+            echo 'err';
+        }
+    }
+
+
+
+    ?>
 
     <main id="content" role="main" class="main">
         <!-- Content -->
@@ -366,8 +366,35 @@ if (isset($_POST['btn_res'])) {
                                 </div>
                                 <!-- End Col -->
                             </div>
+                            <h4 class="text-center">AUTRES FRAIS</h4>
+                            <label for="">Consultation</label>
+                            <form action="" method="POST">
+                                <select class="form-control" name="fr_consult" id="">
+                                    <option value="5">Generaliste</option>
+                                    <option value="10">Specialiste</option>
+
+                                </select>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
+                                        <label for="">Autre consomable </label>
+                                        <input class="form-control" type="text" name="autre" placeholder="autre consomable" value="<?= $carte->autre; ?>">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">Prix : <?= $carte->autre_consult; ?> $</label>
+                                        <input class="form-control" type="number" step="any" name="autre_consult" placeholder="Prix" value="<?= $carte->autre_consult; ?>">
+                                    </div>
+
+                                </div>
+                                <br>
+                                <input class="btn btn-primary" type="submit" value="Enregistrer" name="btn_fact">
+                            </form>
+                            <br>
+
+
                             <!-- End Row -->
-                            <h4 class="text-center">CONSULTATION</h4>
+                            <h4 class="text-center">LABO</h4>
 
                             <!-- Table -->
 
@@ -376,11 +403,11 @@ if (isset($_POST['btn_res'])) {
                             <div>
 
 
-                            <table class="table table-borderless table-thead-bordered text-center">
+                                <table class="table table-borderless table-thead-bordered text-center">
                                     <tr>
-                                    
+
                                         <th>Examen a faire</th>
-                                       
+
                                         <th>Prix</th>
                                     </tr>
                                     <tbody>
@@ -393,20 +420,21 @@ if (isset($_POST['btn_res'])) {
 
 
                                             <tr>
-                                               
+
                                                 <td><?= $g['email']; ?></td>
-                                              
+
                                                 <td><?= $g['prix']; ?> $</td>
                                             </tr>
+
                                         <?php } ?>
                                     </tbody>
                                 </table>
                                 <h4 class="text-center">Para clinique</h4>
                                 <table class="table table-borderless table-thead-bordered text-center">
                                     <tr>
-                                    
+
                                         <th>Examen a faire</th>
-                                       
+
                                         <th>Prix</th>
                                     </tr>
                                     <tbody>
@@ -419,30 +447,27 @@ if (isset($_POST['btn_res'])) {
 
 
                                             <tr>
-                                               
+
                                                 <td><?= $ga['email']; ?></td>
-                                              
+
                                                 <td><?= $ga['px']; ?> $</td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
                                 </table>
 
-                               
+
                             </div>
                             <h3 class="text-center">Ordonnances</h3>
                             <div>
-                            <table class="table table-borderless table-thead-bordered text-center">
+                                <table class="table table-borderless table-thead-bordered text-center">
                                     <tr>
 
                                         <th>Medicament</th>
-                                        <th>Categorie</th>
-                                        <th>Dosage</th>
-                                        <th>Posologie</th>
-                                        <th>Duree</th>
+
                                         <th>Prix de vente</th>
                                         <th>Status</th>
-                                        
+
 
                                     </tr>
                                     <tbody>
@@ -463,14 +488,11 @@ if (isset($_POST['btn_res'])) {
                                             <tr>
 
                                                 <td><?= $g['ref_med']; ?></td>
-                                                <td><?= $g['categorie']; ?></td>
-                                                <td><?= $g['dosage']; ?></td>
-                                                <td><?= $g['posologie']; ?></td>
-                                                <td><?= $g['duree']; ?> Jours</td>
+
 
                                                 <td><?= $g['quantite']; ?> $</td>
                                                 <td class="text tex-black"><?php echo $liv; ?></td>
-                                            
+
 
                                             </tr>
                                         <?php } ?>
