@@ -25,7 +25,7 @@ if (isset($_SESSION['PROFILE']['id_utilisateur'])) {
       header('location: pharmacie/');
       break;
     case 'finance':
-      header('location: finance/');
+      header('location: finances/');
       break;
 
 
@@ -81,7 +81,7 @@ if (isset($_POST['btn_submit'])) {
         header('location: pharmacie/');
         break;
       case 'finance':
-        header('location: finance/');
+        header('location: finances/');
         break;
     }
   } else {

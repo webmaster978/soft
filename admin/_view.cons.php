@@ -349,12 +349,13 @@
                                 <th>SPO2 ET FR</th>
 
                                 <th>Plaintes</th>
+                                <th>Auteur</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE status=5 ORDER BY id_fiche DESC ");
+                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient INNER JOIN tbl_agent ON ref_tri = tbl_agent.id_utilisateur WHERE status=5 ORDER BY id_fiche DESC ");
                             while ($g = $requete->fetch()) {
                             ?>
 
@@ -395,6 +396,7 @@
 
                                     </td>
                                     <td><?= $g['plaintes']; ?></td>
+                                    <td><?= $g['nom_complet']; ?></td>
                                     <td>
                                         <a class="btn btn-outline-primary btn-sm" href="cons?id_fiche=<?= $g['id_fiche']; ?>">Consulter</a>
 
