@@ -56,69 +56,11 @@
                 </div>
                 
               </div>
-              <div class="nav-item">
-                <a class="nav-link dropdown-toggle " href="#navbarRec" role="button" data-bs-toggle="collapse" data-bs-target="#navbarRec" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
-                  <i class="bi-book nav-icon"></i>
-                  <span class="nav-link-title">Triage</span>
-                </a>
 
-                <div id="navbarRec" class="nav-collapse collapse " data-bs-parent="#navbarRec">
-                  <a class="nav-link " href="triage">Nouveau</a>
-                  <a class="nav-link " href="rapport_triage">Rapport</a>
-                  <a class="nav-link " href="plaintes">Plaintes</a>
-                  
-                </div>
-                
-              </div>
-              <div class="nav-item">
-                <a class="nav-link dropdown-toggle " href="#navbarCons" role="button" data-bs-toggle="collapse" data-bs-target="#navbarCons" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
-                  <i class="bi-stickies nav-icon"></i>
-                  <span class="nav-link-title">Consultation</span>
-                </a>
-
-                <div id="navbarCons" class="nav-collapse collapse " data-bs-parent="#navbarCons">
-                  <a class="nav-link " href="consultations">Nouvelle</a>
-                  <a class="nav-link " href="resultat">Resultat</a>
-                  <a class="nav-link " href="rapport_consult">Rapport</a>
-                  
-                  
-                </div>
-                
-              </div>
-              <div class="nav-item">
-                <a class="nav-link dropdown-toggle " href="#navbarLab" role="button" data-bs-toggle="collapse" data-bs-target="#navbarLab" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
-                  <i class="bi-book nav-icon"></i>
-                  <span class="nav-link-title">Laboratoire</span>
-                </a>
-
-                <div id="navbarLab" class="nav-collapse collapse " data-bs-parent="#navbarLab">
-                  <a class="nav-link " href="labos">Nouveau cas</a>
-                  <a class="nav-link " href="rapport_labo">Rapport</a>
-                  <a class="nav-link " href="examen_labo">Liste des examens</a>
-                  
-                  
-                </div>
-                
-              </div>
-              <div class="nav-item">
-                <a class="nav-link dropdown-toggle " href="#navbarP" role="button" data-bs-toggle="collapse" data-bs-target="#navbarP" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
-                  <i class="bi-book nav-icon"></i>
-                  <span class="nav-link-title">Pharmacie</span>
-                </a>
-
-                <div id="navbarP" class="nav-collapse collapse " data-bs-parent="#navbarP">
-                <a class="nav-link " href="ordonnance">Ordonnances</a>
-                  <a class="nav-link " href="medicament">Medicaments</a>
-                  
-                  
-                  
-                </div>
-                
-              </div>
               <div class="nav-item">
                 <a class="nav-link dropdown-toggle " href="#navbarFin" role="button" data-bs-toggle="collapse" data-bs-target="#navbarFin" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
                   <i class="bi-cash nav-icon"></i>
-                  <span class="nav-link-title">Finances</span>
+                  <span class="nav-link-title">Facturation</span>
                 </a>
 
                 <div id="navbarFin" class="nav-collapse collapse" data-bs-parent="#navbarFin">

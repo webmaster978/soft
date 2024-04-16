@@ -12,10 +12,11 @@ if (isset($_POST['btn_tri'])) {
     $frequence = htmlspecialchars($_POST['frequence']);
     $plaintes = implode(',',$_POST['plaintes']);
     $id_fiche = htmlspecialchars($_POST['id_fiche']);
+    $ref_consult = htmlspecialchars($_POST['ref_consult']);
    
 
 
-                $reque = $db->prepare ("UPDATE fiches SET poids=:poids,taille=:taille,temperature=:temperature,pouls=:pouls,spo2=:spo2,frequence=:frequence,plaintes=:plaintes WHERE fiches.id_fiche=:id_fiche ");
+                $reque = $db->prepare ("UPDATE fiches SET poids=:poids,taille=:taille,temperature=:temperature,pouls=:pouls,spo2=:spo2,frequence=:frequence,plaintes=:plaintes,ref_consult=:ref_consult WHERE fiches.id_fiche=:id_fiche ");
 
                 $result = $reque->execute(array(
                     'poids' => $poids,
@@ -25,7 +26,8 @@ if (isset($_POST['btn_tri'])) {
                     'spo2' => $spo2,
                     'frequence' => $frequence,
                     'plaintes' => $plaintes,
-                    'id_fiche' => $id_fiche
+                    'id_fiche' => $id_fiche,
+                    'ref_consult' => $ref_consult
                     
 
                 ));
@@ -468,7 +470,33 @@ if (isset($_POST['btn_tri'])) {
                                                                     <?php } ?>
                                                                 </select>
                                                             </div>
+
                                                             <input type="hidden" name="id_fiche" value="<?= $g['id_fiche'];?>">
+
+                                                        </div>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                        <label for="">Destinateur</label>
+        
+                                                        <div class="col-md-12">
+                                                            
+                                                            <div class="tom-select-custom tom-select-custom-with-tags">
+                                                                <select class="js-select form-select" autocomplete="off" name="ref_consult" required placeholder="selectionner le medecin destinateur">
+                                                                    
+                                                                <?php $med = $db->query("SELECT * FROM tbl_agent where departement!=''");
+                                                                   while ($me = $med->fetch()) {
+                                                                      ?>
+                                                                     <option value=""></option>
+                                                                
+                                                                    <option value="<?= $me['id_utilisateur'];?>"><?= $me['nom_complet'];?> - <?= $me['departement'];?></option>
+                                                                    
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+                                                            
+                                                            
 
                                                         </div>
                                                         <br>

@@ -355,7 +355,9 @@
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient INNER JOIN tbl_agent ON ref_tri = tbl_agent.id_utilisateur WHERE status=5 ORDER BY id_fiche DESC ");
+                            <?php
+                            $ref_consult = $_SESSION['TMP_PROFILE']['ref_utilisateur'];
+                             $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient INNER JOIN tbl_agent ON ref_tri = tbl_agent.id_utilisateur WHERE status=5 AND ref_consult=$ref_consult ORDER BY id_fiche DESC ");
                             while ($g = $requete->fetch()) {
                             ?>
 

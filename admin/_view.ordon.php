@@ -348,6 +348,92 @@ if (isset($_POST['btn_res'])) {
                                 </div>
                                 <!-- End Col -->
                             </div>
+
+                            <div class="">
+                                <table class="table table-borderless table-nowrap table-align-middle">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Poids : <?= ucwords($carte->poids); ?> Kg</th>
+                                            <th>Taille : <?= ucwords($carte->taille); ?> cm</th>
+                                            <th>Temp : <?= ucwords($carte->temperature); ?> C</th>
+                                            <th>Pouls : <?= ucwords($carte->pouls); ?> bpm</th>
+                                            <th>FR : <?= ucwords($carte->frequence); ?></th>
+                                            <th>SPO2 : <?= ucwords($carte->spo2); ?> bpm</th>
+                                        </tr>
+                                    </thead>
+
+
+                                </table>
+                                <h4>Plaintes : <?= ucwords($carte->plaintes); ?>
+                                    <hr>
+                                </h4>
+
+
+
+
+                            </div>
+                            <!-- End Table -->
+                            <form action="" method="post">
+                                <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
+                                <div class="row">
+                                    <h5> CA : <small class="text-muted text-underline"><?= $carte->ca; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <h5> ATCDS : <small class="text-muted text-underline"><?= $carte->atcds; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <h5> HM : <small class="text-muted text-underline"><?= $carte->hm; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <h5> Tete ET Cou:EG : <small class="text-muted text-underline"><?= $carte->cou; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <h5> Thorax : <small class="text-muted text-underline"><?= $carte->thorax; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+                                <div class="row">
+                                    <h5> Abdomen : <small class="text-muted text-underline"><?= $carte->abdomen; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+                                <div class="row">
+                                    <h5> Appareil Locomoteur : <small class="text-muted text-underline"><?= $carte->locomoteur; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+                                <div class="row">
+                                    <h5> Appareil genitaux : <small class="text-muted text-underline"><?= $carte->genitaux; ?></small></h5>
+                                    <hr>
+
+                                </div>
+
+                                <div class="row">
+                                    <h5> Diagnostic de presomption : <small class="text-muted text-underline"><?= $carte->diagno; ?></small></h5>
+                                    <hr>
+
+                                </div>
+                                
+                               
                             <!-- End Row -->
                             <h4 class="text-center">RESULTAT LABO</h4>
 

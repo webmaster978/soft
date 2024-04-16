@@ -1,19 +1,3 @@
-<?php
-require '../config/database.php';
-if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'finance') {
-    header('location:../login');
-} else {
-    $recup_informations = $db->prepare("SELECT * FROM fonction INNER JOIN tbl_agent ON fonction.id_fonction=tbl_agent.ref_fonction WHERE id_utilisateur=:id_utilisateur");
-    $recup_informations->execute([
-        'id_utilisateur' => $_SESSION['PROFILE']['id_utilisateur']
-    ]);
-    $user_infos = $recup_informations->fetch(PDO::FETCH_OBJ);
-}
-
-
-?>
-
-
 
 
 <!DOCTYPE html>
@@ -21,7 +5,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 
 <head>
-    <!-- Required Meta Tags Always Come First -->
+   
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -252,7 +236,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Facturation</h1>
+                        <h1 class="page-header-title">Liste d'attente pour la consultation</h1>
                     </div>
                     <!-- End Col -->
 
@@ -363,13 +347,13 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                                 <th>Pouls</th>
                                 <th>SPO2 ET FR</th>
 
-                                
+                                <th>Plaintes</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE status= 4");
+                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE status=4 ");
                             while ($g = $requete->fetch()) {
                             ?>
 
@@ -409,9 +393,9 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                                         <span class="d-block fs-5 text-body">FR : <?= $g['frequence']; ?></span>
 
                                     </td>
-                                  
+                                    <td><?= $g['plaintes']; ?></td>
                                     <td>
-                                        <a class="btn btn-outline-primary btn-sm" href="facturations?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
+                                        <a class="btn btn-outline-primary btn-sm" href="labo?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
 
                                       
 

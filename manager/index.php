@@ -173,7 +173,7 @@
       <div class="page-header">
         <div class="row align-items-center">
           <div class="col">
-            <h1 class="page-header-title">Dashboard</h1>
+            <h1 class="page-header-title">Bienvenue <?= ucwords($user_infos->nom_complet); ?></h1>
           </div>
           <!-- End Col -->
 
