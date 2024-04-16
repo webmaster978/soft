@@ -21,6 +21,12 @@ if (isset($_SESSION['PROFILE']['id_utilisateur'])) {
     case 'labo':
       header('location: labo/');
       break;
+    case 'pharmacie':
+      header('location: pharmacie/');
+      break;
+    case 'finance':
+      header('location: finances/');
+      break;
 
 
     default:
@@ -70,6 +76,12 @@ if (isset($_POST['btn_submit'])) {
         break;
       case 'labo':
         header('location: labo/');
+        break;
+      case 'pharmacie':
+        header('location: pharmacie/');
+        break;
+      case 'finance':
+        header('location: finances/');
         break;
     }
   } else {

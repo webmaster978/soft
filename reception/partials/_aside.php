@@ -3,7 +3,7 @@
       <div class="navbar-vertical-footer-offset">
         <!-- Logo -->
 
-        <a class="navbar-brand" href="#" aria-label="test">
+        <a class="navbar-brand" href="#" aria-label="clinovie">
           <img class="navbar-brand-logo" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="default">
           <img class="navbar-brand-logo" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="dark">
           <img class="navbar-brand-logo-mini" src="assets/img/logo/lg.png" alt="Logo" data-hs-theme-appearance="default">
