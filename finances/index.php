@@ -1,6 +1,6 @@
 <?php	
  require '../config/database.php';
- if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'admin') {
+ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'finance') {
 	header('location:../login');
  }
  else {
@@ -22,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Title -->
-  <title>Dashboard | Front - Admin &amp; Dashboard Template</title>
+  <title>Finances - <?= ucwords($user_infos->nom_complet); ?> | Clinovie soft </title>
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="favicon.ico">
@@ -173,7 +173,7 @@
       <div class="page-header">
         <div class="row align-items-center">
           <div class="col">
-            <h1 class="page-header-title">Dashboard</h1>
+            <h1 class="page-header-title">Bienvenue <?= ucwords($user_infos->nom_complet); ?></h1>
           </div>
           <!-- End Col -->
 

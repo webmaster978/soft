@@ -1,20 +1,3 @@
-<?php
-require '../config/database.php';
-if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'finance') {
-    header('location:../login');
-} else {
-    $recup_informations = $db->prepare("SELECT * FROM fonction INNER JOIN tbl_agent ON fonction.id_fonction=tbl_agent.ref_fonction WHERE id_utilisateur=:id_utilisateur");
-    $recup_informations->execute([
-        'id_utilisateur' => $_SESSION['PROFILE']['id_utilisateur']
-    ]);
-    $user_infos = $recup_informations->fetch(PDO::FETCH_OBJ);
-}
-
-
-?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +9,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Users | Front - Admin &amp; Dashboard Template</title>
+    <title>Facturations | Clinovie soft</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">
@@ -39,6 +22,17 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
+
+
 
     <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
     <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
@@ -243,239 +237,316 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
     <?php include 'partials/_aside.php' ?>
 
+    <?php
+
+
+    $id_fiche = $_GET['id_fiche'];
+
+
+
+    $card = $db->prepare("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE id_fiche=:id_fiche");
+    $card->execute([
+        'id_fiche' => $id_fiche
+    ]);
+    $carte = $card->fetch(PDO::FETCH_OBJ);
+
+
+
+
+
+
+    ?>
+    <?php
+    if (isset($_POST['btn_fact'])) {
+        $id_fiche = htmlspecialchars($_POST['id_fiche']);
+        $fr_consult = htmlspecialchars($_POST['fr_consult']);
+        $autre = htmlspecialchars($_POST['autre']);
+        $autre_consult = htmlspecialchars($_POST['autre_consult']);
+
+
+        $consult = $db->prepare("UPDATE fiches SET fr_consult=:fr_consult,autre=:autre,autre_consult=:autre_consult WHERE id_fiche=:id_fiche");
+        $consult->execute(array(
+            'id_fiche' => $id_fiche,
+            'fr_consult' => $fr_consult,
+            'autre' => $autre,
+            'autre_consult' => $autre_consult
+
+        ));
+
+        if ($consult) {
+            echo 'valider';
+        } else {
+            echo 'err';
+        }
+    }
+
+
+
+    ?>
+
     <main id="content" role="main" class="main">
         <!-- Content -->
         <div class="content container-fluid">
             <!-- Page Header -->
-            <div class="page-header">
-                <div class="row align-items-end">
-                    <div class="col-sm mb-2 mb-sm-0">
 
+            <div class="row">
+                <div class="col-lg-12 mb-5 mb-lg-0">
+                    <!-- Card -->
+                    <div class="card card-lg mb-5">
+                        <div class="card-body">
+                            <div class="row justify-content-lg-between">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="../assets/img/logo/lg.png" alt="Logo">
 
-                        <h1 class="page-header-title">Facturation</h1>
-                    </div>
-                    <!-- End Col -->
-
-
-                    <!-- End Col -->
-                </div>
-                <!-- End Row -->
-            </div>
-            <!-- End Page Header -->
-
-            <!-- Stats -->
-
-            <!-- End Stats -->
-
-            <!-- Card -->
-            <div class="card">
-                <!-- Header -->
-                <div class="card-header card-header-content-md-between">
-                    <div class="mb-2 mb-md-0">
-                        <form>
-                            <!-- Search -->
-                            <div class="input-group input-group-merge input-group-flush">
-                                <div class="input-group-prepend input-group-text">
-                                    <i class="bi-search"></i>
-                                </div>
-                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un patient" aria-label="Search users">
-                            </div>
-                            <!-- End Search -->
-                        </form>
-                    </div>
-
-                    <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-                        <!-- Datatable Info -->
-
-                        <!-- End Datatable Info -->
-
-                        <!-- Dropdown -->
-                        <div class="dropdown">
-                            <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi-download me-2"></i> Export
-                            </button>
-
-                            <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
-                                <span class="dropdown-header">Options</span>
-                                <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/illustrations/copy-icon.svg" alt="Image Description">
-                                    Copy
-                                </a>
-                                <a id="export-print" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/illustrations/print-icon.svg" alt="Image Description">
-                                    Print
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <span class="dropdown-header">Download options</span>
-                                <a id="export-excel" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/brands/excel-icon.svg" alt="Image Description">
-                                    Excel
-                                </a>
-                                <a id="export-csv" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/components/placeholder-csv-format.svg" alt="Image Description">
-                                    .CSV
-                                </a>
-                                <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4x3 me-2" src="assets/svg/brands/pdf-icon.svg" alt="Image Description">
-                                    PDF
-                                </a>
-                            </div>
-                        </div>
-                        <!-- End Dropdown -->
-
-                        <!-- Dropdown -->
-
-                        <!-- End Dropdown -->
-                    </div>
-                </div>
-                <!-- End Header -->
-
-                <!-- Table -->
-                <div class="table-responsive datatable-custom position-relative">
-                    <table id="datatable" class="table table-lg table-borderless table-thead-bordered table-nowrap table-align-middle card-table" data-hs-datatables-options='{
-                   "columnDefs": [{
-                      "targets": [0, 7],
-                      "orderable": false
-                    }],
-                   "order": [],
-                   "info": {
-                     "totalQty": "#datatableWithPaginationInfoTotalQty"
-                   },
-                   "search": "#datatableSearch",
-                   "entries": "#datatableEntries",
-                   "pageLength": 15,
-                   "isResponsive": false,
-                   "isShowPaging": false,
-                   "pagination": "datatablePagination"
-                 }'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="table-column-pe-0">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="datatableCheckAll">
-                                        <label class="form-check-label" for="datatableCheckAll"></label>
                                     </div>
-                                </th>
-                                <th class="table-column-ps-0">Noms du patient</th>
-                                <th>Poids</th>
-                                <th>Taille</th>
-                                <th>Temperature</th>
-                                <th>Pouls</th>
-                                <th>SPO2 ET FR</th>
+                                    <div class="col-md-8">
+                                        <h1 style="font-size: 50px;" class=" text-primary">CLINIQUE NOTRE VIE</h1>
+                                        <h1 class="text-center text-danger">CLINOVIE</h1>
+                                    </div>
 
-                                
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                                </div>
+                                <!-- End Col -->
 
-                        <tbody>
-                            <?php $requete = $db->query("SELECT * FROM fiches INNER JOIN patients ON fiches.ref_patient = patients.id_patient WHERE status= 4");
-                            while ($g = $requete->fetch()) {
-                            ?>
+                                <div class="">
+                                    <div>
+                                        <h2 class="text-center">FACTURE</h2>
+
+                                    </div>
 
 
+                                </div>
+                                <!-- End Col -->
+                            </div>
+                            <!-- End Row -->
+
+                            <div class="row justify-content-md-between mb-3">
+                                <div class="col-md">
+                                    <h4>Nom & Post Nom & Prenom: <?= ucwords($carte->noms); ?> </h4>
+                                    <h4>Sexe : <?= ucwords($carte->genre); ?> </h4>
+                                    <h4>Date de naissance : <?= ucwords($carte->date_naiss); ?> // Age <?php
+                                                                                                        $daten = $carte->date_naiss;
+                                                                                                        $today = date("Y-m-d");
+                                                                                                        $diff = date_diff(date_create($daten), date_create($today));
+                                                                                                        echo $diff->format('%y');
+
+                                                                                                        ?> An(s)</h4>
+                                    <h4>Categorie : <?= ucwords($carte->categorie); ?> </h4>
+                                    <h4>Personne a contacter : <?= ucwords($carte->nom_respo); ?> // <?= ucwords($carte->contact_respo); ?> </h4>
 
 
-                                <tr>
-                                    <td class="table-column-pe-0">
+                                </div>
+                                <!-- End Col -->
 
-                                        <?= $g['id_fiche']; ?>
+                                <div class="col-md text-md-end">
+                                    <dl class="row">
+                                        <dt class="col-sm-8">Num du dossier:</dt>
+                                        <dd class="col-sm-4">00<?= ucwords($carte->id_fiche); ?></dd>
+                                    </dl>
+
+                                </div>
+                                <!-- End Col -->
+                            </div>
+                            <h4 class="text-center">AUTRES FRAIS</h4>
+                            <label for="">Consultation</label>
+                            <form action="" method="POST">
+                                <select class="form-control" name="fr_consult" id="">
+                                    <option value="5">Generaliste</option>
+                                    <option value="10">Specialiste</option>
+
+                                </select>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
+                                        <label for="">Autre consomable </label>
+                                        <input class="form-control" type="text" name="autre" placeholder="autre consomable" value="<?= $carte->autre; ?>">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="">Prix : <?= $carte->autre_consult; ?> $</label>
+                                        <input class="form-control" type="number" step="any" name="autre_consult" placeholder="Prix" value="<?= $carte->autre_consult; ?>">
+                                    </div>
+
+                                </div>
+                                <br>
+                                <input class="btn btn-primary" type="submit" value="Enregistrer" name="btn_fact">
+                            </form>
+                            <br>
 
 
-                                    </td>
-                                    <td class="table-column-ps-0">
-                                        <a class="d-flex align-items-center" href="#">
-                                            <div class="avatar avatar-circle">
-                                                <img class="avatar-img" src="../assets/img/prof/img.jpg" alt="Image Description">
-                                            </div>
-                                            <div class="ms-3">
-                                                <span class="d-block h5 text-inherit mb-0"><?= $g['noms']; ?><i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></span>
-                                                <span class="d-block fs-5 text-body"><?= $g['categorie']; ?></span>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <?= $g['poids']; ?> Kg
-                                    </td>
-                                    <td><?= $g['taille']; ?> m</td>
-                                    <td>
-                                        <?= $g['temperature']; ?> Degrer
-                                    </td>
-                                    <td>
-                                        <?= $g['pouls']; ?> bpm
+                            <!-- End Row -->
+                            <h4 class="text-center">LABO</h4>
 
-                                    </td>
-                                    <td>SPO2 : <?= $g['spo2']; ?>
-                                        <span class="d-block fs-5 text-body">FR : <?= $g['frequence']; ?></span>
+                            <!-- Table -->
 
-                                    </td>
-                                  
-                                    <td>
-                                        <a class="btn btn-outline-primary btn-sm" href="facturations?id_fiche=<?= $g['id_fiche']; ?>">Voir</a>
 
+
+                            <div>
+
+
+                                <table class="table table-borderless table-thead-bordered text-center">
+                                    <tr>
+
+                                        <th>Examen a faire</th>
+
+                                        <th>Prix</th>
+                                    </tr>
+                                    <tbody>
+                                        <?php
+                                        $name = $_GET['id_fiche'];
+
+                                        $requete = $db->query("SELECT * FROM user_data INNER JOIN labo ON user_data.email = labo.nom_labo WHERE name=$name");
+                                        $total = 0;
+                                        while ($g = $requete->fetch()) {
+                                        echo'
+
+
+                                            <tr>
+
+                                                <td>'. $g['email'] . '</td>
+
+                                                <td>'. $g['prix'] .' $</td>
+                                            </tr>
+                                            ';
+                                            $total +=$g['prix'];
+
+                                        }
+                                       ?>
+                                       <tr>
+                                        <th colspan="3">Total : <?php echo $total; ?> $ </th>
+                                       </tr>
+                                    </tbody>
+                                </table>
+                               
+                                <h4 class="text-center">Para clinique</h4>
+                                <table class="table table-borderless table-thead-bordered text-center">
+                                    <tr>
+
+                                        <th>Examen a faire</th>
+
+                                        <th>Prix</th>
+                                    </tr>
+                                    <tbody>
+                                        <?php
+                                        $total2=0;
+                                        $name = $_GET['id_fiche'];
+
+                                        $requet = $db->query("SELECT * FROM user_data WHERE name=$name AND categorie='imagerie'");
+                                        while ($ga = $requet->fetch()) {
+                                       echo '
+
+
+                                            <tr>
+
+                                                <td>'. $ga['email'].'</td>
+
+                                                <td>'. $ga['px'].' $</td>
+                                            </tr>
+                                        ';
+                                        $total2 +=$ga['px'];
+
+                                      }
+                                     ?>
+                                    </tbody>
+                                    <tr>
                                       
+                                        <th colspan="3">Total : <?php echo $total2; ?> $ </th>
+                                       </tr>
+                                </table>
 
-                                    </td>
-                                </tr>
-                            <?php } ?>
+
+                            </div>
+                            <h3 class="text-center">Ordonnances</h3>
+                            <div>
+                                <table class="table table-borderless table-thead-bordered text-center">
+                                    <tr>
+
+                                        <th>Medicament</th>
+
+                                        <th>Prix de vente</th>
+                                        <th>Status</th>
 
 
-                        </tbody>
-                    </table>
+                                    </tr>
+                                    <tbody>
+                                        <?php
+
+                                        $ref_fiche = $_GET['id_fiche'];
+                                        $total3=0;
+
+                                        $requem = $db->query("SELECT * FROM `ordonnance` INNER JOIN medicaments ON ordonnance.ref_med = medicaments.nom_med WHERE ref_fiche=$ref_fiche");
+                                        while ($gm = $requem->fetch()) {
+
+                                            $liv = '';
+                                            if ($gm['status'] == '1') {
+                                                $liv = "<span class='badge bg-warning'>pas encore livrer</span>";
+                                            } else {
+                                                $liv = "<span class='badge bg-success'>livrer</span>";
+                                            }
+                                        echo'
+
+                                            <tr>
+
+                                                <td> '.$gm['ref_med'].'</td>
+
+
+                                                <td>'.$gm['quantite'].' $</td>
+                                                <td class="text tex-black"><?php echo $liv; ?></td>
+
+
+                                            </tr>
+                                            ';
+                                            $total3 +=$gm['quantite'];
+                                         } ?>
+                                    </tbody>
+                                    <tr>
+                                      
+                                        <th colspan="3">Total : <?php echo $total3; ?> $ </th>
+                                       </tr>
+                                </table>
+                            </div>
+
+
+
+
+                            <div>
+
+
+
+                            </div>
+                            <h4>Total Generale = <?php echo $total + $total3 + $total2 + $carte->autre_consult ?> $</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+                            <!-- End Row -->
+
+
+                        </div>
+
+                    </div>
+
+                    <!-- End Card -->
+
+                    <!-- Footer -->
+
+                    <!-- End Footer -->
                 </div>
-                <!-- End Table -->
-                <div class="card-footer">
-          <!-- Pagination -->
-          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                <span class="me-2">Showing:</span>
-
-                <!-- Select -->
-                <div class="tom-select-custom">
-                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
-                            "searchInDropdown": false,
-                            "hideSearch": true
-                          }'>
-                    <option value="4">4</option>
-                    <option value="6">6</option>
-                    <option value="8" selected>8</option>
-                    <option value="12">12</option>
-                  </select>
-                </div>
-                <!-- End Select -->
-
-                <span class="text-secondary me-2">of</span>
-
-                <!-- Pagination Quantity -->
-                <span id="datatableWithPaginationInfoTotalQty"></span>
-              </div>
             </div>
-            <!-- End Col -->
 
-            <div class="col-sm-auto">
-              <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
-                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Pagination -->
-        </div>
-        <!-- End Footer -->
-      </div>
+            <!-- Footer -->
 
-                <!-- Footer -->
+            <?php include '../part/_foot.php' ?>
 
-
-        <!-- End Content -->
-
-        <!-- Footer -->
-
-        <?php include '../part/_foot.php' ?>
-
-        <!-- End Footer -->
+            <!-- End Footer -->
     </main>
     <!-- ========== END MAIN CONTENT ========== -->
 
@@ -612,6 +683,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
     <script src="assets/js/demo.js"></script>
 
+
     <!-- END ONLY DEV -->
 
     <!-- ========== SECONDARY CONTENTS ========== -->
@@ -638,6 +710,7 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
     <!-- JS Front -->
     <script src="assets/js/theme.min.js"></script>
+
 
 
     <!-- JS Plugins Init. -->
@@ -718,6 +791,14 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
                 datatable.column(targetColumnIndex).search(elVal).draw();
             });
         });
+    </script>
+
+    <script>
+        (function() {
+            // INITIALIZATION OF  QUANTITY COUNTER
+            // =======================================================
+            new HSQuantityCounter('.js-quantity-counter')
+        })();
     </script>
 
     <!-- JS Plugins Init. -->
@@ -852,6 +933,8 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
             }
         })()
     </script>
+
+
 
     <!-- End Style Switcher JS -->
 </body>
