@@ -398,6 +398,11 @@ $carte = $card->fetch(PDO::FETCH_OBJ);
                                     <hr>
 
                                 </div>
+                                <div class="row">
+                                    <h5> Diagnostic final : <small class="text-muted text-underline"><?= $carte->final; ?></small></h5>
+                                    <hr>
+
+                                </div>
                                 <br>
                                 <h3 class="text-center">Examens labo et paraclinique</h3>
 

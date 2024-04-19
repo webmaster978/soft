@@ -25,6 +25,30 @@ if (isset($_POST['btn_res'])) {
 
 ?>
 
+<?php
+if (isset($_POST['btn_fin'])) {
+    $final = htmlspecialchars($_POST['final']);
+    $id_fiche = htmlspecialchars($_POST['id_fiche']);
+
+    $consult = $db->prepare("UPDATE fiches SET final=:final WHERE id_fiche=:id_fiche");
+    $consult->execute(array(
+        'final' => $final,
+        'id_fiche' => $id_fiche
+
+        
+    ));
+
+    if ($consult) {
+        echo 'valider';
+    } else {
+        echo 'err';
+    }
+}
+
+
+
+?>
+
 
 
 <!DOCTYPE html>
@@ -492,6 +516,23 @@ if (isset($_POST['btn_res'])) {
                                 <!-- End Table -->
 
                                 <br>
+                            </div>
+
+                            <div class="row">
+                                <form action="" method="POST">
+                                    <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
+                                <textarea class="form-control" name="final" id="" cols="30" rows="5" value="<?= $carte->final; ?>">
+                                <?= $carte->final; ?>
+
+                                </textarea>
+                                
+                                <div class="col-md-6">
+                                    <br>
+                                <input class="btn btn-primary" type="submit" value="Enregistrer" name="btn_fin">
+
+                                </div>
+                               
+                                </form>
                             </div>
                             
                                 <h3>Ordonnance pour la fiche numero <?= $carte->id_fiche; ?> </h3>
