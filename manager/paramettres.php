@@ -13,30 +13,130 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
 
 ?>
 
-<?php
 
+
+<?php
 if (isset($_POST['btn_submit'])) {
     extract($_POST);
-     $id_utilisateur = htmlspecialchars($_POST['id_utilisateur']);
-     $ref_fonction = htmlspecialchars($_POST['ref_fonction']);
 
-     $mdf=$db->prepare("UPDATE tbl_agent SET ref_fonction=:ref_fonction WHERE id_utilisateur=:id_utilisateur");
-     $mdf->execute(array(
-       'id_utilisateur' =>$id_utilisateur,
-       'ref_fonction' => $ref_fonction
-     ));
-     if($mdf){
-        echo 'valider';
-     } else {
-        echo 'err';
-     }
+    $noms = htmlspecialchars($_POST['noms']);
+    $adresse = htmlspecialchars($_POST['adresse']);
+    $date_naiss = htmlspecialchars($_POST['date_naiss']);
+    $nom_respo = htmlspecialchars($_POST['nom_respo']);
+    $contact_respo = htmlspecialchars($_POST['contact_respo']);
+    $contact = htmlspecialchars($_POST['contact']);
+    $categorie = htmlspecialchars($_POST['categorie']);
+    $genre = htmlspecialchars($_POST['genre']);
+    $add_by = $_SESSION['PROFILE']['id_utilisateur'];
+
+
+
+    $check_query = "SELECT * FROM patients
+            WHERE noms=:noms
+           ";
+    $statement = $db->prepare($check_query);
+    $check_data = array(
+        ':noms'   =>  $noms
+
+    );
+    if ($statement->execute($check_data)) {
+        if ($statement->rowCount() > 1) {
+            echo "
+                err existe
+                ";
+        } else {
+            if ($statement->rowCount() == 0) {
+
+
+
+                $reque = $db->prepare("INSERT INTO patients (noms,adresse,date_naiss,nom_respo,contact_respo,contact,categorie,genre,add_by) VALUES (:noms,:adresse,:date_naiss,:nom_respo,:contact_respo,:contact,:categorie,:genre,:add_by) ");
+
+                $result = $reque->execute(array(
+
+                    'noms' => $noms,
+                    'adresse' => $adresse,
+                    'date_naiss' => $date_naiss,
+                    'nom_respo' => $nom_respo,
+                    'contact_respo' => $contact_respo,
+                    'contact' => $contact,
+                    'categorie' => $categorie,
+                    'genre' => $genre,
+                    'add_by' => $_SESSION['PROFILE']['id_utilisateur']
+
+                ));
+                if ($result) {
+                    echo "
+   valider
+     ";
+                } else {
+                    echo "err";
+                }
+            }
+        }
+    }
 }
 
 
 
 ?>
 
+<?php
+if (isset($_POST['btn_tri'])) {
+    extract($_POST);
 
+    $ref_patient = htmlspecialchars($_POST['ref_patient']);
+    $date_t = htmlspecialchars($_POST['date_t']);
+    $description = htmlspecialchars($_POST['description']);
+    $status = 5;
+    $ref_tri = $_SESSION['PROFILE']['id_utilisateur'];
+
+
+
+    $check_query = "SELECT * FROM fiches
+            WHERE ref_patient=:ref_patient AND status=:status
+           ";
+    $statement = $db->prepare($check_query);
+    $check_data = array(
+        ':ref_patient'   =>  $ref_patient,
+        ':status' => $status
+
+    );
+    if ($statement->execute($check_data)) {
+        if ($statement->rowCount() > 1) {
+            echo "
+                err existe
+                ";
+        } else {
+            if ($statement->rowCount() == 0) {
+
+
+
+                $reque = $db->prepare("INSERT INTO fiches (ref_patient,date_t,description,status,ref_tri) VALUES (:ref_patient,:date_t,:description,:status,:ref_tri) ");
+
+                $result = $reque->execute(array(
+
+                    'ref_patient' => $ref_patient,
+                    'date_t' => $date_t,
+                    'description' => $description,
+                    'status' => $status,
+                    'ref_tri' => $_SESSION['PROFILE']['id_utilisateur']
+
+                ));
+                if ($result) {
+                    echo "
+   valider
+     ";
+                } else {
+                    echo "err";
+                }
+            }
+        }
+    }
+}
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,22 +147,22 @@ if (isset($_POST['btn_submit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Personnels | Clinovie soft</title>
+    <title>Clinovie soft - paramettres</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/img/logo/lg.png">
+    <link rel="shortcut icon" href="favicon.ico">
 
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
 
     <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="../assets/css/vendor.min.css">
+    <link rel="stylesheet" href="assets/css/vendor.min.css">
 
     <!-- CSS Front Template -->
-    <link rel="stylesheet" href="../assets/css/theme.minc619.css?v=1.0">
+    <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
 
-    <link rel="preload" href="../assets/css/theme.min.css" data-hs-appearance="default" as="style">
-    <link rel="preload" href="../assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
+    <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
+    <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
 
     <style data-hs-appearance-onload-styles>
         * {
@@ -127,17 +227,17 @@ if (isset($_POST['btn_submit'])) {
                 "lang": "en"
             },
             "skipFilesFromBundle": {
-                "dist": ["../assets/js/hs.theme-appearance.js", "../assets/js/hs.theme-appearance-charts.js", "../assets/js/demo.js"],
-                "build": ["../assets/css/theme.css", "../assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js", "../assets/js/demo.js", "../assets/css/theme-dark.html", "../assets/css/docs.css", "../assets/vendor/icon-set/style.html", "../assets/js/hs.theme-appearance.js", "../assets/js/hs.theme-appearance-charts.js", "../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html", "../assets/js/demo.js"]
+                "dist": ["assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.js", "assets/js/demo.js"],
+                "build": ["assets/css/theme.css", "assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js", "assets/js/demo.js", "assets/css/theme-dark.html", "assets/css/docs.css", "assets/vendor/icon-set/style.html", "assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.js", "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html", "assets/js/demo.js"]
             },
-            "minifyCSSFiles": ["../assets/css/theme.css", "../assets/css/theme-dark.css"],
+            "minifyCSSFiles": ["assets/css/theme.css", "assets/css/theme-dark.css"],
             "copyDependencies": {
                 "dist": {
-                    "*../assets/js/theme-custom.js": ""
+                    "*assets/js/theme-custom.js": ""
                 },
                 "build": {
-                    "*../assets/js/theme-custom.js": "",
-                    "../node_modules/bootstrap-icons/font/*fonts/**": "../assets/css"
+                    "*assets/js/theme-custom.js": "",
+                    "node_modules/bootstrap-icons/font/*fonts/**": "assets/css"
                 }
             },
             "buildFolder": "",
@@ -246,9 +346,9 @@ if (isset($_POST['btn_submit'])) {
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl   footer-offset">
 
-    <script src="../assets/js/hs.theme-appearance.js"></script>
+    <script src="assets/js/hs.theme-appearance.js"></script>
 
-    <script src="../assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js"></script>
+    <script src="assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js"></script>
 
     <!-- ========== HEADER ========== -->
 
@@ -273,17 +373,10 @@ if (isset($_POST['btn_submit'])) {
                     <div class="col-sm mb-2 mb-sm-0">
 
 
-                        <h1 class="page-header-title">Nos Personnels</h1>
+                        <h1 class="page-header-title">Paramettres</h1>
                     </div>
                     <!-- End Col -->
 
-                    <!-- <div class="col-sm-auto">
-                        <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-                            <i class="bi-person"></i>
-                            Nouveau Personnel
-                        </button>
-
-                    </div> -->
                     <!-- End Col -->
                 </div>
                 <!-- End Row -->
@@ -305,7 +398,7 @@ if (isset($_POST['btn_submit'])) {
                                 <div class="input-group-prepend input-group-text">
                                     <i class="bi-search"></i>
                                 </div>
-                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un agent" aria-label="Search users">
+                                <input id="datatableSearch" type="search" class="form-control" placeholder="Rechercher un patient" aria-label="Search users">
                             </div>
                             <!-- End Search -->
                         </form>
@@ -383,101 +476,102 @@ if (isset($_POST['btn_submit'])) {
                                         <label class="form-check-label" for="datatableCheckAll"></label>
                                     </div>
                                 </th>
-                                <th class="table-column-ps-0">Noms de l'agent</th>
-                                <th>Access</th>
+                                <th class="table-column-ps-0">Noms du system</th>
+                                <th>Logo system</th>
+                                <th>Adresse</th>
+                                <th>Contact</th>
+                                <th>Email</th>
+                                <th>Site web</th>
+                                <th>Date modification</th>
 
-
-
+                            
                                 <th>Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <?php $requete = $db->query("SELECT * FROM tbl_agent INNER JOIN fonction ON ref_fonction=fonction.id_fonction ORDER by id_utilisateur DESC");
+                            <?php $requete = $db->query("SELECT * FROM paramettres");
                             while ($g = $requete->fetch()) {
                             ?>
-
-                                <div id="exampleModalCenter<?= $g['id_utilisateur']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalCenterTitle">Modifier l'access de <?= $g['nom_complet']; ?></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="" method="POST" autocomplete="off" enctype="multipart/form-data">
-                                                    
-                                                        <input type="hidden" name="id_utilisateur" value="<?= $g['id_utilisateur']; ?>">
-
-
-                                                    
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <label for="">Nom de l'agent</label>
-                                                            <input type="text" class="form-control" name="nom_complet" value="<?= $g['nom_complet']; ?>" readonly>
-                                                        </div>
-
-                                                        <div class="col-md-6">
-                                                            <label for="">Access</label>
-                                                            <select name="ref_fonction" id="" class="form-control" required>
-                                                                <option value="<?= $g['id_fonction']; ?>"><?= $g['designation']; ?></option>
-                                                                <?php $mx = $db->query("SELECT * FROM fonction");
-                                                    while ($tot = $mx->fetch()) {
-                                                    ?>
-                                                                <option value="<?= $tot['id_fonction']; ?>"><?= $tot['designation']; ?></option>
-                                                                
-                                                                <?php } ?>
-                                                            </select>
-
-                                                        </div>
-                                                    </div>
-
-
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                                                <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
 
 
                                 <!-- modal triage -->
 
+                                <div id="exampleModalCenter<?= $g['id_paramettres']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Etes vous sur de vouloir envoyer <?= $g['nom_system']; ?> Au triage?</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" method="POST">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" class="form-control" name="noms" value="<?= $g['nom_system']; ?>" readonly>
+                                            <input type="hidden" name="ref_patient" value="<?= $g['id_paramettres']; ?>">
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <br>
+                                       
+                                        <div class="col-md-6">
+                                            <label for="">Date</label>
+                                            <input type="date" class="form-control" name="date_t" placeholder="" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="">Description</label>
+                                            <span class="span span-warning">(Optionel)</span>
+                                            <input type="text" class="form-control" name="description" placeholder="petite description">
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <br>
+                                       
 
+
+                                    </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
+                                <button type="submit" name="btn_tri" class="btn btn-primary">Envoyer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                                 <!-- end modal triage -->
                                 <tr>
                                     <td class="table-column-pe-0">
 
-                                        <?= $g['id_utilisateur']; ?>
-
+                                        <?= $g['id_paramettres']; ?>
 
                                     </td>
-                                    <td class="table-column-ps-0">
-                                        <a class="d-flex align-items-center" href="#">
-                                            <div class="avatar avatar-circle">
-                                                <img class="avatar-img" src="../prof/<?= $g['photo']; ?>" alt="Image Description">
-                                            </div>
-                                            <div class="ms-3">
-                                                <span class="d-block h5 text-inherit mb-0"><?= $g['nom_complet']; ?></span>
-                                                <span class="d-block fs-5 text-body"><?= $g['departement']; ?></span>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td><?= $g['designation']; ?></td>
-
-
-
-
-
                                     <td>
+                                        <?= $g['nom_system'];?>
+                                    </td>
+                                    <td>
+                                        <?= $g['logo_system']; ?>
+                                    </td>
+                                    <td><?= $g['adresse_system']; ?></td>
+                                    <td>
+                                    <?= $g['contact_system']; ?>
+                                       
+                                    </td>
+                                    <td>
+                                        <?= $g['email_system']; ?>
+                                    </td>
+                                    <td><?= $g['site_web_system']; ?>
+                                      
 
-                                        <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_utilisateur']; ?>">
+                                    </td>
+                                    <td><?= $g['created_system']; ?></td>
+                                    <td>
+                                        
+                                        <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_paramettres']; ?>">
                                             <i class="bi-pencil-fill me-1"></i> Modifier
                                         </button>
 
@@ -492,54 +586,126 @@ if (isset($_POST['btn_submit'])) {
                 <!-- End Table -->
 
                 <div class="card-footer">
-                    <!-- Pagination -->
-                    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-                        <div class="col-sm mb-2 mb-sm-0">
-                            <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                                <span class="me-2">Showing:</span>
+          <!-- Pagination -->
+          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+            <div class="col-sm mb-2 mb-sm-0">
+              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                <span class="me-2">Showing:</span>
 
-                                <!-- Select -->
-                                <div class="tom-select-custom">
-                                    <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
+                <!-- Select -->
+                <div class="tom-select-custom">
+                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }'>
-                                        <option value="4">4</option>
-                                        <option value="6">6</option>
-                                        <option value="8" selected>8</option>
-                                        <option value="12">12</option>
-                                    </select>
-                                </div>
-                                <!-- End Select -->
-
-                                <span class="text-secondary me-2">of</span>
-
-                                <!-- Pagination Quantity -->
-                                <span id="datatableWithPaginationInfoTotalQty"></span>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-
-                        <div class="col-sm-auto">
-                            <div class="d-flex justify-content-center justify-content-sm-end">
-                                <!-- Pagination -->
-                                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-                            </div>
-                        </div>
-                        <!-- End Col -->
-                    </div>
-                    <!-- End Pagination -->
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="8" selected>8</option>
+                    <option value="12">12</option>
+                  </select>
                 </div>
+                <!-- End Select -->
+
+                <span class="text-secondary me-2">of</span>
+
+                <!-- Pagination Quantity -->
+                <span id="datatableWithPaginationInfoTotalQty"></span>
+              </div>
+            </div>
+            <!-- End Col -->
+
+            <div class="col-sm-auto">
+              <div class="d-flex justify-content-center justify-content-sm-end">
+                <!-- Pagination -->
+                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+              </div>
+            </div>
+            <!-- End Col -->
+          </div>
+          <!-- End Pagination -->
+        </div>
+        <!-- End Footer -->
+      </div>
+
+                <!-- Footer -->
+
+                <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau patient</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="" method="POST" autocomplete="off">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" class="form-control" name="noms" placeholder="Nom du patients" required>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <div class="col-md-6">
+                                            <label for="">Genre</label>
+                                            <select name="genre" id="" class="form-control" required>
+                                                <option>--Genre--</option>
+                                                <option value="Homme">Homme</option>
+                                                <option value="Femme">Femme</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="">Date de naissance</label>
+                                            <input type="date" class="form-control" name="date_naiss" placeholder="date de naissance" required>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="nom_respo" placeholder="nom du reponsable" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="number" class="form-control" name="contact_respo" placeholder="contact du reponsable" required>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <div class="col-md-6">
+                                            <input type="number" class="form-control" name="contact" placeholder="cobract du patient" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-control" name="categorie" id="">
+                                                <option>--Categorie--</option>
+                                                <option value="abonnee">Abonnee</option>
+                                                <option value="non abonnee">Non abonnee</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        <div class="col-md-12">
+                                            <input type="text" class="form-control" name="adresse" placeholder="adresse" required>
+
+                                        </div>
+                                        <br>
+
+
+                                    </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                                <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- End Footer -->
             </div>
-
-            <!-- Footer -->
-
-
-
-            <!-- End Footer -->
-        </div>
-        <!-- End Card -->
+            <!-- End Card -->
         </div>
         <!-- End Content -->
 
@@ -1616,8 +1782,8 @@ if (isset($_POST['btn_submit'])) {
                 <div class="modal-body p-sm-5">
                     <div class="text-center">
                         <div class="w-75 w-sm-50 mx-auto mb-4">
-                            <img class="img-fluid" src="../assets/svg/illustrations/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="default">
-                            <img class="img-fluid" src="../assets/svg/illustrations-light/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="dark">
+                            <img class="img-fluid" src="assets/svg/illustrations/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="default">
+                            <img class="img-fluid" src="assets/svg/illustrations-light/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="dark">
                         </div>
 
                         <h4 class="h1">Welcome to Front</h4>
@@ -1634,16 +1800,16 @@ if (isset($_POST['btn_submit'])) {
                     <div class="w-85 mx-auto">
                         <div class="row justify-content-between">
                             <div class="col">
-                                <img class="img-fluid" src="../assets/svg/brands/gitlab-gray.svg" alt="Image Description">
+                                <img class="img-fluid" src="assets/svg/brands/gitlab-gray.svg" alt="Image Description">
                             </div>
                             <div class="col">
-                                <img class="img-fluid" src="../assets/svg/brands/fitbit-gray.svg" alt="Image Description">
+                                <img class="img-fluid" src="assets/svg/brands/fitbit-gray.svg" alt="Image Description">
                             </div>
                             <div class="col">
-                                <img class="img-fluid" src="../assets/svg/brands/flow-xo-gray.svg" alt="Image Description">
+                                <img class="img-fluid" src="assets/svg/brands/flow-xo-gray.svg" alt="Image Description">
                             </div>
                             <div class="col">
-                                <img class="img-fluid" src="../assets/svg/brands/layar-gray.svg" alt="Image Description">
+                                <img class="img-fluid" src="assets/svg/brands/layar-gray.svg" alt="Image Description">
                             </div>
                         </div>
                     </div>
@@ -1661,10 +1827,10 @@ if (isset($_POST['btn_submit'])) {
     <!-- ========== END SECONDARY CONTENTS ========== -->
 
     <!-- JS Implementing Plugins -->
-    <script src="../assets/js/vendor.min.js"></script>
+    <script src="assets/js/vendor.min.js"></script>
 
     <!-- JS Front -->
-    <script src="../assets/js/theme.min.js"></script>
+    <script src="assets/js/theme.min.js"></script>
 
     <!-- JS Plugins Init. -->
     <script>
@@ -1705,8 +1871,8 @@ if (isset($_POST['btn_submit'])) {
                 },
                 language: {
                     zeroRecords: `<div class="text-center p-4">
-              <img class="mb-3" src="../assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
-              <img class="mb-3" src="../assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
+              <img class="mb-3" src="./assets/svg/illustrations/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="default">
+              <img class="mb-3" src="./assets/svg/illustrations-light/oc-error.svg" alt="Image Description" style="width: 10rem;" data-hs-theme-appearance="dark">
             <p class="mb-0">No data to show</p>
             </div>`
                 }

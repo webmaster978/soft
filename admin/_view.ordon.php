@@ -456,6 +456,11 @@ if (isset($_POST['btn_fin'])) {
                                     <hr>
 
                                 </div>
+                                <div class="row">
+                                    <h5> Diagnostic final : <small class="text-muted text-underline"><?= $carte->final; ?></small></h5>
+                                    <hr>
+
+                                </div>
                                 
                                
                             <!-- End Row -->
@@ -519,6 +524,7 @@ if (isset($_POST['btn_fin'])) {
                             </div>
 
                             <div class="row">
+                                <label for="">Diagnostic final</label>
                                 <form action="" method="POST">
                                     <input type="hidden" name="id_fiche" value="<?= $carte->id_fiche; ?>">
                                 <textarea class="form-control" name="final" id="" cols="30" rows="5" value="<?= $carte->final; ?>">
