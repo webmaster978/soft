@@ -146,6 +146,22 @@
                 </div>
                 
               </div>
+              <div class="nav-item">
+                <a class="nav-link dropdown-toggle " href="#navbarSet" role="button" data-bs-toggle="collapse" data-bs-target="#navbarSet" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
+                  <i class="bi-grid nav-icon"></i>
+                  <span class="nav-link-title">Paramettres</span>
+                </a>
+
+                <div id="navbarSet" class="nav-collapse collapse" data-bs-parent="#navbarSet">
+                <a class="nav-link " href="paramettres">System</a>
+                  <a class="nav-link " href="access">Access</a>
+                  <a class="nav-link " href="departement">Departement</a>
+                  
+                  
+                  
+                </div>
+                
+              </div>
               <!-- End Collapse -->
 
 
