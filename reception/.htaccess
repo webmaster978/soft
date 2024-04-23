@@ -5,3 +5,4 @@ RewriteRule ^triage$ triage.php
 RewriteRule ^plaintes$ plaintes.php
 RewriteRule ^consultations$ consultations.php
 RewriteRule ^cons$ cons.php
+RewriteRule ^rapport_reception$ rapport_reception.php

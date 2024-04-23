@@ -53,6 +53,7 @@
                   <a class="nav-link " href="patients">Nos patients</a>
                   <a class="nav-link " href="#">Abonnees</a>
                   <a class="nav-link " href="#">Non Abonnees</a>
+                  <a class="nav-link " href="rapport_reception">Rapport</a>
                 </div>
                 
               </div>
