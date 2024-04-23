@@ -1,4 +1,3 @@
-
 <?php
 if (isset($_POST['btn_submit'])) {
     extract($_POST);
@@ -25,9 +24,14 @@ if (isset($_POST['btn_submit'])) {
     );
     if ($statement->execute($check_data)) {
         if ($statement->rowCount() > 1) {
-            echo "
-                err existe
-                ";
+            echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                
+              })
+                  </script>";
         } else {
             if ($statement->rowCount() == 0) {
 
@@ -49,9 +53,16 @@ if (isset($_POST['btn_submit'])) {
 
                 ));
                 if ($result) {
-                    echo "
-   valider
-     ";
+                    echo "<script>
+                Swal.fire({
+                     position: 'top-end',
+                     icon: 'success',
+                     title: 'societes inserer avec success',
+                    showConfirmButton: false,
+                     timer: 1500
+                   })
+
+            </script>";
                 } else {
                     echo "err";
                 }
@@ -87,9 +98,14 @@ if (isset($_POST['btn_tri'])) {
     );
     if ($statement->execute($check_data)) {
         if ($statement->rowCount() > 1) {
-            echo "
-                err existe
-                ";
+            echo "<script>
+                         Swal.fire({
+                          icon: 'error',
+                           title: 'Oops...',
+                      text: 'Ce patient existe deja!',
+                         footer: ''
+                          })
+                  </script>";
         } else {
             if ($statement->rowCount() == 0) {
 
@@ -107,9 +123,16 @@ if (isset($_POST['btn_tri'])) {
 
                 ));
                 if ($result) {
-                    echo "
-   valider
-     ";
+                    echo "<script>
+                    Swal.fire({
+                         position: 'top-end',
+                         icon: 'success',
+                         title: 'patient inserer avec success',
+                        showConfirmButton: false,
+                         timer: 1500
+                       })
+    
+                </script>";
                 } else {
                     echo "err";
                 }
@@ -131,10 +154,22 @@ if (isset($_POST['btn_tri'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Patients | <?= $set->nom_system; ?> </title>
+    <title>Users | Front - Admin &amp; Dashboard Template</title>
 
     <!-- Favicon -->
-<?php include 'partials/_link.php' ?>
+    <link rel="shortcut icon" href="assets/img/logo/lg.png">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+
+    <!-- CSS Implementing Plugins -->
+    <link rel="stylesheet" href="assets/css/vendor.min.css">
+
+    <!-- CSS Front Template -->
+    <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
+
+    <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
+    <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
 
     <style data-hs-appearance-onload-styles>
         * {
@@ -477,49 +512,49 @@ if (isset($_POST['btn_tri'])) {
                                 <!-- modal triage -->
 
                                 <div id="exampleModalCenter<?= $g['id_patient']; ?>" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalCenterTitle">Etes vous sur de vouloir envoyer <?= $g['noms']; ?> Au triage?</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" method="POST">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control" name="noms" value="<?= $g['noms']; ?>" readonly>
-                                            <input type="hidden" name="ref_patient" value="<?= $g['id_patient']; ?>">
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                       
-                                        <div class="col-md-6">
-                                            <label for="">Date</label>
-                                            <input type="date" class="form-control" name="date_t" placeholder="" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="">Description</label>
-                                            <span class="span span-warning">(Optionel)</span>
-                                            <input type="text" class="form-control" name="description" placeholder="petite description">
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                       
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalCenterTitle">Etes vous sur de vouloir envoyer <?= $g['noms']; ?> Au triage?</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="" method="POST">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input type="text" class="form-control" name="noms" value="<?= $g['noms']; ?>" readonly>
+                                                            <input type="hidden" name="ref_patient" value="<?= $g['id_patient']; ?>">
+                                                        </div>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+
+                                                        <div class="col-md-6">
+                                                            <label for="">Date</label>
+                                                            <input type="date" class="form-control" name="date_t" placeholder="" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="">Description</label>
+                                                            <span class="span span-warning">(Optionel)</span>
+                                                            <input type="text" class="form-control" name="description" placeholder="petite description">
+                                                        </div>
+                                                        <br>
+                                                        <br>
+                                                        <br>
 
 
+
+                                                    </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
+                                                <button type="submit" name="btn_tri" class="btn btn-primary">Envoyer</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuller</button>
-                                <button type="submit" name="btn_tri" class="btn btn-primary">Envoyer</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                </div>
 
                                 <!-- end modal triage -->
                                 <tr>
@@ -548,9 +583,9 @@ if (isset($_POST['btn_tri'])) {
                                         <?php
                                         $daten = $g['date_naiss'];
                                         $today = date("Y-m-d");
-                                        $diff = date_diff(date_create($daten),date_create($today));
+                                        $diff = date_diff(date_create($daten), date_create($today));
                                         echo $diff->format('%y');
-                                        
+
                                         ?>
                                         An(s)
                                     </td>
@@ -563,7 +598,7 @@ if (isset($_POST['btn_tri'])) {
                                     </td>
                                     <td><?= $g['categorie']; ?></td>
                                     <td>
-                                        
+
                                         <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalCenter<?= $g['id_patient']; ?>">
                                             <i class="bi-pencil-fill me-1"></i> Triage
                                         </button>
@@ -579,126 +614,126 @@ if (isset($_POST['btn_tri'])) {
                 <!-- End Table -->
 
                 <div class="card-footer">
-          <!-- Pagination -->
-          <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-            <div class="col-sm mb-2 mb-sm-0">
-              <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
-                <span class="me-2">Showing:</span>
+                    <!-- Pagination -->
+                    <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
+                        <div class="col-sm mb-2 mb-sm-0">
+                            <div class="d-flex justify-content-center justify-content-sm-start align-items-center">
+                                <span class="me-2">Showing:</span>
 
-                <!-- Select -->
-                <div class="tom-select-custom">
-                  <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
+                                <!-- Select -->
+                                <div class="tom-select-custom">
+                                    <select id="datatableEntries" class="js-select form-select form-select-borderless w-auto" autocomplete="off" data-hs-tom-select-options='{
                             "searchInDropdown": false,
                             "hideSearch": true
                           }'>
-                    <option value="4">4</option>
-                    <option value="6">6</option>
-                    <option value="8" selected>8</option>
-                    <option value="12">12</option>
-                  </select>
-                </div>
-                <!-- End Select -->
+                                        <option value="4">4</option>
+                                        <option value="6">6</option>
+                                        <option value="8" selected>8</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                                <!-- End Select -->
 
-                <span class="text-secondary me-2">of</span>
+                                <span class="text-secondary me-2">of</span>
 
-                <!-- Pagination Quantity -->
-                <span id="datatableWithPaginationInfoTotalQty"></span>
-              </div>
-            </div>
-            <!-- End Col -->
-
-            <div class="col-sm-auto">
-              <div class="d-flex justify-content-center justify-content-sm-end">
-                <!-- Pagination -->
-                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-          <!-- End Pagination -->
-        </div>
-        <!-- End Footer -->
-      </div>
-
-                <!-- Footer -->
-
-                <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau patient</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <!-- Pagination Quantity -->
+                                <span id="datatableWithPaginationInfoTotalQty"></span>
                             </div>
-                            <div class="modal-body">
-                                <form action="" method="POST" autocomplete="off">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control" name="noms" placeholder="Nom du patients" required>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <div class="col-md-6">
-                                            <label for="">Genre</label>
-                                            <select name="genre" id="" class="form-control" required>
-                                                <option>--Genre--</option>
-                                                <option value="Homme">Homme</option>
-                                                <option value="Femme">Femme</option>
-                                            </select>
+                        </div>
+                        <!-- End Col -->
 
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="">Date de naissance</label>
-                                            <input type="date" class="form-control" name="date_naiss" placeholder="date de naissance" required>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" name="nom_respo" placeholder="nom du reponsable" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="number" class="form-control" name="contact_respo" placeholder="contact du reponsable" required>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <div class="col-md-6">
-                                            <input type="number" class="form-control" name="contact" placeholder="cobract du patient" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <select class="form-control" name="categorie" id="">
-                                                <option>--Categorie--</option>
-                                                <option value="abonnee">Abonnee</option>
-                                                <option value="non abonnee">Non abonnee</option>
-                                            </select>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <br>
-                                        <div class="col-md-12">
-                                            <input type="text" class="form-control" name="adresse" placeholder="adresse" required>
+                        <div class="col-sm-auto">
+                            <div class="d-flex justify-content-center justify-content-sm-end">
+                                <!-- Pagination -->
+                                <nav id="datatablePagination" aria-label="Activity pagination"></nav>
+                            </div>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Pagination -->
+                </div>
+                <!-- End Footer -->
+            </div>
 
-                                        </div>
-                                        <br>
+            <!-- Footer -->
 
+            <div id="exampleModalCenter" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Nouveau patient</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="POST" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" name="noms" placeholder="Nom du patients" required>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="col-md-6">
+                                        <label for="">Genre</label>
+                                        <select name="genre" id="" class="form-control" required>
+                                            <option>--Genre--</option>
+                                            <option value="Homme">Homme</option>
+                                            <option value="Femme">Femme</option>
+                                        </select>
 
                                     </div>
+                                    <div class="col-md-6">
+                                        <label for="">Date de naissance</label>
+                                        <input type="date" class="form-control" name="date_naiss" placeholder="date de naissance" required>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="nom_respo" placeholder="nom du reponsable" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control" name="contact_respo" placeholder="contact du reponsable" required>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control" name="contact" placeholder="cobract du patient" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="categorie" id="">
+                                            <option>--Categorie--</option>
+                                            <option value="abonnee">Abonnee</option>
+                                            <option value="non abonnee">Non abonnee</option>
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" name="adresse" placeholder="adresse" required>
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
-                                <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
-                                </form>
-                            </div>
+                                    </div>
+                                    <br>
+
+
+                                </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                            <button type="submit" name="btn_submit" class="btn btn-primary">Enregistrer</button>
+                            </form>
                         </div>
                     </div>
                 </div>
-
-                <!-- End Footer -->
             </div>
-            <!-- End Card -->
+
+            <!-- End Footer -->
+        </div>
+        <!-- End Card -->
         </div>
         <!-- End Content -->
 
@@ -1824,6 +1859,8 @@ if (isset($_POST['btn_tri'])) {
 
     <!-- JS Front -->
     <script src="assets/js/theme.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- JS Plugins Init. -->
     <script>

@@ -1,15 +1,17 @@
-<?php	
- require '../config/database.php';
- if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'reception') {
-	header('location:../login');
- }
- else {
-	$recup_informations = $db->prepare("SELECT * FROM fonction INNER JOIN tbl_agent ON fonction.id_fonction=tbl_agent.ref_fonction WHERE id_utilisateur=:id_utilisateur");
-	$recup_informations->execute([
-		'id_utilisateur' => $_SESSION['PROFILE']['id_utilisateur']
-	]);
-	$user_infos = $recup_informations->fetch(PDO::FETCH_OBJ);
- }
+<?php
+require '../config/database.php';
+if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['designation'] != 'reception') {
+  header('location:../login');
+} else {
+  $recup_informations = $db->prepare("SELECT * FROM fonction INNER JOIN tbl_agent ON fonction.id_fonction=tbl_agent.ref_fonction WHERE id_utilisateur=:id_utilisateur");
+  $recup_informations->execute([
+    'id_utilisateur' => $_SESSION['PROFILE']['id_utilisateur']
+  ]);
+  $user_infos = $recup_informations->fetch(PDO::FETCH_OBJ);
+}
+
+$settings = $db->query("SELECT * FROM paramettres");
+$set = $settings->fetch(PDO::FETCH_OBJ);
 
 ?>
 <!DOCTYPE html>
@@ -22,31 +24,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Title -->
-  <title>Dashboard | clinovie soft</title>
+  <title>Dashboard | </title>
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="assets/logo/lg.png">
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
-
-  <!-- CSS Implementing Plugins -->
-  <link rel="stylesheet" href="assets/css/vendor.min.css">
-
-  <!-- CSS Front Template -->
-  <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
-
-  <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
-  <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
+  <?php include 'partials/_link.php' ?>
 
   <style data-hs-appearance-onload-styles>
-    *
-    {
+    * {
       transition: unset !important;
     }
 
-    body
-    {
+    body {
       opacity: 0;
     }
   </style>
@@ -54,8 +42,7 @@
   <!-- ONLY DEV -->
 
   <style>
-    body
-    {
+    body {
       opacity: 0;
     }
   </style>
@@ -63,88 +50,163 @@
   <!-- END ONLY DEV -->
 
   <script>
-            window.hs_config = {"autopath":"@@autopath","deleteLine":"hs-builder:delete","deleteLine:build":"hs-builder:build-delete","deleteLine:dist":"hs-builder:dist-delete","previewMode":false,"startPath":"/index.html","vars":{"themeFont":"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap","version":"?v=1.0"},"layoutBuilder":{"extend":{"switcherSupport":true},"header":{"layoutMode":"default","containerMode":"container-fluid"},"sidebarLayout":"default"},"themeAppearance":{"layoutSkin":"default","sidebarSkin":"default","styles":{"colors":{"primary":"#377dff","transparent":"transparent","white":"#fff","dark":"132144","gray":{"100":"#f9fafc","900":"#1e2022"}},"font":"Inter"}},"languageDirection":{"lang":"en"},"skipFilesFromBundle":{"dist":["assets/js/hs.theme-appearance.js","assets/js/hs.theme-appearance-charts.js","assets/js/demo.js"],"build":["assets/css/theme.css","assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js","assets/js/demo.js","assets/css/theme-dark.html","assets/css/docs.css","assets/vendor/icon-set/style.html","assets/js/hs.theme-appearance.js","assets/js/hs.theme-appearance-charts.js","node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html","assets/js/demo.js"]},"minifyCSSFiles":["assets/css/theme.css","assets/css/theme-dark.css"],"copyDependencies":{"dist":{"*assets/js/theme-custom.js":""},"build":{"*assets/js/theme-custom.js":"","node_modules/bootstrap-icons/font/*fonts/**":"assets/css"}},"buildFolder":"","replacePathsToCDN":{},"directoryNames":{"src":"./src","dist":"./dist","build":"./build"},"fileNames":{"dist":{"js":"theme.min.js","css":"theme.min.css"},"build":{"css":"theme.min.css","js":"theme.min.js","vendorCSS":"vendor.min.css","vendorJS":"vendor.min.js"}},"fileTypes":"jpg|png|svg|mp4|webm|ogv|json"}
-            window.hs_config.gulpRGBA = (p1) => {
-  const options = p1.split(',')
-  const hex = options[0].toString()
-  const transparent = options[1].toString()
-
-  var c;
-  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-    c= hex.substring(1).split('');
-    if(c.length== 3){
-      c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+    window.hs_config = {
+      "autopath": "@@autopath",
+      "deleteLine": "hs-builder:delete",
+      "deleteLine:build": "hs-builder:build-delete",
+      "deleteLine:dist": "hs-builder:dist-delete",
+      "previewMode": false,
+      "startPath": "/index.html",
+      "vars": {
+        "themeFont": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
+        "version": "?v=1.0"
+      },
+      "layoutBuilder": {
+        "extend": {
+          "switcherSupport": true
+        },
+        "header": {
+          "layoutMode": "default",
+          "containerMode": "container-fluid"
+        },
+        "sidebarLayout": "default"
+      },
+      "themeAppearance": {
+        "layoutSkin": "default",
+        "sidebarSkin": "default",
+        "styles": {
+          "colors": {
+            "primary": "#377dff",
+            "transparent": "transparent",
+            "white": "#fff",
+            "dark": "132144",
+            "gray": {
+              "100": "#f9fafc",
+              "900": "#1e2022"
+            }
+          },
+          "font": "Inter"
+        }
+      },
+      "languageDirection": {
+        "lang": "en"
+      },
+      "skipFilesFromBundle": {
+        "dist": ["assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.js", "assets/js/demo.js"],
+        "build": ["assets/css/theme.css", "assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js", "assets/js/demo.js", "assets/css/theme-dark.html", "assets/css/docs.css", "assets/vendor/icon-set/style.html", "assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.js", "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html", "assets/js/demo.js"]
+      },
+      "minifyCSSFiles": ["assets/css/theme.css", "assets/css/theme-dark.css"],
+      "copyDependencies": {
+        "dist": {
+          "*assets/js/theme-custom.js": ""
+        },
+        "build": {
+          "*assets/js/theme-custom.js": "",
+          "node_modules/bootstrap-icons/font/*fonts/**": "assets/css"
+        }
+      },
+      "buildFolder": "",
+      "replacePathsToCDN": {},
+      "directoryNames": {
+        "src": "./src",
+        "dist": "./dist",
+        "build": "./build"
+      },
+      "fileNames": {
+        "dist": {
+          "js": "theme.min.js",
+          "css": "theme.min.css"
+        },
+        "build": {
+          "css": "theme.min.css",
+          "js": "theme.min.js",
+          "vendorCSS": "vendor.min.css",
+          "vendorJS": "vendor.min.js"
+        }
+      },
+      "fileTypes": "jpg|png|svg|mp4|webm|ogv|json"
     }
-    c= '0x'+c.join('');
-    return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',' + transparent + ')';
-  }
-  throw new Error('Bad Hex');
-}
-            window.hs_config.gulpDarken = (p1) => {
-  const options = p1.split(',')
+    window.hs_config.gulpRGBA = (p1) => {
+      const options = p1.split(',')
+      const hex = options[0].toString()
+      const transparent = options[1].toString()
 
-  let col = options[0].toString()
-  let amt = -parseInt(options[1])
-  var usePound = false
+      var c;
+      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+        c = hex.substring(1).split('');
+        if (c.length == 3) {
+          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c = '0x' + c.join('');
+        return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + transparent + ')';
+      }
+      throw new Error('Bad Hex');
+    }
+    window.hs_config.gulpDarken = (p1) => {
+      const options = p1.split(',')
 
-  if (col[0] == "#") {
-    col = col.slice(1)
-    usePound = true
-  }
-  var num = parseInt(col, 16)
-  var r = (num >> 16) + amt
-  if (r > 255) {
-    r = 255
-  } else if (r < 0) {
-    r = 0
-  }
-  var b = ((num >> 8) & 0x00FF) + amt
-  if (b > 255) {
-    b = 255
-  } else if (b < 0) {
-    b = 0
-  }
-  var g = (num & 0x0000FF) + amt
-  if (g > 255) {
-    g = 255
-  } else if (g < 0) {
-    g = 0
-  }
-  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
-}
-            window.hs_config.gulpLighten = (p1) => {
-  const options = p1.split(',')
+      let col = options[0].toString()
+      let amt = -parseInt(options[1])
+      var usePound = false
 
-  let col = options[0].toString()
-  let amt = parseInt(options[1])
-  var usePound = false
+      if (col[0] == "#") {
+        col = col.slice(1)
+        usePound = true
+      }
+      var num = parseInt(col, 16)
+      var r = (num >> 16) + amt
+      if (r > 255) {
+        r = 255
+      } else if (r < 0) {
+        r = 0
+      }
+      var b = ((num >> 8) & 0x00FF) + amt
+      if (b > 255) {
+        b = 255
+      } else if (b < 0) {
+        b = 0
+      }
+      var g = (num & 0x0000FF) + amt
+      if (g > 255) {
+        g = 255
+      } else if (g < 0) {
+        g = 0
+      }
+      return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
+    }
+    window.hs_config.gulpLighten = (p1) => {
+      const options = p1.split(',')
 
-  if (col[0] == "#") {
-    col = col.slice(1)
-    usePound = true
-  }
-  var num = parseInt(col, 16)
-  var r = (num >> 16) + amt
-  if (r > 255) {
-    r = 255
-  } else if (r < 0) {
-    r = 0
-  }
-  var b = ((num >> 8) & 0x00FF) + amt
-  if (b > 255) {
-    b = 255
-  } else if (b < 0) {
-    b = 0
-  }
-  var g = (num & 0x0000FF) + amt
-  if (g > 255) {
-    g = 255
-  } else if (g < 0) {
-    g = 0
-  }
-  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
-}
-            </script>
+      let col = options[0].toString()
+      let amt = parseInt(options[1])
+      var usePound = false
+
+      if (col[0] == "#") {
+        col = col.slice(1)
+        usePound = true
+      }
+      var num = parseInt(col, 16)
+      var r = (num >> 16) + amt
+      if (r > 255) {
+        r = 255
+      } else if (r < 0) {
+        r = 0
+      }
+      var b = ((num >> 8) & 0x00FF) + amt
+      if (b > 255) {
+        b = 255
+      } else if (b < 0) {
+        b = 0
+      }
+      var g = (num & 0x0000FF) + amt
+      if (g > 255) {
+        g = 255
+      } else if (g < 0) {
+        g = 0
+      }
+      return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
+    }
+  </script>
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl   footer-offset">
@@ -155,7 +217,7 @@
 
   <!-- ========== HEADER ========== -->
 
- <?php include 'partials/_header.php' ?>
+  <?php include 'partials/_header.php' ?>
 
   <!-- ========== END HEADER ========== -->
 
@@ -177,7 +239,7 @@
           </div>
           <!-- End Col -->
 
-         
+
           <!-- End Col -->
         </div>
         <!-- End Row -->
@@ -186,57 +248,28 @@
 
       <!-- Stats -->
       <div class="row">
-        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+        <div class="col-sm-6 col-lg-4 mb-3 mb-lg-5">
           <!-- Card -->
           <a class="card card-hover-shadow h-100" href="#">
             <div class="card-body">
-              <h6 class="card-subtitle">Total Users</h6>
+              <h6 class="card-subtitle">Total patients</h6>
 
               <div class="row align-items-center gx-2 mb-1">
                 <div class="col-6">
-                  <h2 class="card-title text-inherit">72,540</h2>
+                  <?php
+
+                  $com = $db->query("SELECT COUNT(*) AS id_patient FROM patients");
+                  ?>
+                  <?php while ($m = $com->fetch()) { ?>
+                    <h2 class="card-title text-inherit"><?= $m['id_patient']; ?></h2>
+                  <?php } ?>
                 </div>
                 <!-- End Col -->
 
                 <div class="col-6">
                   <!-- Chart -->
                   <div class="chartjs-custom" style="height: 3rem;">
-                    <canvas class="js-chart" data-hs-chartjs-options='{
-                              "type": "line",
-                              "data": {
-                                 "labels": ["1 May","2 May","3 May","4 May","5 May","6 May","7 May","8 May","9 May","10 May","11 May","12 May","13 May","14 May","15 May","16 May","17 May","18 May","19 May","20 May","21 May","22 May","23 May","24 May","25 May","26 May","27 May","28 May","29 May","30 May","31 May"],
-                                 "datasets": [{
-                                  "data": [21,20,24,20,18,17,15,17,18,30,31,30,30,35,25,35,35,40,60,90,90,90,85,70,75,70,30,30,30,50,72],
-                                  "backgroundColor": ["rgba(55, 125, 255, 0)", "rgba(255, 255, 255, 0)"],
-                                  "borderColor": "#377dff",
-                                  "borderWidth": 2,
-                                  "pointRadius": 0,
-                                  "pointHoverRadius": 0
-                                }]
-                              },
-                              "options": {
-                                 "scales": {
-                                   "y": {
-                                     "display": false
-                                   },
-                                   "x": {
-                                     "display": false
-                                   }
-                                 },
-                                "hover": {
-                                  "mode": "nearest",
-                                  "intersect": false
-                                },
-                                "plugins": {
-                                  "tooltip": {
-                                    "postfix": "k",
-                                    "hasIndicator": true,
-                                    "intersect": false
-                                  }
-                                }
-                              }
-                            }'>
-                    </canvas>
+
                   </div>
                   <!-- End Chart -->
                 </div>
@@ -244,24 +277,28 @@
               </div>
               <!-- End Row -->
 
-              <span class="badge bg-soft-success text-success">
-                <i class="bi-graph-up"></i> 12.5%
-              </span>
-              <span class="text-body fs-6 ms-1">from 70,104</span>
+
             </div>
           </a>
           <!-- End Card -->
         </div>
 
-        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+        <div class="col-sm-6 col-lg-4 mb-4 mb-lg-5">
           <!-- Card -->
           <a class="card card-hover-shadow h-100" href="#">
             <div class="card-body">
-              <h6 class="card-subtitle">Sessions</h6>
+              <h6 class="card-subtitle">Total patients aujourd'hui</h6>
 
               <div class="row align-items-center gx-2 mb-1">
                 <div class="col-6">
-                  <h2 class="card-title text-inherit">29.4%</h2>
+                  <?php
+                  $date = date("Y-m-d");
+
+                  $pa = $db->query("SELECT COUNT(*) AS ref_patient FROM fiches WHERE date_t=$date");
+                  ?>
+                  <?php while ($pap = $pa->fetch()) { ?>
+                    <h2 class="card-title text-inherit"><?= $pap['ref_patient']; ?></h2>
+                  <?php } ?>
                 </div>
                 <!-- End Col -->
 
@@ -319,58 +356,28 @@
           </a>
           <!-- End Card -->
         </div>
-
-        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
+        <div class="col-sm-6 col-lg-4 mb-3 mb-lg-5">
           <!-- Card -->
           <a class="card card-hover-shadow h-100" href="#">
             <div class="card-body">
-              <h6 class="card-subtitle">Avg. Click Rate</h6>
+              <h6 class="card-subtitle">Total patients</h6>
 
               <div class="row align-items-center gx-2 mb-1">
                 <div class="col-6">
-                  <h2 class="card-title text-inherit">56.8%</h2>
+                  <?php
+
+                  $com = $db->query("SELECT COUNT(*) AS id_patient FROM patients");
+                  ?>
+                  <?php while ($m = $com->fetch()) { ?>
+                    <h2 class="card-title text-inherit"><?= $m['id_patient']; ?></h2>
+                  <?php } ?>
                 </div>
                 <!-- End Col -->
 
                 <div class="col-6">
                   <!-- Chart -->
                   <div class="chartjs-custom" style="height: 3rem;">
-                    <canvas class="js-chart" data-hs-chartjs-options='{
-                              "type": "line",
-                              "data": {
-                                 "labels": ["1 May","2 May","3 May","4 May","5 May","6 May","7 May","8 May","9 May","10 May","11 May","12 May","13 May","14 May","15 May","16 May","17 May","18 May","19 May","20 May","21 May","22 May","23 May","24 May","25 May","26 May","27 May","28 May","29 May","30 May","31 May"],
-                                 "datasets": [{
-                                  "data": [25,18,30,31,35,35,60,60,60,75,21,20,24,20,18,17,15,17,30,120,120,120,100,90,75,90,90,90,75,70,60],
-                                  "backgroundColor": ["rgba(55, 125, 255, 0)", "rgba(255, 255, 255, 0)"],
-                                  "borderColor": "#377dff",
-                                  "borderWidth": 2,
-                                  "pointRadius": 0,
-                                  "pointHoverRadius": 0
-                                }]
-                              },
-                              "options": {
-                                 "scales": {
-                                   "y": {
-                                     "display": false
-                                   },
-                                   "x": {
-                                     "display": false
-                                   }
-                                 },
-                                "hover": {
-                                  "mode": "nearest",
-                                  "intersect": false
-                                },
-                                "plugins": {
-                                  "tooltip": {
-                                    "postfix": "k",
-                                    "hasIndicator": true,
-                                    "intersect": false
-                                  }
-                                }
-                              }
-                            }'>
-                    </canvas>
+
                   </div>
                   <!-- End Chart -->
                 </div>
@@ -378,96 +385,32 @@
               </div>
               <!-- End Row -->
 
-              <span class="badge bg-soft-danger text-danger">
-                <i class="bi-graph-down"></i> 4.4%
-              </span>
-              <span class="text-body fs-6 ms-1">from 61.2%</span>
+
             </div>
           </a>
           <!-- End Card -->
         </div>
 
-        <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-          <!-- Card -->
-          <a class="card card-hover-shadow h-100" href="#">
-            <div class="card-body">
-              <h6 class="card-subtitle">Pageviews</h6>
 
-              <div class="row align-items-center gx-2 mb-1">
-                <div class="col-6">
-                  <h2 class="card-title text-inherit">92,913</h2>
-                </div>
-                <!-- End Col -->
 
-                <div class="col-6">
-                  <!-- Chart -->
-                  <div class="chartjs-custom" style="height: 3rem;">
-                    <canvas class="js-chart" data-hs-chartjs-options='{
-                              "type": "line",
-                              "data": {
-                                 "labels": ["1 May","2 May","3 May","4 May","5 May","6 May","7 May","8 May","9 May","10 May","11 May","12 May","13 May","14 May","15 May","16 May","17 May","18 May","19 May","20 May","21 May","22 May","23 May","24 May","25 May","26 May","27 May","28 May","29 May","30 May","31 May"],
-                                 "datasets": [{
-                                  "data": [21,20,24,15,17,30,30,35,35,35,40,60,12,90,90,85,70,75,43,75,90,22,120,120,90,85,100,92,92,92,92],
-                                  "backgroundColor": ["rgba(55, 125, 255, 0)", "rgba(255, 255, 255, 0)"],
-                                  "borderColor": "#377dff",
-                                  "borderWidth": 2,
-                                  "pointRadius": 0,
-                                  "pointHoverRadius": 0
-                                }]
-                              },
-                              "options": {
-                                 "scales": {
-                                   "y": {
-                                     "display": false
-                                   },
-                                   "x": {
-                                     "display": false
-                                   }
-                                 },
-                                "hover": {
-                                  "mode": "nearest",
-                                  "intersect": false
-                                },
-                                "plugins": {
-                                  "tooltip": {
-                                    "postfix": "k",
-                                    "hasIndicator": true,
-                                    "intersect": false
-                                  }
-                                }
-                              }
-                            }'>
-                    </canvas>
-                  </div>
-                  <!-- End Chart -->
-                </div>
-                <!-- End Col -->
-              </div>
-              <!-- End Row -->
 
-              <span class="badge bg-soft-secondary text-body">0.0%</span>
-              <span class="text-body fs-6 ms-1">from 2,913</span>
-            </div>
-          </a>
-          <!-- End Card -->
-        </div>
       </div>
       <!-- End Stats -->
 
-      
+
       <!-- End Row -->
 
       <!-- Card -->
- 
+
       <!-- End Card -->
 
-     
+
     </div>
     <!-- End Content -->
 
     <!-- Footer -->
 
-<?php include '../part/_foot.php' ?>
+    <?php include '../part/_foot.php' ?>
 
     <!-- End Footer -->
   </main>
@@ -3621,7 +3564,7 @@
 
   <!-- JS Plugins Init. -->
   <script>
-    $(document).on('ready', function () {
+    $(document).on('ready', function() {
       // INITIALIZATION OF DATERANGEPICKER
       // =======================================================
       $('.js-daterangepicker').daterangepicker();
@@ -3682,13 +3625,13 @@
 
     const datatable = HSCore.components.HSDatatables.getItem(0)
 
-    document.querySelectorAll('.js-datatable-filter').forEach(function (item) {
-      item.addEventListener('change',function(e) {
+    document.querySelectorAll('.js-datatable-filter').forEach(function(item) {
+      item.addEventListener('change', function(e) {
         const elVal = e.target.value,
-    targetColumnIndex = e.target.getAttribute('data-target-column-index'),
-    targetTable = e.target.getAttribute('data-target-table');
+          targetColumnIndex = e.target.getAttribute('data-target-column-index'),
+          targetTable = e.target.getAttribute('data-target-table');
 
-    HSCore.components.HSDatatables.getItem(targetTable).column(targetColumnIndex).search(elVal !== 'null' ? elVal : '').draw()
+        HSCore.components.HSDatatables.getItem(targetTable).column(targetColumnIndex).search(elVal !== 'null' ? elVal : '').draw()
       })
     })
   </script>
@@ -3698,8 +3641,8 @@
     (function() {
       localStorage.removeItem('hs_theme')
 
-      window.onload = function () {
-        
+      window.onload = function() {
+
 
         // INITIALIZATION OF NAVBAR VERTICAL ASIDE
         // =======================================================
@@ -3711,7 +3654,7 @@
         const HSFormSearchInstance = new HSFormSearch('.js-form-search')
 
         if (HSFormSearchInstance.collection.length) {
-          HSFormSearchInstance.getItem(1).on('close', function (el) {
+          HSFormSearchInstance.getItem(1).on('close', function(el) {
             el.classList.remove('top-0')
           })
 
@@ -3749,8 +3692,7 @@
 
             if (keyDataset === 'lastWeek') {
               updatingBarChart.data.labels = ["Apr 22", "Apr 23", "Apr 24", "Apr 25", "Apr 26", "Apr 27", "Apr 28", "Apr 29", "Apr 30", "Apr 31"];
-              updatingBarChart.data.datasets = [
-                {
+              updatingBarChart.data.datasets = [{
                   "data": [120, 250, 300, 200, 300, 290, 350, 100, 125, 320],
                   "backgroundColor": styles.data.datasets[0].backgroundColor,
                   "hoverBackgroundColor": styles.data.datasets[0].hoverBackgroundColor,
@@ -3767,8 +3709,7 @@
               updatingBarChart.update();
             } else {
               updatingBarChart.data.labels = ["May 1", "May 2", "May 3", "May 4", "May 5", "May 6", "May 7", "May 8", "May 9", "May 10"];
-              updatingBarChart.data.datasets = [
-                {
+              updatingBarChart.data.datasets = [{
                   "data": [200, 300, 290, 350, 150, 350, 300, 100, 125, 220],
                   "backgroundColor": styles.data.datasets[0].backgroundColor,
                   "hoverBackgroundColor": styles.data.datasets[0].hoverBackgroundColor,
@@ -3795,19 +3736,19 @@
           options: {
             plugins: {
               datalabels: {
-                anchor: function (context) {
+                anchor: function(context) {
                   var value = context.dataset.data[context.dataIndex];
                   return value.r < 20 ? 'end' : 'center';
                 },
-                align: function (context) {
+                align: function(context) {
                   var value = context.dataset.data[context.dataIndex];
                   return value.r < 20 ? 'end' : 'center';
                 },
-                color: function (context) {
+                color: function(context) {
                   var value = context.dataset.data[context.dataIndex];
                   return value.r < 20 ? context.dataset.backgroundColor : context.dataset.color;
                 },
-                font: function (context) {
+                font: function(context) {
                   var value = context.dataset.data[context.dataIndex],
                     fontSize = 25;
 
@@ -3824,7 +3765,7 @@
                     size: fontSize
                   };
                 },
-                formatter: function (value) {
+                formatter: function(value) {
                   return value.r
                 },
                 offset: 2,
@@ -3849,43 +3790,44 @@
   <!-- Style Switcher JS -->
 
   <script>
-      (function () {
-        // STYLE SWITCHER
-        // =======================================================
-        const $dropdownBtn = document.getElementById('selectThemeDropdown') // Dropdowon trigger
-        const $variants = document.querySelectorAll(`[aria-labelledby="selectThemeDropdown"] [data-icon]`) // All items of the dropdown
+    (function() {
+      // STYLE SWITCHER
+      // =======================================================
+      const $dropdownBtn = document.getElementById('selectThemeDropdown') // Dropdowon trigger
+      const $variants = document.querySelectorAll(`[aria-labelledby="selectThemeDropdown"] [data-icon]`) // All items of the dropdown
 
-        // Function to set active style in the dorpdown menu and set icon for dropdown trigger
-        const setActiveStyle = function () {
-          $variants.forEach($item => {
-            if ($item.getAttribute('data-value') === HSThemeAppearance.getOriginalAppearance()) {
-              $dropdownBtn.innerHTML = `<i class="${$item.getAttribute('data-icon')}" />`
-              return $item.classList.add('active')
-            }
+      // Function to set active style in the dorpdown menu and set icon for dropdown trigger
+      const setActiveStyle = function() {
+        $variants.forEach($item => {
+          if ($item.getAttribute('data-value') === HSThemeAppearance.getOriginalAppearance()) {
+            $dropdownBtn.innerHTML = `<i class="${$item.getAttribute('data-icon')}" />`
+            return $item.classList.add('active')
+          }
 
-            $item.classList.remove('active')
-          })
-        }
-
-        // Add a click event to all items of the dropdown to set the style
-        $variants.forEach(function ($item) {
-          $item.addEventListener('click', function () {
-            HSThemeAppearance.setAppearance($item.getAttribute('data-value'))
-          })
+          $item.classList.remove('active')
         })
+      }
 
-        // Call the setActiveStyle on load page
+      // Add a click event to all items of the dropdown to set the style
+      $variants.forEach(function($item) {
+        $item.addEventListener('click', function() {
+          HSThemeAppearance.setAppearance($item.getAttribute('data-value'))
+        })
+      })
+
+      // Call the setActiveStyle on load page
+      setActiveStyle()
+
+      // Add event listener on change style to call the setActiveStyle function
+      window.addEventListener('on-hs-appearance-change', function() {
         setActiveStyle()
-
-        // Add event listener on change style to call the setActiveStyle function
-        window.addEventListener('on-hs-appearance-change', function () {
-          setActiveStyle()
-        })
-      })()
-    </script>
+      })
+    })()
+  </script>
 
   <!-- End Style Switcher JS -->
 </body>
 
 <!-- Mirrored from htmlstream.com/preview/front-dashboard-v2.1.1/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 04 Mar 2024 14:10:48 GMT -->
+
 </html>
