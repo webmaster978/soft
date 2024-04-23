@@ -10,6 +10,9 @@ if (!isset($_SESSION['PROFILE']['id_utilisateur']) || $_SESSION['PROFILE']['desi
     $user_infos = $recup_informations->fetch(PDO::FETCH_OBJ);
 }
 
+$settings = $db->query("SELECT * FROM paramettres");
+$set=$settings->fetch(PDO::FETCH_OBJ);
+
 
 ?>
 
@@ -147,7 +150,7 @@ if (isset($_POST['btn_tri'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Clinovie soft - paramettres</title>
+    <title> <?= $set->nom_system; ?> - paramettres</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">

@@ -131,22 +131,10 @@ if (isset($_POST['btn_tri'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Users | Front - Admin &amp; Dashboard Template</title>
+    <title>Patients | <?= $set->nom_system; ?> </title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="favicon.ico">
-
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
-
-    <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="assets/css/vendor.min.css">
-
-    <!-- CSS Front Template -->
-    <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
-
-    <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
-    <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
+<?php include 'partials/_link.php' ?>
 
     <style data-hs-appearance-onload-styles>
         * {
