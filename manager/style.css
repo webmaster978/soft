@@ -1,0 +1,50 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+	font-size: 1.3rem;
+}
+
+.inputs {
+	display: flex;
+	gap: 2rem;
+}
+
+.container {
+	display: flex;
+	gap: 2rem;
+}
+
+.box {
+	background: green;
+	color: #fff;
+	padding: 3rem;
+}
+
+#two {
+	background-color: blue;
+}
+
+#three {
+	background-color: red;
+}
+
+select option {
+	display: block;
+	font-size: 1.2rem;
+	color: green;
+}
+
+select {
+	padding: .7rem 1.5rem;
+	font-size: 1.2rem;
+	color: green;
+}

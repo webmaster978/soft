@@ -15,8 +15,8 @@ if (isset($_SESSION['PROFILE']['id_utilisateur'])) {
     case 'consultation':
       header('location: consultation/');
       break;
-    case 'triage':
-      header('location: triage/');
+    case 'infirmier':
+      header('location: infirmier/');
       break;
     case 'labo':
       header('location: labo/');
@@ -71,8 +71,8 @@ if (isset($_POST['btn_submit'])) {
       case 'consultation':
         header('location: consultation/');
         break;
-      case 'triage':
-        header('location: triage/');
+      case 'infirmier':
+        header('location: infirmier/');
         break;
       case 'labo':
         header('location: labo/');
@@ -91,339 +91,108 @@ if (isset($_POST['btn_submit'])) {
 
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 
+    
 
 <head>
-  <!-- Required Meta Tags Always Come First -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta charset="utf-8" />
+        <title>Log In | Hyper - Responsive Bootstrap 5 Admin Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
 
-  <!-- Title -->
-  <title>Clinovie || Connexion</title>
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+        
+        <!-- Theme Config Js -->
+        <script src="assets/js/hyper-config.js"></script>
 
-  <!-- Favicon -->
-  <link rel="shortcut icon" href="assets/img/logo/lg.png">
+        <!-- App css -->
+        <link href="assets/css/app-saas.min.css" rel="stylesheet" type="text/css" id="app-style" />
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+        <!-- Icons css -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    </head>
+    
+    <body class="authentication-bg position-relative">
 
-  <!-- CSS Implementing Plugins -->
-  <link rel="stylesheet" href="assets/css/vendor.min.css">
+        <div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5 position-relative">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xxl-4 col-lg-5">
+                        <div class="card">
 
-  <!-- CSS Front Template -->
-  <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
+                            <!-- Logo -->
+                            <div class="card-header py-4 text-center">
+                                <a href="#">
+                                    <span><img src="assets/images/logo/lg.png" alt="logo"></span>
+                                </a>
+                            </div>
 
-  <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
-  <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
+                            <div class="card-body p-4">
+                                
+                                <div class="text-center w-75 m-auto">
+                                    <h4 class="text-dark-50 text-center pb-0 fw-bold">Connexion</h4>
+                                    <!-- <p class="text-muted mb-4">Enter your email address and password to access admin panel.</p> -->
+                                </div>
 
-  <style data-hs-appearance-onload-styles>
-    * {
-      transition: unset !important;
-    }
+                                <form action="#" method="POST">
 
-    body {
-      opacity: 0;
-    }
-  </style>
+                                    <div class="mb-3">
+                                        <label for="emailaddress" class="form-label">Adrese email</label>
+                                        <input class="form-control" type="text" id="emailaddress" name="username" value="<?= (isset($username)) ? $username : ''; ?>" required="" placeholder="nom d;utilisateur">
+                                    </div>
 
-  <script>
-    window.hs_config = {
-      "autopath": "@@autopath",
-      "deleteLine": "hs-builder:delete",
-      "deleteLine:build": "hs-builder:build-delete",
-      "deleteLine:dist": "hs-builder:dist-delete",
-      "previewMode": false,
-      "startPath": "/index.html",
-      "vars": {
-        "themeFont": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap",
-        "version": "?v=1.0"
-      },
-      "layoutBuilder": {
-        "extend": {
-          "switcherSupport": true
-        },
-        "header": {
-          "layoutMode": "default",
-          "containerMode": "container-fluid"
-        },
-        "sidebarLayout": "default"
-      },
-      "themeAppearance": {
-        "layoutSkin": "default",
-        "sidebarSkin": "default",
-        "styles": {
-          "colors": {
-            "primary": "#377dff",
-            "transparent": "transparent",
-            "white": "#fff",
-            "dark": "132144",
-            "gray": {
-              "100": "#f9fafc",
-              "900": "#1e2022"
-            }
-          },
-          "font": "Inter"
-        }
-      },
-      "languageDirection": {
-        "lang": "en"
-      },
-      "skipFilesFromBundle": {
-        "dist": ["assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.js", "assets/js/demo.js"],
-        "build": ["assets/css/theme.css", "assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js", "assets/js/demo.js", "assets/css/theme-dark.html", "assets/css/docs.css", "assets/vendor/icon-set/style.html", "assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.js", "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html", "assets/js/demo.js"]
-      },
-      "minifyCSSFiles": ["assets/css/theme.css", "assets/css/theme-dark.css"],
-      "copyDependencies": {
-        "dist": {
-          "*assets/js/theme-custom.js": ""
-        },
-        "build": {
-          "*assets/js/theme-custom.js": "",
-          "node_modules/bootstrap-icons/font/*fonts/**": "assets/css"
-        }
-      },
-      "buildFolder": "",
-      "replacePathsToCDN": {},
-      "directoryNames": {
-        "src": "./src",
-        "dist": "./dist",
-        "build": "./build"
-      },
-      "fileNames": {
-        "dist": {
-          "js": "theme.min.js",
-          "css": "theme.min.css"
-        },
-        "build": {
-          "css": "theme.min.css",
-          "js": "theme.min.js",
-          "vendorCSS": "vendor.min.css",
-          "vendorJS": "vendor.min.js"
-        }
-      },
-      "fileTypes": "jpg|png|svg|mp4|webm|ogv|json"
-    }
-    window.hs_config.gulpRGBA = (p1) => {
-      const options = p1.split(',')
-      const hex = options[0].toString()
-      const transparent = options[1].toString()
+                                    <div class="mb-3">
+                                        
+                                        <label for="password" class="form-label">Mot de passe</label>
+                                        <div class="input-group input-group-merge">
+                                            <input type="password" id="password" class="form-control" name="password" value="<?= (isset($password)) ? $password : ''; ?>" required="" placeholder="motde passe">
+                                            <div class="input-group-text" data-password="false">
+                                                <span class="password-eye"></span>
+                                            </div>
+                                        </div>
+                                    </div>
 
-      var c;
-      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-        c = hex.substring(1).split('');
-        if (c.length == 3) {
-          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-        }
-        c = '0x' + c.join('');
-        return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + transparent + ')';
-      }
-      throw new Error('Bad Hex');
-    }
-    window.hs_config.gulpDarken = (p1) => {
-      const options = p1.split(',')
+                                    <div class="mb-3 mb-3">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="checkbox-signin" checked>
+                                           
+                                        </div>
+                                    </div>
 
-      let col = options[0].toString()
-      let amt = -parseInt(options[1])
-      var usePound = false
+                                    <div class="mb-3 mb-0 text-center">
+                                        <button class="btn btn-outline-dark rounded-pill" name="btn_submit" type="submit"> Se conncter </button>
+                                    </div>
 
-      if (col[0] == "#") {
-        col = col.slice(1)
-        usePound = true
-      }
-      var num = parseInt(col, 16)
-      var r = (num >> 16) + amt
-      if (r > 255) {
-        r = 255
-      } else if (r < 0) {
-        r = 0
-      }
-      var b = ((num >> 8) & 0x00FF) + amt
-      if (b > 255) {
-        b = 255
-      } else if (b < 0) {
-        b = 0
-      }
-      var g = (num & 0x0000FF) + amt
-      if (g > 255) {
-        g = 255
-      } else if (g < 0) {
-        g = 0
-      }
-      return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
-    }
-    window.hs_config.gulpLighten = (p1) => {
-      const options = p1.split(',')
+                                </form>
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
 
-      let col = options[0].toString()
-      let amt = parseInt(options[1])
-      var usePound = false
+                        
+                        <!-- end row -->
 
-      if (col[0] == "#") {
-        col = col.slice(1)
-        usePound = true
-      }
-      var num = parseInt(col, 16)
-      var r = (num >> 16) + amt
-      if (r > 255) {
-        r = 255
-      } else if (r < 0) {
-        r = 0
-      }
-      var b = ((num >> 8) & 0x00FF) + amt
-      if (b > 255) {
-        b = 255
-      } else if (b < 0) {
-        b = 0
-      }
-      var g = (num & 0x0000FF) + amt
-      if (g > 255) {
-        g = 255
-      } else if (g < 0) {
-        g = 0
-      }
-      return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
-    }
-  </script>
-</head>
-
-<body>
-
-  <script src="assets/js/hs.theme-appearance.js"></script>
-
-
-
-  <!-- ========== MAIN CONTENT ========== -->
-  <main id="content" role="main" class="main">
-    <div class="position-fixed top-0 end-0 start-0 bg-img-start" style="height: 32rem; background-image: url(assets/svg/components/card-6.svg);">
-      <!-- Shape -->
-      <div class="shape shape-bottom zi-1">
-        <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
-          <polygon fill="#fff" points="0,273 1921,273 1921,0 " />
-        </svg>
-      </div>
-      <!-- End Shape -->
-    </div>
-
-    <!-- Content -->
-    <div class="container py-5 py-sm-7">
-      <a class="d-flex justify-content-center mb-5" href="#">
-        <img class="zi-2" src="assets/img/logo/lg.png" alt="Image Description" style="width: 8rem;">
-      </a>
-
-
-
-      <div class="mx-auto" style="max-width: 30rem;">
-        <!-- Card -->
-        <div class="card card-lg mb-5">
-          <div class="card-body">
-            <!-- Form -->
-            <form class="js-validate needs-validation" id="login-form" method="POST" novalidate>
-              <div class="text-center">
-                <div class="mb-5">
-                  <h1 class="display-5">Connexion</h1>
-
-
-
-
+                    </div> <!-- end col -->
                 </div>
-
-                <div class="d-grid mb-4">
-                  <a class="btn btn-white btn-lg" href="#">
-                    <span class="d-flex justify-content-center align-items-center">
-                      <img class="avatar avatar-xss me-2" src="assets/img/logo/lg.png" alt="Image Description">
-
-                    </span>
-                  </a>
-                </div>
-
-
-              </div>
-
-              <!-- Form -->
-              <div class="mb-4">
-                <label class="form-label" for="signinSrEmail">Nom d'utilisateur ou email</label>
-                <input type="text" class="form-control form-control-lg" id="email" name="username" value="<?= (isset($username)) ? $username : ''; ?>" placeholder="email@address.com" required>
-                <span class="invalid-feedback">Veuillez entrer une adresse email.</span>
-              </div>
-              <!-- End Form -->
-
-              <!-- Form -->
-              <div class="mb-4">
-
-                <label class="form-label" for="signupSrPassword">Mot de passe</label>
-                <div class="input-group input-group-merge" data-hs-validation-validate-class>
-
-                  <input type="password" class="js-toggle-password form-control form-control-lg" name="password" value="<?= (isset($password)) ? $password : ''; ?>" placeholder="8+ characters required" aria-label="3+ characters required" required minlength="3" data-hs-toggle-password-options='{
-                           "target": "#changePassTarget",
-                           "defaultClass": "bi-eye-slash",
-                           "showClass": "bi-eye",
-                           "classChangeTarget": "#changePassIcon"
-                         }'>
-                  <a id="changePassTarget" class="input-group-append input-group-text" href="javascript:;">
-                    <i id="changePassIcon" class="bi-eye"></i>
-                  </a>
-                </div>
-
-                <span class="invalid-feedback">Veuillez entrez un mot de passe.</span>
-              </div>
-              <!-- End Form -->
-
-              <!-- Form Check -->
-              <div class="form-check mb-4">
-                <input class="form-check-input" type="checkbox" value="" id="termsCheckbox">
-                <label class="form-check-label" for="termsCheckbox">
-                  Se souvenir de moi
-                </label>
-              </div>
-              <!-- End Form Check -->
-
-              <div class="d-grid">
-                <button type="submit" name="btn_submit" class="btn btn-primary btn-lg">Se connecter</button>
-              </div>
-            </form>
-            <!-- End Form -->
-          </div>
+                <!-- end row -->
+            </div>
+            <!-- end container -->
         </div>
-        <!-- End Card -->
+        <!-- end page -->
 
+        <footer class="footer footer-alt">
+            2023 - <script>document.write(new Date().getFullYear())</script> © Clinovie - Soft
+        </footer>
+        <!-- Vendor js -->
+        <script src="assets/js/vendor.min.js"></script>
+        
+        <!-- App js -->
+        <script src="assets/js/app.min.js"></script>
 
-      </div>
-    </div>
-    <!-- End Content -->
-  </main>
-  <!-- ========== END MAIN CONTENT ========== -->
-
-  <!-- JS Implementing Plugins -->
-  <script src="assets/js/vendor.min.js"></script>
-
-  <!-- JS Front -->
-  <script src="assets/js/theme.min.js"></script>
-
-  <!-- JS Plugins Init. -->
-  <script>
-    (function() {
-      window.onload = function() {
-        // INITIALIZATION OF BOOTSTRAP VALIDATION
-        // =======================================================
-        // HSBsValidation.init('.js-validate', {
-        //   onSubmit: data => {
-        //     data.event.preventDefault()
-        //     alert('Submited')
-        //   }
-        // })
-
-
-        // INITIALIZATION OF TOGGLE PASSWORD
-        // =======================================================
-        // new HSTogglePassword('.js-toggle-password')
-      }
-    })()
-  </script>
-</body>
+    </body>
 
 
 </html>
